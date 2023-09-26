@@ -6,5 +6,5 @@
 	displayBlock="true"
 	busyIndicatorDelay="0"
 >
-    <Text text="This is a test"></Text>
+    <Text text="Clock"></Text>
 </mvc:View>

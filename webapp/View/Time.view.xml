@@ -2,43 +2,37 @@
 	controllerName="sap.ui.agi.zeiterfassung.controller.Time"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m"
-	xmlns:core="sap.ui.core"
 	xmlns:unified="sap.ui.unified">
 	<VBox class="sapUiSmallMargin">
-		<PlanningCalendar
-				id="PC1"
-				startDate="{path: '/startDate'}"
-				rows="{path: '/people'}"
-				appointmentsVisualization="Filled">
-			<toolbarContent>
-				<Title text="{i18n>TimeTitle}" titleStyle="H4"/>
-			</toolbarContent>
-			<rows>
-				<PlanningCalendarRow
-						icon="{pic}"
-						title="{name}"
-						text="{role}"
-						enableAppointmentsDragAndDrop="{path:'name', formatter:'.canModifyAppointments'}"
-						enableAppointmentsResize="{path:'name', formatter:'.canModifyAppointments'}"
-						enableAppointmentsCreate="{path:'name', formatter:'.canModifyAppointments'}"
-						appointmentDrop="handleAppointmentDrop"
-						appointmentDragEnter="handleAppointmentDragEnter"
-						appointmentResize="handleAppointmentResize"
-						appointmentCreate="handleAppointmentCreate"
-						appointments="{path : 'appointments', templateShareable: false}">
-					<appointments>
-						<unified:CalendarAppointment
-								startDate="{start}"
-								endDate="{end}"
-								icon="{pic}"
-								title="{title}"
-								text="{info}"
-								type="{type}"
-								tentative="{tentative}">
-						</unified:CalendarAppointment>
-					</appointments>
-				</PlanningCalendarRow>
-			</rows>
-		</PlanningCalendar>
+		<SinglePlanningCalendar
+			id="SPC1"
+			class="sapUiSmallMarginTop"
+			title= "{i18n>TimeTitle}"
+			startDate="{path: '/startDate'}"
+			appointments="{path: '/appointments'}">
+			<actions>
+				<Button
+					id="addNewAppointment"
+					text="{i18n>TimeCreateButtonText}"
+					press="handleAppointmentCreate"
+					tooltip="{i18n>TimeCreateButtonTooltip}" />
+			</actions>
+			<views>
+				<SinglePlanningCalendarDayView key="DayView" title="Day" />
+				<SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />
+				<SinglePlanningCalendarWeekView key="WeekView" title="Week" />
+				<SinglePlanningCalendarMonthView key="MonthView" title="Month" />
+			</views>
+			<appointments>
+				<unified:CalendarAppointment
+					title= "{title}"
+					text= "{text}"
+					type= "{type}"
+					icon= "{icon}"
+					startDate= "{startDate}"
+					endDate= "{endDate}">
+				</unified:CalendarAppointment>
+			</appointments>
+		</SinglePlanningCalendar>
 	</VBox>
 </mvc:View>
