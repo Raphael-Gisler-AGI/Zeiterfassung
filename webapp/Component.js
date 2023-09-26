@@ -1,9 +1,8 @@
 sap.ui.define([
-   "sap/ui/core/UIComponent",
-   "sap/ui/model/json/JSONModel"
-], function (UIComponent, JSONModel) {
+   "sap/ui/core/UIComponent"
+], function (UIComponent) {
    "use strict";
-   return UIComponent.extend("sap.ui.demo.zeiterfassung.Component", {
+   return UIComponent.extend("sap.ui.agi.zeiterfassung.Component", {
       metadata : {
             interfaces: ["sap.ui.core.IAsyncContentCreation"],
             manifest: "json"

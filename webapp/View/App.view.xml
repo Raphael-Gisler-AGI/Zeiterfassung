@@ -1,5 +1,15 @@
 <mvc:View
+   xmlns:f="sap.f"
    xmlns="sap.m"
    xmlns:mvc="sap.ui.core.mvc">
-   <Text text="Hello World"/>
+   <Shell>
+      <App class="myAppDemoWT">
+         <Page title="Zeiterfassung">
+            <FlexBox justifyContent="SpaceBetween">
+               <mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Time" />
+               <mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
+            </FlexBox>
+         </Page>
+      </App>
+   </Shell>
 </mvc:View>

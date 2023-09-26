@@ -1,0 +1,10 @@
+<mvc:View
+	controllerName="sap.ui.agi.zeiterfassung.controller.Clock"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+	displayBlock="true"
+	busyIndicatorDelay="0"
+>
+    <Text text="This is a test"></Text>
+</mvc:View>
