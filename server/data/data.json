@@ -3,16 +3,18 @@
     "Pensum": "50%",
     "Entries": [
       {
-        "Date": "26-09-2023",
-        "Time": 120,
-        "Description": "Heheheha",
-        "Category": "Gilgen",
-        "Type": 0
+        "2023-09-27" : [{ 
+          "Duration" : 10,
+          "Description": "sus"
+        }],
+        "Day": "2023-09-27",
+        "Duration": 10,
+        "Description": "HEHEHEHA"
       },
       {
-        "StartDate": "2023-09-26T23:30:00.000Z",
-        "EndDate": "2023-09-27T05:30:00.000Z",
-        "Description": ""
+        "Day": "2023-09-27",
+        "Duration": 10,
+        "Description": "HEHEHEHA"
       }
     ]
   }

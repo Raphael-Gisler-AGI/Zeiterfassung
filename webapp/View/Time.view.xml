@@ -1,27 +1,26 @@
 <mvc:View
 	controllerName="sap.ui.agi.zeiterfassung.controller.Time"
 	xmlns:mvc="sap.ui.core.mvc"
-	xmlns="sap.m"
-	xmlns:unified="sap.ui.unified">
-	<VBox class="sapUiSmallMargin">
-		<SinglePlanningCalendar
+	xmlns:unified="sap.ui.unified"
+	xmlns="sap.m">
+			<SinglePlanningCalendar
 			id="SPC1"
-			class="sapUiSmallMarginTop"
-			title= "{i18n>TimeTitle}"
+			title= "My Calendar"
+			appointmentSelect="handleAppointmentSelect"
+			headerDateSelect="handleHeaderDateSelect"
+			startDateChange="handleStartDateChange"
+			enableAppointmentsDragAndDrop="true"
+			enableAppointmentsCreate="true"
+			enableAppointmentsResize="true"
 			startDate="{path: '/startDate'}"
 			appointments="{path: '/appointments'}">
 			<actions>
-				<Button
-					id="addNewAppointment"
-					text="{i18n>TimeCreateButtonText}"
-					press="handleAppointmentCreate"
-					tooltip="{i18n>TimeCreateButtonTooltip}" />
+				<Button id="addNewAppointment" text="Create" press="handleAppointmentCreate" tooltip="Add new appointment" />
 			</actions>
 			<views>
 				<SinglePlanningCalendarDayView key="DayView" title="Day" />
 				<SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />
 				<SinglePlanningCalendarWeekView key="WeekView" title="Week" />
-				<SinglePlanningCalendarMonthView key="MonthView" title="Month" />
 			</views>
 			<appointments>
 				<unified:CalendarAppointment
@@ -34,5 +33,4 @@
 				</unified:CalendarAppointment>
 			</appointments>
 		</SinglePlanningCalendar>
-	</VBox>
 </mvc:View>

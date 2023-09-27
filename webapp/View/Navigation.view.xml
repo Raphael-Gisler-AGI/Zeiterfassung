@@ -1,0 +1,10 @@
+<mvc:View
+	controllerName="sap.ui.agi.zeiterfassung.controller.Navigation"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core">
+    <VBox>
+        <Button text="Zeiterfassung" press="onNavigateZeiterfassung"/>
+        <Button text="Kalender" press="onNavigateKalender"/>
+    </VBox>
+</mvc:View>

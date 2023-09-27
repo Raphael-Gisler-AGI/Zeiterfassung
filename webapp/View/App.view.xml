@@ -2,21 +2,14 @@
    xmlns:l="sap.ui.layout"
    xmlns="sap.m"
    xmlns:mvc="sap.ui.core.mvc">
-   <Shell>
-      <App class="myAppDemoWT">
-         <Page
-            title="Zeiterfassung">
-            <l:BlockLayout>
-               <l:BlockLayoutRow>
-                  <l:BlockLayoutCell width="4">
-                     <mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Time" />
-                  </l:BlockLayoutCell>
-                  <l:BlockLayoutCell width="1">
-                     <mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
-                  </l:BlockLayoutCell>
-               </l:BlockLayoutRow> 
-            </l:BlockLayout>
-         </Page>
-      </App>
-   </Shell>
+   <l:BlockLayout>
+      <l:BlockLayoutRow>
+         <l:BlockLayoutCell width="1">
+            <mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Navigation" />
+         </l:BlockLayoutCell>
+         <l:BlockLayoutCell width="4">
+            <mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
+         </l:BlockLayoutCell>
+      </l:BlockLayoutRow>
+   </l:BlockLayout>
 </mvc:View>

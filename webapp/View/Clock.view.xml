@@ -2,9 +2,13 @@
 	controllerName="sap.ui.agi.zeiterfassung.controller.Clock"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m"
-	xmlns:c="sap.ui.core"
-	displayBlock="true"
-	busyIndicatorDelay="0"
->
-    <Text text="Clock"></Text>
+	xmlns:c="sap.ui.core">
+	<VBox>
+		<FlexBox alignItems="Center">
+			<Text text="{Timer>/time}"/>
+			<Button
+				press="onPressActivate"
+				text="{= ${Timer>/active} ? 'Stop' : 'Start'}"/>
+		</FlexBox>
+	</VBox>
 </mvc:View>
