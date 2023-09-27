@@ -1,2 +1,4 @@
 package.json
 ui5.yaml
+package-lock.json
+node_modules

@@ -1,14 +1,14 @@
 {
-    "User": {
-        "Pensum": "50%",
-        "Eintrag": [
-            {
-                "Date": "26-09-2023",
-                "Time": 120,
-                "Description": "Heheheha",
-                "Categorie": "Gilgen",
-                "Type": 0
-            }
-        ]
-    }
+  "User": {
+    "Pensum": "50%",
+    "Entries": [
+      {
+        "Date": "26-09-2023",
+        "Time": 120,
+        "Description": "Heheheha",
+        "Category": "Gilgen",
+        "Type": 0
+      }
+    ]
+  }
 }
