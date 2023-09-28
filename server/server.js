@@ -19,7 +19,7 @@ app.listen(port, () => {
 });
 
 app.get("/createEntry", (req, res) => {
-  const entry = JSON.parse(req.query.entry);
+  const entry = JSON.parse(req.query.data);
   file.User.Entries.push(entry);
   fs.writeFile(fileName, JSON.stringify(file), (err) => {
     if (err) res.sendStatus(400);

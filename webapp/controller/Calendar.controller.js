@@ -17,8 +17,13 @@ function(coreLibrary, Fragment, Controller, DateFormat, JSONModel, unifiedLibrar
 	return Controller.extend("sap.ui.agi.zeiterfassung.controller.Time", {
 
 		onInit: function() {
-			console.log(this.getView().getModel().getData())
-			oModel = new JSONModel();
+			this.getOwnerComponent().getModel("entries").getData().forEach((entry) => {
+				entry.StartTime = new Date(entry.StartTime)
+				entry.EndTime = UI5Date.getInstance(entry.EndTime)
+			})
+			this.getOwnerComponent().getModel("entries").refresh()
+			console.log(this.getOwnerComponent().getModel("entries").getData())
+			const oModel = new JSONModel();
 			oModel.setData({allDay: false});
 			this.getView().setModel(oModel, "allDay");
 		},

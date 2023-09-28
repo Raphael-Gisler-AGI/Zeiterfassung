@@ -5,6 +5,7 @@ sap.ui.define(
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Clock", {
       onInit: function () {
+        console.log(this.getOwnerComponent().getModel("entries").getData());
         this.getView().setModel(
           new JSONModel({
             time: 0,
@@ -13,33 +14,6 @@ sap.ui.define(
           }),
           "Timer"
         );
-        this.getView().setModel(
-          new JSONModel([
-            {
-              Day: "2023-09-28",
-              StartTime: this.startTime,
-              EndTime: this.endTime,
-              Duration: "3",
-              Description: "ösldfasödlfj",
-            },
-            {
-              Day: "2023-09-28",
-              StartTime: this.startTime,
-              EndTime: this.endTime,
-              Duration: "3",
-              Description: "ösldfasödlfj",
-            },
-            {
-              Day: "2023-09-29",
-              StartTime: this.startTime,
-              EndTime: this.endTime,
-              Duration: "3",
-              Description: "ösldfasödlfj",
-            },
-          ])
-        );
-
-        console.log(this.test);
       },
       onPressActivate: function () {
         const timer = this.getView().getModel("Timer").getData();
@@ -57,28 +31,27 @@ sap.ui.define(
           clearInterval(this.counter);
         }
       },
-      onPressSave: function () {
+      onPressSave: async function () {
         if (!this.startTime) {
           MessageToast.show("Please start the timer before saving");
           return;
         }
         const data = this.getView().getModel("Timer").getData();
-        this.endTime = new Date();
-        this.getView()
-          .getModel()
-          .getData()
-          .push({
-            Day: this.startTime.toISOString().split("T")[0],
-            StartTime: this.startTime,
-            EndTime: this.endTime,
-            Duration: data.time,
-            Description: data.Description,
-          });
+        const result = {
+          Day: this.startTime.toISOString().split("T")[0],
+          StartTime: this.startTime.toString(),
+          EndTime: new Date(),
+          Duration: data.time,
+          Description: data.Description,
+        };
+        await fetch(
+          `http://localhost:3000/createEntry?data=${JSON.stringify(result)}`
+        ).then((res) => console.log(res));
         data.time = 0;
         this.getView().getModel("Timer").refresh();
-        this.getView().getModel().refresh();
         this.startTime = undefined;
-        this.endTime = undefined;
+        this.getOwnerComponent().getModel("entries").getData().push(result);
+        this.getOwnerComponent().getModel("entries").refresh();
       },
     });
   }

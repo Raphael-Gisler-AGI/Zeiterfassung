@@ -22,7 +22,7 @@
 			id="invoiceList"
 			class="sapUiResponsiveMargin"
 			items="{
-				path : '/',
+				path : 'entries>/',
 				sorter: {
 					path: 'Day',
 					group: true
@@ -30,8 +30,8 @@
 			}">
 			<items>
 				<ObjectListItem
-				 	number="{Time}"
-					title="{Description}">
+				 	number="{entries>Time}"
+					title="{entries>Description}">
 				</ObjectListItem>
 			</items>
 		</List>

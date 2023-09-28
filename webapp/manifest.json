@@ -39,6 +39,10 @@
           "supportedLocales": [""],
           "fallbackLocale": ""
         }
+      },
+      "entries": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "http://localhost:3000/getEntries"
       }
     },
     "routing": {

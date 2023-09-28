@@ -3,34 +3,37 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:unified="sap.ui.unified"
 	xmlns="sap.m">
-	<SinglePlanningCalendar
-		id="SPC1"
-		title= "My Calendar"
-		appointmentSelect="handleAppointmentSelect"
-		headerDateSelect="handleHeaderDateSelect"
-		startDateChange="handleStartDateChange"
-		enableAppointmentsDragAndDrop="true"
-		enableAppointmentsCreate="true"
-		enableAppointmentsResize="true"
-		startDate="{path: '/startDate'}"
-		appointments="{path: '/appointments'}">
-		<actions>
-			<Button id="addNewAppointment" text="Create" press="handleAppointmentCreate" tooltip="Add new appointment" />
-		</actions>
-		<views>
-			<SinglePlanningCalendarDayView key="DayView" title="Day" />
-			<SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />
-			<SinglePlanningCalendarWeekView key="WeekView" title="Week" />
-		</views>
-		<appointments>
-			<unified:CalendarAppointment
-				title= "{title}"
-				text= "{text}"
-				type= "{type}"
-				icon= "{icon}"
-				startDate= "{startDate}"
-				endDate= "{endDate}">
-			</unified:CalendarAppointment>
-		</appointments>
-	</SinglePlanningCalendar>
+	<ScrollContainer height="100vh" vertical="true">
+		<SinglePlanningCalendar
+			id="SPC1"
+			title="My Calendar"
+			appointmentSelect="handleAppointmentSelect"
+			headerDateSelect="handleHeaderDateSelect"
+			startDateChange="handleStartDateChange"
+			enableAppointmentsDragAndDrop="true"
+			enableAppointmentsCreate="true"
+			enableAppointmentsResize="true"
+			startDate="{path: '/startDate'}"
+			appointments="{entries>/}">
+			<actions>
+				<Button id="addNewAppointment" text="Create" press="handleAppointmentCreate"
+					tooltip="Add new appointment" />
+			</actions>
+			<views>
+				<SinglePlanningCalendarDayView key="DayView" title="Day" />
+				<SinglePlanningCalendarWeekView key="WeekView" title="Week" />
+				<SinglePlanningCalendarMonthView key="MonthView" title="Month" />
+			</views>
+			<appointments>
+				<unified:CalendarAppointment
+					title="{entries>Description}"
+					text="{text}"
+					type="{type}"
+					icon="{icon}"
+					startDate="{entries>StartTime}"
+					endDate="{entries>EndTime}">
+				</unified:CalendarAppointment>
+			</appointments>
+		</SinglePlanningCalendar>
+	</ScrollContainer>
 </mvc:View>
