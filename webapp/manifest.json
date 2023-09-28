@@ -1,45 +1,82 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-	"id": "sap.ui.agi.zeiterfassung",
-	"type": "application",
-	"i18n": "i18n/i18n.properties",
-	"title": "{{appTitle}}",
-	"description": "{{appDescription}}",
-	"applicationVersion": {
-	  "version": "1.0.0"
-	}
+    "id": "sap.ui.agi.zeiterfassung",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "applicationVersion": {
+      "version": "1.0.0"
+    }
   },
   "sap.ui": {
-	"technology": "UI5",
-	"deviceTypes": {
-		"desktop": true,
-		"tablet": true,
-		"phone": true
-	}
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
   },
   "sap.ui5": {
-	"rootView": {
-		"viewName": "sap.ui.agi.zeiterfassung.view.App",
-		"type": "XML",
-		"id": "app"
-	},
-	"dependencies": {
-	  "minUI5Version": "1.93",
-	  "libs": {
-		"sap.ui.core": {},
-		"sap.m": {}
-	  }
-	},
-	"models": {
-	  "i18n": {
-		"type": "sap.ui.model.resource.ResourceModel",
-		"settings": {
-		  "bundleName": "sap.ui.agi.zeiterfassung.i18n.i18n",
-		  "supportedLocales": [""],
-		  "fallbackLocale": ""
-		}
-	  }
-	}
+    "rootView": {
+      "viewName": "sap.ui.agi.zeiterfassung.view.App",
+      "type": "XML",
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.93",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {}
+      }
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "sap.ui.agi.zeiterfassung.i18n.i18n",
+          "supportedLocales": [""],
+          "fallbackLocale": ""
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "type": "View",
+        "viewType": "XML",
+        "path": "sap.ui.agi.zeiterfassung.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "transition": "slide",
+        "bypassed": {
+          "target": "notFound"
+        },
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "time",
+          "target": "time"
+        },
+        {
+          "pattern": "calendar",
+          "name": "calendar",
+          "target": "calendar"
+        }
+      ],
+      "targets": {
+        "time": {
+          "id": "time",
+          "name": "Time"
+        },
+        "calendar": {
+          "id": "calendar",
+          "name": "Calendar"
+        }
+      }
+    }
   }
 }

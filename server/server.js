@@ -3,7 +3,9 @@ const app = express();
 const port = 3000;
 const fs = require("fs");
 const fileName = "./data/data.json";
+const categoriesPath = "./data/categories.json";
 const file = require(fileName);
+const categoires = require(categoriesPath);
 
 const cors = require("cors");
 app.use(
@@ -27,4 +29,8 @@ app.get("/createEntry", (req, res) => {
 
 app.get("/getEntries", (req, res) => {
   res.send(file.User.Entries);
+});
+
+app.get("/getCategories", (req, res) => {
+  res.send(categoires);
 });

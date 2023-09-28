@@ -2,20 +2,6 @@
   "User": {
     "Pensum": "50%",
     "Entries": [
-      {
-        "2023-09-27" : [{ 
-          "Duration" : 10,
-          "Description": "sus"
-        }],
-        "Day": "2023-09-27",
-        "Duration": 10,
-        "Description": "HEHEHEHA"
-      },
-      {
-        "Day": "2023-09-27",
-        "Duration": 10,
-        "Description": "HEHEHEHA"
-      }
     ]
   }
 }

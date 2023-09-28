@@ -1,0 +1,14 @@
+[
+    {
+        "Name": "Gilgen",
+        "Type": 0
+    },
+    {
+        "Name": "Schulung",
+        "Type": 1
+    },
+    {
+        "Name": "Ferien",
+        "Type": 2
+    }
+]
