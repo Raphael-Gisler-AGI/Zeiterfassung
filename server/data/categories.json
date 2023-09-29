@@ -1,14 +1,22 @@
 [
     {
+        "id": 0,
         "Name": "Gilgen",
         "Type": 0
     },
     {
+        "id": 1,
         "Name": "Schulung",
         "Type": 1
     },
     {
+        "id": 2,
         "Name": "Ferien",
         "Type": 2
+    },
+    {
+        "id": 3,
+        "Name": "BMC",
+        "Type": 0
     }
 ]
