@@ -5,6 +5,7 @@ sap.ui.define(
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Clock", {
       onInit: function () {
+        this.convertToDate();
         console.log(this.getOwnerComponent().getModel("entries").getData());
         this.getView().setModel(
           new JSONModel({
@@ -37,9 +38,10 @@ sap.ui.define(
           return;
         }
         const data = this.getView().getModel("Timer").getData();
+        console.log(this.startTime);
         const result = {
           Day: this.startTime.toISOString().split("T")[0],
-          StartTime: this.startTime.toString(),
+          StartTime: this.startTime,
           EndTime: new Date(),
           Duration: data.time,
           Description: data.Description,
@@ -48,10 +50,17 @@ sap.ui.define(
           `http://localhost:3000/createEntry?data=${JSON.stringify(result)}`
         ).then((res) => console.log(res));
         data.time = 0;
+        data.active = false;
         this.getView().getModel("Timer").refresh();
         this.startTime = undefined;
+        clearInterval(this.counter);
         this.getOwnerComponent().getModel("entries").getData().push(result);
         this.getOwnerComponent().getModel("entries").refresh();
+      },
+      onPressDelete: function (oEvent) {
+        const oItem = oEvent.getSource();
+        const id = oItem.getBindingContext("entries").getProperty("id");
+        this.deleteTime(id);
       },
     });
   }
