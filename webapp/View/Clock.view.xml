@@ -1,0 +1,40 @@
+<mvc:View
+    controllerName="sap.ui.agi.zeiterfassung.controller.Clock"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Toolbar>
+        <Input
+            value="{timer>/description}"
+            placeholder="Description"
+            width="300px"/>
+        <ComboBox
+            required="true"
+            placeholder="Choose a Category..."
+            items="{categories>/}"
+            selectionChange="onSetCategory">
+            <items>
+                <core:Item
+                    key="{categories>id}"
+                    text="{categories>Name}" />
+            </items>
+        </ComboBox>
+        <ObjectNumber
+            class="sapMObjectNumberLarge"
+            number="{timer>/timeDisplay}" />
+        <Button
+            press="onPressActivate"
+            icon="{= ${timer>/active} ? 'sap-icon://stop' : 'sap-icon://play'}" />
+        <ToolbarSpacer />
+        <Button text="Erstellen" icon="sap-icon://add" />
+        <ToolbarSpacer />
+        <Button
+            press="onNavigateTime"
+            tooltip="Navigate to List"
+            icon="sap-icon://table-chart"/>
+        <Button
+            press="onNavigateCalendar"
+            tooltip="Navigate to Calendar"
+            icon="sap-icon://calendar"/>
+    </Toolbar>
+</mvc:View>

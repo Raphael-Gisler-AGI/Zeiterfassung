@@ -1,24 +1,7 @@
 <mvc:View
 	controllerName="sap.ui.agi.zeiterfassung.controller.App"
 	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc"
-	xmlns:grid="sap.ui.layout.cssgrid"
-	displayBlock="true">
-	<Shell>
-		<grid:CSSGrid gridTemplateColumns="1fr 80%" class="sapUiMediumMarginTop">
-			<List
-				headerText="Zeiterfassung"
-				width="200px">
-				<StandardListItem
-					type="Navigation"
-					title="Zeiterfassung"
-					press="onNavigateTime" />
-				<StandardListItem
-					type="Navigation"
-					title="Kalender"
-					press="onNavigateCalendar" />
-			</List>
-			<App id="app" />
-		</grid:CSSGrid>
-	</Shell>
+	xmlns:mvc="sap.ui.core.mvc">
+	<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock"/>
+	<App id="app" />
 </mvc:View>

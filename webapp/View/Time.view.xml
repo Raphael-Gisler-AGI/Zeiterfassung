@@ -5,36 +5,7 @@
 	xmlns:grid="sap.ui.layout.cssgrid"
 	xmlns="sap.m">
 	<grid:CSSGrid gridGap="50px">
-		<FlexBox alignItems="Center" width="100%" justifyContent="SpaceBetween">
-			<FlexBox>
-				<Input
-				 	class="sapUiSmallMarginEnd"
-					value="{timer>/description}"
-					placeholder="Description"
-					width="400px" />
-				<ComboBox
-					required="true"
-					placeholder="Choose a Category..."
-					items="{categories>/}"
-					selectionChange="onSetCategory">
-					<items>
-						<core:Item
-							key="{categories>id}"
-							text="{categories>Name}" />
-					</items>
-				</ComboBox>
-			</FlexBox>
-			<HBox>
-				<ObjectNumber
-					class="sapMObjectNumberLarge"
-					number="{timer>/timeDisplay}" />
-				<Button
-					class="sapUiMediumMarginBeginEnd"
-					press="onPressActivate"
-					icon="{= ${timer>/active} ? 'sap-icon://stop' : 'sap-icon://play'}" />
-			</HBox>
-		</FlexBox>
-		<ScrollContainer height="100vh" vertical="true">
+		<ScrollContainer vertical="true">
 			<Table
 				items="{
 				path: 'entries>/',
