@@ -43,6 +43,10 @@
       "entries": {
         "type": "sap.ui.model.json.JSONModel",
         "uri": "http://localhost:3000/getEntries"
+      },
+      "categories": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "http://localhost:3000/getCategories"
       }
     },
     "routing": {

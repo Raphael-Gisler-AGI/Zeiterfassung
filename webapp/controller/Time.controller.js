@@ -1,61 +1,79 @@
 sap.ui.define(
-  ["./BaseController", "sap/ui/model/json/JSONModel", "sap/m/MessageToast"],
-  function (BaseController, JSONModel, MessageToast) {
+  [
+    "./BaseController",
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageToast",
+    "sap/ui/util/Storage",
+  ],
+  function (BaseController, JSONModel, MessageToast, Storage) {
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Clock", {
       onInit: function () {
         this.convertToDate();
-        console.log(this.getOwnerComponent().getModel("entries").getData());
+        console.log(this.categories().getData());
         this.getView().setModel(
           new JSONModel({
-            time: 0,
+            description: "",
+            category: "",
             active: false,
-            Description: "",
+            time: 0,
+            timeDisplay: "00:00:00",
           }),
-          "Timer"
+          "timer"
         );
       },
+      getTimer: function () {
+        return this.getView().getModel("timer");
+      },
+      runTimer: function () {
+        const timer = this.getView().getModel("timer");
+        this.timer = setInterval(() => {
+          timer.setProperty("/time", timer.getProperty("/time") + 1);
+          timer.setProperty(
+            "/timeDisplay",
+            new Date(timer.getProperty("/time") * 1000)
+              .toISOString()
+              .substring(11, 19)
+          );
+        }, 1000);
+      },
       onPressActivate: function () {
-        const timer = this.getView().getModel("Timer").getData();
-        timer.active = !timer.active;
-        this.getView().getModel("Timer").refresh();
-        if (!this.startTime) {
-          this.startTime = new Date();
-        }
-        if (timer.active) {
-          this.counter = setInterval(() => {
-            timer.time++;
-            this.getView().getModel("Timer").refresh();
-          }, 1000);
+        const timer = this.getView().getModel("timer");
+        timer.setProperty("/active", !timer.getProperty("/active"));
+        if (timer.getProperty("/active")) {
+          Storage.put("time", new Date());
+          this.runTimer();
         } else {
-          clearInterval(this.counter);
+          clearInterval(this.timer);
+          this.onSave();
         }
       },
-      onPressSave: async function () {
-        if (!this.startTime) {
-          MessageToast.show("Please start the timer before saving");
+      onSetCategory: function (oEvent) {
+        this.getTimer().setProperty(
+          "/category",
+          oEvent.getSource().getSelectedKey()
+        );
+      },
+      onSave: async function () {
+        let errorMessage = "";
+        if (errorMessage != "") {
+          MessageToast.show(errorMessage);
           return;
         }
-        const data = this.getView().getModel("Timer").getData();
-        console.log(this.startTime);
+        const timer = this.getTimer();
+        const startTime = new Date(Storage.get("time"));
         const result = {
-          Day: this.startTime.toISOString().split("T")[0],
-          StartTime: this.startTime,
+          Day: startTime.toISOString().split("T")[0],
+          StartTime: startTime,
           EndTime: new Date(),
-          Duration: data.time,
-          Description: data.Description,
+          Description: timer.getProperty("/description"),
+          Category: timer.getProperty("/category"),
         };
         await fetch(
           `http://localhost:3000/createEntry?data=${JSON.stringify(result)}`
         ).then((res) => console.log(res));
-        data.time = 0;
-        data.active = false;
-        this.getView().getModel("Timer").refresh();
-        this.startTime = undefined;
-        clearInterval(this.counter);
-        this.getOwnerComponent().getModel("entries").getData().push(result);
-        this.getOwnerComponent().getModel("entries").refresh();
+        this.onInit();
       },
       onPressDelete: function (oEvent) {
         const oItem = oEvent.getSource();

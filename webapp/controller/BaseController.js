@@ -30,6 +30,12 @@ sap.ui.define(
             }
           );
         },
+        entries: function () {
+          return this.getOwnerComponent().getModel("entries")
+        },
+        categories: function () {
+          return this.getOwnerComponent().getModel("categories")
+        }
       }
     );
   }

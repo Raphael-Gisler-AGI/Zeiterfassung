@@ -1,30 +1,41 @@
 <mvc:View
 	controllerName="sap.ui.agi.zeiterfassung.controller.Time"
-	xmlns:f="sap.f"
-	xmlns:cssgrid="sap.ui.layout.cssgrid"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
 	xmlns:grid="sap.ui.layout.cssgrid"
 	xmlns="sap.m">
 	<grid:CSSGrid gridGap="50px">
 		<FlexBox alignItems="Center" width="100%" justifyContent="SpaceBetween">
-			<Input
-				value="{Timer>/Description}"
-				placeholder="Description"
-				width="400px" />
-			<cssgrid:CSSGrid gridTemplateColumns="1fr 1fr 1fr" gridGap="20px">
-				<NumericContent value="{Timer>/time}" />
+			<FlexBox>
+				<Input
+				 	class="sapUiSmallMarginEnd"
+					value="{timer>/description}"
+					placeholder="Description"
+					width="400px" />
+				<ComboBox
+					required="true"
+					placeholder="Choose a Category..."
+					items="{categories>/}"
+					selectionChange="onSetCategory">
+					<items>
+						<core:Item
+							key="{categories>id}"
+							text="{categories>Name}" />
+					</items>
+				</ComboBox>
+			</FlexBox>
+			<HBox>
+				<ObjectNumber
+					class="sapMObjectNumberLarge"
+					number="{timer>/timeDisplay}" />
 				<Button
+					class="sapUiMediumMarginBeginEnd"
 					press="onPressActivate"
-					text="{= ${Timer>/active} ? 'Stop' : 'Start'}" />
-				<Button
-					press="onPressSave"
-					text="Save" />
-			</cssgrid:CSSGrid>
+					icon="{= ${timer>/active} ? 'sap-icon://stop' : 'sap-icon://play'}" />
+			</HBox>
 		</FlexBox>
 		<ScrollContainer height="100vh" vertical="true">
-			<Table id="idProductsTable"
-				inset="false"
+			<Table
 				items="{
 				path: 'entries>/',
 				sorter: {
@@ -35,11 +46,10 @@
 				<headerToolbar>
 					<OverflowToolbar>
 						<content>
-							<Title text="Products" level="H2" />
+							<Title text="Entries" level="H1" />
 							<ToolbarSpacer />
 							<ComboBox id="idPopinLayout"
-								placeholder="Popin layout options"
-								change="onPopinLayoutChanged">
+								placeholder="Choose a Category">
 								<items>
 									<core:Item text="Block"
 										key="Block" />
@@ -85,7 +95,8 @@
 									text="{
 								path: 'entries>StartTime',
 								type: 'sap.ui.model.type.Date',
-								formatOptions: {pattern: 'hh:mm:ss'}}-" />
+								formatOptions: {pattern: 'hh:mm:ss'}}" />
+								<Text text=" - " />
 								<Text
 									text="{
 								path: 'entries>EndTime',
@@ -94,10 +105,11 @@
 							</HBox>
 							<Text
 								text="{entries>Duration}" />
-							<Button text="Edit" />
 							<Button
-								press="onPressDelete"
-								text="Delete" />
+								icon="sap-icon://edit" />
+							<Button
+								icon="sap-icon://delete"
+								press="onPressDelete"/>
 						</cells>
 					</ColumnListItem>
 				</items>
