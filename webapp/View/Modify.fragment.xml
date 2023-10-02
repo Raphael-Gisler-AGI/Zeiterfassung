@@ -1,58 +1,53 @@
-<core:FragmentDefinition
-		xmlns="sap.m"
-		xmlns:l="sap.ui.layout"
-		xmlns:f="sap.ui.layout.form"
-		xmlns:core="sap.ui.core">
-	<Dialog id="modifyDialog" title="fasdfasdf">
+<core:FragmentDefinition xmlns:cssgrid="sap.ui.layout.cssgrid"
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog id="modifyDialog" title="Title">
 		<beginButton>
-			<Button text="OK" type="Emphasized" press="handleDialogOkButton"/>
+			<Button text="OK" type="Emphasized" press="handleDialogOkButton" />
 		</beginButton>
 		<endButton>
-			<Button text="Cancel" press="handleDialogCancelButton"/>
+			<Button text="Cancel" press="handleDialogCancelButton" />
 		</endButton>
 		<l:VerticalLayout
-				class="sapUiContentPadding"
-				width="100%">
+			class="sapUiContentPadding"
+			width="100%">
 			<f:SimpleForm
-					id="appointmentCreateForm"
-					editable="true"
-					layout="ResponsiveGridLayout"
-					singleContainerFullSize="false">
-					<Label text="Description" labelFor="appDescription"/>
-					<TextArea id="appDescription"/>
-					<Label text="From" labelFor="startDate"/>
-				<DateTimePicker
-						id="DTPStartDate"
-						required="true"
-						visible="{= !${allDay>/allDay}}"
-						change="handleDateTimePickerChange"/>
-				<DatePicker
-						id="DPStartDate"
-						required="true"
-						visible="{= ${allDay>/allDay}}"
-						change="handleDatePickerChange"/>
-				<Label text="To" labelFor="endDate"/>
-				<DateTimePicker
-						id="DTPEndDate"
-						required="true"
-						visible="{= !${allDay>/allDay}}"
-						change="handleDateTimePickerChange"/>
-				<DatePicker
-						id="DPEndDate"
-						required="true"
-						visible="{= ${allDay>/allDay}}"
-						change="handleDatePickerChange"/>
-				<CheckBox
-						id="allDay"
-						text="All-day"
-						selected="{allDay>/allDay}"
-						select="handleCheckBoxSelect"/>
-				<Label text="Type" labelFor="appType"/>
+				id="appointmentCreateForm"
+				editable="true"
+				layout="ResponsiveGridLayout"
+				singleContainerFullSize="false">
+				<Label text="Description" labelFor="appDescription" />
+				<TextArea id="appDescription" />
+				<Label text="Category" labelFor="category" />
 				<Select
-						id="appType"
-						items="{/types}">
-					<core:Item key="{type}" text="{type}" />
+					id="category"
+					items="{categories>/}">
+					<core:Item key="{type}" text="{categories>Name}" />
 				</Select>
+				<Label text="Day" labelFor="startDate" />
+				<DatePicker
+					required="true"
+					visible="{= ${allDay>/allDay}}"
+					change="handleDatePickerChange" />
+				<Label />
+				<VBox>
+					<Label text="Start Time" labelFor="startTime" />
+					<TimePickerSliders
+						visible="{= !${allDay>/allDay}}"
+						change="handleDateTimePickerChange"
+						displayFormat="hh:mm"
+						height="200px" />
+				</VBox>
+				<VBox>
+					<Label text="End Time" labelFor="endTime" />
+					<TimePickerSliders
+						visible="{= ${allDay>/allDay}}"
+						change="handleDatePickerChange"
+						displayFormat="hh:mm"
+						height="200px" />
+				</VBox>
 			</f:SimpleForm>
 		</l:VerticalLayout>
 	</Dialog>

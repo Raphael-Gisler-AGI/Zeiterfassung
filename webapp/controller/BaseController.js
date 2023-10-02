@@ -35,6 +35,17 @@ sap.ui.define(
         categories: function () {
           return this.getOwnerComponent().getModel("categories");
         },
+        onOpenModify: function (title) {
+          if (!this.pDialog) {
+            this.pDialog = this.loadFragment({
+              name: "sap.ui.agi.zeiterfassung.view.Modify",
+            });
+          }
+          this.pDialog.then(function (oDialog) {
+            oDialog.setTitle(title)
+            oDialog.open();
+          });
+        },
       }
     );
   }

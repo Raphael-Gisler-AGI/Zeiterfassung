@@ -82,10 +82,11 @@
 								formatter: '.formatter.categoryText'
 							}"/>
 							<Button
-								icon="sap-icon://edit" />
+								icon="sap-icon://edit"
+								press="onPressEdit" />
 							<Button
 								icon="sap-icon://delete"
-								press="onPressDelete"/>
+								press="onPressDelete" />
 						</cells>
 					</ColumnListItem>
 				</items>

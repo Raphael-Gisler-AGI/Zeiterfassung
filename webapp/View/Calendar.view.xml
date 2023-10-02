@@ -15,10 +15,6 @@
 			enableAppointmentsResize="true"
 			startDate="{path: '/startDate'}"
 			appointments="{entries>/}">
-			<actions>
-				<Button id="addNewAppointment" text="Create" press="handleAppointmentCreate"
-					tooltip="Add new appointment" />
-			</actions>
 			<views>
 				<SinglePlanningCalendarDayView key="DayView" title="Day" />
 				<SinglePlanningCalendarWeekView key="WeekView" title="Week" />

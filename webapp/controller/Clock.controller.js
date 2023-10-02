@@ -10,10 +10,19 @@ sap.ui.define(
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Clock", {
-      formatter: categories,
       onInit: function () {
         this.convertToDate();
         this.setDefaultTimer();
+        if (!Storage.get("time")) {
+          return;
+        }
+        const time = Math.round(
+          (new Date() - new Date(Storage.get("time"))) / 1000
+        );
+        this.getTimer().setProperty("/time", time);
+        this.getTimer().setProperty("/timeDisplay", this.formatDate(time));
+        this.getTimer().setProperty("/active", true);
+        this.runTimer();
       },
       setDefaultTimer: function () {
         this.getView().setModel(
@@ -45,12 +54,11 @@ sap.ui.define(
       },
       onPressActivate: function () {
         const timer = this.getView().getModel("timer");
-        timer.setProperty("/active", !timer.getProperty("/active"));
-        if (timer.getProperty("/active")) {
+        if (!timer.getProperty("/active")) {
+          timer.setProperty("/active", true);
           Storage.put("time", new Date());
           this.runTimer();
         } else {
-          clearInterval(this.timer);
           this.onSave();
         }
       },
@@ -62,15 +70,22 @@ sap.ui.define(
       },
       onSave: async function () {
         let errorMessage = "";
+        const timer = this.getTimer();
+        if (!timer.getProperty("/category")) {
+          errorMessage = "Please select a category";
+        }
+        if (!timer.getProperty("/description")) {
+          errorMessage = "Please add a description";
+        }
         if (errorMessage != "") {
           MessageToast.show(errorMessage);
           return;
         }
-        const timer = this.getTimer();
+        timer.setProperty("/active", false);
         const startTime = new Date(Storage.get("time"));
         const endTime = new Date();
         const duration = this.formatDate(
-          Math.abs((endTime - startTime) / 1000)
+          Math.round((endTime - startTime) / 1000)
         );
         const result = {
           Day: startTime.toISOString().split("T")[0],
@@ -83,9 +98,14 @@ sap.ui.define(
         await fetch(
           `http://localhost:3000/createEntry?data=${JSON.stringify(result)}`
         ).then((res) => console.log(res));
+
+        clearInterval(this.timer);
+        Storage.remove("time");
         this.setDefaultTimer();
       },
-      
+      onPressCreate: function () {
+        this.onOpenModify("Create Entry");
+      },
     });
   }
 );
