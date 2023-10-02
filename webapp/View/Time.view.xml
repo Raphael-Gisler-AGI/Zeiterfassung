@@ -63,16 +63,17 @@
 					</OverflowToolbar>
 				</headerToolbar>
 				<columns>
-					<Column
-						width="12em">
+					<Column>
 						<Text text="Description" />
 					</Column>
-					<Column
-						demandPopin="true">
+					<Column>
 						<Text text="Time" />
 					</Column>
 					<Column>
 						<Text text="Duration" />
+					</Column>
+					<Column>
+						<Text text="Category" />
 					</Column>
 					<Column
 						width="80px"
@@ -105,6 +106,10 @@
 							</HBox>
 							<Text
 								text="{entries>Duration}" />
+							<Text text="{
+								path: 'entries>Category',
+								formatter: '.formatter.categoryText'
+							}"/>
 							<Button
 								icon="sap-icon://edit" />
 							<Button

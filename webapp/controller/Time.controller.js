@@ -4,14 +4,18 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/ui/util/Storage",
+    "../model/categories",
   ],
-  function (BaseController, JSONModel, MessageToast, Storage) {
+  function (BaseController, JSONModel, MessageToast, Storage, categories) {
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Clock", {
+      formatter: categories,
       onInit: function () {
         this.convertToDate();
-        console.log(this.categories().getData());
+        this.setDefaultTimer();
+      },
+      setDefaultTimer: function () {
         this.getView().setModel(
           new JSONModel({
             description: "",
@@ -73,7 +77,7 @@ sap.ui.define(
         await fetch(
           `http://localhost:3000/createEntry?data=${JSON.stringify(result)}`
         ).then((res) => console.log(res));
-        this.onInit();
+        this.setDefaultTimer();
       },
       onPressDelete: function (oEvent) {
         const oItem = oEvent.getSource();
