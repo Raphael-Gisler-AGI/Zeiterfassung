@@ -15,8 +15,7 @@ sap.ui.define(
           oRouter.navTo("calendar");
         },
         convertToDate: function () {
-          this.getOwnerComponent()
-            .getModel("entries")
+          this.entries()
             .getData()
             .forEach((entry) => {
               entry.StartTime = new Date(entry.StartTime);
@@ -31,11 +30,11 @@ sap.ui.define(
           );
         },
         entries: function () {
-          return this.getOwnerComponent().getModel("entries")
+          return this.getOwnerComponent().getModel("entries");
         },
         categories: function () {
-          return this.getOwnerComponent().getModel("categories")
-        }
+          return this.getOwnerComponent().getModel("categories");
+        },
       }
     );
   }

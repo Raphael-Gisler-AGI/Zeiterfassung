@@ -30,15 +30,19 @@ sap.ui.define(
       getTimer: function () {
         return this.getView().getModel("timer");
       },
+      formatDate: (date) => {
+        return new Date(date * 1000)
+          .toISOString()
+          .substring(11, 19)
+
+      },
       runTimer: function () {
         const timer = this.getView().getModel("timer");
         this.timer = setInterval(() => {
           timer.setProperty("/time", timer.getProperty("/time") + 1);
           timer.setProperty(
             "/timeDisplay",
-            new Date(timer.getProperty("/time") * 1000)
-              .toISOString()
-              .substring(11, 19)
+            this.formatDate(timer.getProperty("/time"))
           );
         }, 1000);
       },
@@ -67,10 +71,13 @@ sap.ui.define(
         }
         const timer = this.getTimer();
         const startTime = new Date(Storage.get("time"));
+        const endTime = new Date();
+        const duration = this.formatDate(Math.abs((endTime - startTime) / 1000));
         const result = {
           Day: startTime.toISOString().split("T")[0],
           StartTime: startTime,
-          EndTime: new Date(),
+          EndTime: endTime,
+          Duration: duration,
           Description: timer.getProperty("/description"),
           Category: timer.getProperty("/category"),
         };
@@ -79,10 +86,10 @@ sap.ui.define(
         ).then((res) => console.log(res));
         this.setDefaultTimer();
       },
-      onPressDelete: function (oEvent) {
+      onPressDelete: async function (oEvent) {
         const oItem = oEvent.getSource();
         const id = oItem.getBindingContext("entries").getProperty("id");
-        this.deleteTime(id);
+        await this.deleteTime(id);
       },
     });
   }
