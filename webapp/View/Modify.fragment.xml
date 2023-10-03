@@ -1,4 +1,4 @@
-<core:FragmentDefinition xmlns:cssgrid="sap.ui.layout.cssgrid"
+<core:FragmentDefinition
 	xmlns="sap.m"
 	xmlns:l="sap.ui.layout"
 	xmlns:f="sap.ui.layout.form"
@@ -8,7 +8,7 @@
 			<Button text="OK" type="Emphasized" press="handleDialogOkButton" />
 		</beginButton>
 		<endButton>
-			<Button text="Cancel" press="handleDialogCancelButton" />
+			<Button text="Cancel" press="onCloseModify" />
 		</endButton>
 		<l:VerticalLayout
 			class="sapUiContentPadding"

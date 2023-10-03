@@ -42,9 +42,12 @@ sap.ui.define(
             });
           }
           this.pDialog.then(function (oDialog) {
-            oDialog.setTitle(title)
+            oDialog.setTitle(title);
             oDialog.open();
           });
+        },
+        onCloseModify: function () {
+          this.byId("modifyDialog").close();
         },
       }
     );
