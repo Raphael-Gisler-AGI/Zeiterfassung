@@ -38,6 +38,7 @@
 						visible="{= !${allDay>/allDay}}"
 						change="handleDateTimePickerChange"
 						displayFormat="hh:mm"
+						minutesStep="15"
 						height="200px" />
 				</VBox>
 				<VBox>

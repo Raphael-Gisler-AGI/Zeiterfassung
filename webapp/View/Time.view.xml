@@ -11,6 +11,7 @@
 				path: 'entries>/',
 				sorter: {
 					path: 'Day',
+					descending: true,
 					group: true
 					}
 				}">

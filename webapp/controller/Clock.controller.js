@@ -104,6 +104,12 @@ sap.ui.define(
         this.setDefaultTimer();
       },
       onPressCreate: function () {
+        this.getView().setModel(
+          new JSONModel({
+            description: "heheheeha",
+          }),
+          "modify"
+        );
         this.onOpenModify("Create Entry");
       },
     });
