@@ -18,41 +18,53 @@
 				editable="true"
 				layout="ResponsiveGridLayout"
 				singleContainerFullSize="false">
+				<Label
+					visible="false"
+					id="modifyId"/>
 				<Label text="Description" labelFor="appDescription" />
 				<TextArea
 					required="true"
-					value="{modify>/Description}" />
+					id="modifyDescription"/>
 				<Label text="Category" labelFor="category" />
 				<ComboBox
+					id="modifyCategory"
 					selectionChange="onChangeCategoryModify"
 					items="{categories>/}">
 					<core:Item
 						key="{categories>id}"
 						text="{categories>Name}" />
 				</ComboBox>
-				<Label text="{= ${modify>/Type} > 1 ? 'From' : 'Day'}" labelFor="startDate" />
+				<Label
+					text="{= ${type>/Type} > 1 ? 'From' : 'Day'}"
+					labelFor="startDate" />
 				<DatePicker
-					dateValue="{modify>/Day}"
-					required="true"
-					change="handleDatePickerChange" />
+				 	valueFormat="dd.MM.YYYY"
+					id="modifyStartDate"
+					required="true" />
 				<Label />
-				<VBox visible="{= ${modify>/Type} > 1 ? true : false}">
+				<VBox visible="{= ${type>/Type} > 1 ? true : false}">
 					<Label text="Until"/>
 					<DatePicker />
 				</VBox>
 				<Label />
-				<HBox visible="{= ${modify>/Type} > 1 ? false : true}" justifyContent="SpaceBetween">
+				<HBox visible="{= ${type>/Type} > 1 ? false : true}" justifyContent="SpaceBetween">
 					<VBox>
 						<Label text="Start Time" labelFor="startTime" />
 						<TimePicker
-							value="{modify>/StartDate}"
-							valueFormat="hh:mm"
-							displayFormat="hh:mm" />
+							id="modifyStartTime"
+							minutesStep="{= ${type>/Type} > 0 ? 1 : 15}"
+							support2400="true"
+							valueFormat="HH:mm"
+							displayFormat="HH:mm" />
 					</VBox>
 					<VBox>
 						<Label text="End Time" labelFor="endTime" />
 						<TimePicker
-							displayFormat="hh:mm" />
+							id="modifyEndTime"
+							minutesStep="{= ${type>/Type} > 0 ? 1 : 15}"
+							support2400="true"
+							valueFormat="HH:mm"
+							displayFormat="HH:mm"/>
 					</VBox>
 				</HBox>
 			</f:SimpleForm>

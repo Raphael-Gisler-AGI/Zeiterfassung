@@ -97,20 +97,16 @@ sap.ui.define(
         this.setDefaultTimer();
       },
       onPressCreate: function () {
-        this.getView().setModel(
-          new JSONModel({
-            create: true,
-            Description: "",
-            Category: 0,
-            Type: 0,
-            Day: new Date(),
-            StartTime: "00:00",
-            EndTime: "10:00",
-          }),
-          "modify"
-        );
-        console.log(this.getView().getModel("modify").getData());
-        this.onOpenModify("Create Entry");
+        this.onOpenModify("Create Entry", () => {
+          this.byId("modifyId").setText("");
+          this.byId("modifyDescription").setValue(
+            this.default().getProperty("/Description")
+          );
+          this.byId("modifyCategory").setSelectedKey(
+            this.default().getProperty("/Category")
+          );
+          this.byId("modifyStartDate").setDateValue(new Date());
+        });
       },
     });
   }

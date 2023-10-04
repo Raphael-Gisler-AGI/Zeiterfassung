@@ -1,43 +1,28 @@
 {
   "User": {
     "Pensum": "50%",
-    "Default": { "Description": "hehehe", "Category": "2" },
+    "Default": {
+      "Description": "Working hard or hardly working",
+      "Category": "3"
+    },
     "Entries": [
       {
-        "Day": "1970-01-01",
-        "StartTime": "1970-01-01T00:00:00.000Z",
-        "EndTime": "2023-10-02T14:16:58.800Z",
-        "Duration": "14:16:59",
-        "Description": "testset",
-        "Category": "1",
-        "id": "6024870b0650952bece2b8203ccf9163"
-      },
-      {
-        "Day": "1970-01-01",
-        "StartTime": "1970-01-01T00:00:00.000Z",
-        "EndTime": "2023-10-02T14:18:23.632Z",
-        "Duration": "14:18:24",
-        "Description": "asdfasdf",
-        "Category": "1",
-        "id": "7e77dd1d16a91516ae6c4dc8fe634437"
-      },
-      {
-        "Day": "2023-10-02",
-        "StartTime": "2023-10-02T14:45:33.359Z",
-        "EndTime": "2023-10-02T14:45:57.773Z",
-        "Duration": "00:00:24",
-        "Description": "I know this works",
+        "Day": "10.04.2023",
+        "StartTime": "2023-04-10T04:00:41.815Z",
+        "EndTime": "2023-04-10T11:00:41.815Z",
+        "Duration": 0,
+        "Description": "Working hard or hardly workinggggg",
         "Category": "3",
-        "id": "73b8cb02dddc52c9049241a2355f5d0c"
+        "id": "03d492da558d59caa64030d11b71c6d2"
       },
       {
-        "Day": "2023-10-04",
-        "StartTime": "2023-10-04T07:43:51.055Z",
-        "EndTime": "2023-10-04T07:44:06.569Z",
-        "Duration": "00:00:16",
-        "Description": "Testing",
-        "Category": "1",
-        "id": "78c333f87fe45483903e015e4871ff9e"
+        "Day": "05.10.2023",
+        "StartTime": "2023-10-05T04:15:20.191Z",
+        "EndTime": "2023-10-05T16:04:20.191Z",
+        "Duration": 0,
+        "Description": "Working hard or hardly working",
+        "Category": "3",
+        "id": "139d82835f04d9ca865adf78a3eefa18"
       }
     ]
   }

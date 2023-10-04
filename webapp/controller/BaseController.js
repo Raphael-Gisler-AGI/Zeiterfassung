@@ -33,6 +33,10 @@ sap.ui.define(
         default: function () {
           return this.getOwnerComponent().getModel("default");
         },
+        // Refresh Global Models
+        refreshEntries: function () {
+          this.entries().loadData;
+        },
         // Create Edit Delete
         baseUrl: "http://localhost:3000/",
         createEntry: async function (data) {
@@ -71,52 +75,69 @@ sap.ui.define(
               entry.EndTime = new Date(entry.EndTime);
             });
         },
-        onOpenModify: function (title) {
+        onOpenModify: function (title, setValues) {
+          this.getView().setModel(
+            new JSONModel({
+              Type: 0,
+            }),
+            "type"
+          );
           if (!this.pDialog) {
             this.pDialog = this.loadFragment({
               name: "sap.ui.agi.zeiterfassung.view.Modify",
             });
           }
-          this.pDialog.then(function (oDialog) {
-            oDialog.setTitle(title);
-            oDialog.open();
-          });
+          this.pDialog
+            .then(function (oDialog) {
+              oDialog.setTitle(title);
+              oDialog.open();
+            })
+            .then(setValues);
         },
         onChangeCategoryModify: function (oEvent) {
           const id = oEvent.getSource().getSelectedKey();
           const type = this.categories()
             .getData()
             .find((category) => category.id == id).Type;
-          this.getView()
-            .getModel("modify")
-            .setProperty("/category", oEvent.getSource().getSelectedKey());
-          this.getView().getModel("modify").setProperty("/Type", type);
+          this.getView().getModel("type").setProperty("/Type", type);
+        },
+        timeToDate: function (modifyTime, date) {
+          const time = new Date();
+          time.setFullYear(date.split(".")[2]);
+          time.setMonth(date.split(".")[1] - 1);
+          time.setDate(date.split(".")[0]);
+          time.setHours(modifyTime.getHours());
+          time.setMinutes(modifyTime.getMinutes());
+          return time;
         },
         onOkModify: async function () {
-          const modify = this.getView().getModel("modify");
-          modify.setProperty(
-            "/Duration",
-            this.calcDuration(
-              new Date(modify.getProperty("/StartTime")),
-              new Date(modify.getProperty("/EndTime"))
-            )
+          const date = this.byId("modifyStartDate").getValue();
+          const modifyStartTime = new Date(
+            this.byId("modifyStartTime").getDateValue()
           );
-          const day = new Date(modify.getProperty("/Day"))
-            .toISOString()
-            .split("T")[0];
-          console.log(day);
-          modify.setProperty("/Day", day);
-          console.log("test");
-          if (modify.create) {
-            await this.createEntry(modify.getData());
+          const modifyEndTime = new Date(
+            this.byId("modifyEndTime").getDateValue()
+          );
+          const startTime = this.timeToDate(modifyStartTime, date);
+          const endTime = this.timeToDate(modifyEndTime, date);
+          const result = {
+            Day: this.byId("modifyStartDate").getValue(),
+            StartTime: startTime,
+            EndTime: endTime,
+            Duration: 0,
+            Description: this.byId("modifyDescription").getValue(),
+            Category: this.byId("modifyCategory").getSelectedItem().getKey(),
+          };
+          const id = this.byId("modifyId").getText();
+          if (id == "") {
+            await this.createEntry(result);
           } else {
-            await this.editEntry(modify.getData());
+            result["id"] = id;
+            await this.editEntry(result);
           }
           this.onCloseModify();
         },
         onCloseModify: function () {
-          this.getView().getModel("modify").setData(null);
-          this.getView().getModel("modify").refresh();
           this.byId("modifyDialog").close();
         },
         formatDate: function (date) {

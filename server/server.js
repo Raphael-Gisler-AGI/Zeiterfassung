@@ -28,9 +28,6 @@ app.get("/createEntry", (req, res) => {
 
 app.get("/editEntry", (req, res) => {
   const entry = JSON.parse(req.query.data);
-  console.log(entry);
-  delete entry.create;
-  console.log(entry);
   findDelete(entry.id);
   file.User.Entries.push(entry);
   res.sendStatus(save());
