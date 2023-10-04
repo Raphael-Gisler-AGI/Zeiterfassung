@@ -39,9 +39,7 @@ sap.ui.define(
       getTimer: function () {
         return this.getView().getModel("timer");
       },
-      formatDate: (date) => {
-        return new Date(date * 1000).toISOString().substring(11, 19);
-      },
+
       runTimer: function () {
         const timer = this.getView().getModel("timer");
         this.timer = setInterval(() => {
@@ -84,9 +82,7 @@ sap.ui.define(
         timer.setProperty("/active", false);
         const startTime = new Date(Storage.get("time"));
         const endTime = new Date();
-        const duration = this.formatDate(
-          Math.round((endTime - startTime) / 1000)
-        );
+        const duration = this.calcDuration(startTime, endTime);
         const result = {
           Day: startTime.toISOString().split("T")[0],
           StartTime: startTime,
@@ -95,10 +91,7 @@ sap.ui.define(
           Description: timer.getProperty("/description"),
           Category: timer.getProperty("/category"),
         };
-        await fetch(
-          `http://localhost:3000/createEntry?data=${JSON.stringify(result)}`
-        ).then((res) => console.log(res));
-
+        this.createEntry(result);
         clearInterval(this.timer);
         Storage.remove("time");
         this.setDefaultTimer();
@@ -106,10 +99,17 @@ sap.ui.define(
       onPressCreate: function () {
         this.getView().setModel(
           new JSONModel({
-            description: "heheheeha",
+            create: true,
+            Description: "",
+            Category: 0,
+            Type: 0,
+            Day: new Date(),
+            StartTime: "00:00",
+            EndTime: "10:00",
           }),
           "modify"
         );
+        console.log(this.getView().getModel("modify").getData());
         this.onOpenModify("Create Entry");
       },
     });

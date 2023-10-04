@@ -47,6 +47,10 @@
       "categories": {
         "type": "sap.ui.model.json.JSONModel",
         "uri": "http://localhost:3000/getCategories"
+      },
+      "default": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "http://localhost:3000/getDefault"
       }
     },
     "routing": {

@@ -1,9 +1,19 @@
-<mvc:View xmlns:cssgrid="sap.ui.layout.cssgrid"
+<mvc:View
 	controllerName="sap.ui.agi.zeiterfassung.controller.App"
+	xmlns:grid="sap.ui.layout.cssgrid"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">
-	<cssgrid:CSSGrid gridTemplateRows="auto 1fr">
+	<grid:CSSGrid
+		gridAutoFlow="Column"
+		gridTemplateRows="auto 1fr"
+		gridTemplateColumns="1fr 250px">
 		<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
 		<App id="app" />
-	</cssgrid:CSSGrid>
+		<VBox class="sapUiSmallMarginBeginEnd">
+			<layoutData>
+				<grid:GridItemLayoutData gridRow="1 / 3" />
+			</layoutData>
+			<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Default" />
+		</VBox>
+	</grid:CSSGrid>
 </mvc:View>

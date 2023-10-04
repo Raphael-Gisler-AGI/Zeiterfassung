@@ -5,7 +5,7 @@
 	xmlns:core="sap.ui.core">
 	<Dialog id="modifyDialog" title="Title">
 		<beginButton>
-			<Button text="OK" type="Emphasized" press="handleDialogOkButton" />
+			<Button text="OK" type="Emphasized" press="onOkModify" />
 		</beginButton>
 		<endButton>
 			<Button text="Cancel" press="onCloseModify" />
@@ -19,36 +19,42 @@
 				layout="ResponsiveGridLayout"
 				singleContainerFullSize="false">
 				<Label text="Description" labelFor="appDescription" />
-				<TextArea id="appDescription" />
-				<Label text="Category" labelFor="category" />
-				<Select
-					id="category"
-					items="{categories>/}">
-					<core:Item key="{type}" text="{categories>Name}" />
-				</Select>
-				<Label text="Day" labelFor="startDate" />
-				<DatePicker
+				<TextArea
 					required="true"
-					visible="{= ${allDay>/allDay}}"
+					value="{modify>/Description}" />
+				<Label text="Category" labelFor="category" />
+				<ComboBox
+					selectionChange="onChangeCategoryModify"
+					items="{categories>/}">
+					<core:Item
+						key="{categories>id}"
+						text="{categories>Name}" />
+				</ComboBox>
+				<Label text="{= ${modify>/Type} > 1 ? 'From' : 'Day'}" labelFor="startDate" />
+				<DatePicker
+					dateValue="{modify>/Day}"
+					required="true"
 					change="handleDatePickerChange" />
 				<Label />
-				<VBox>
-					<Label text="Start Time" labelFor="startTime" />
-					<TimePickerSliders
-						visible="{= !${allDay>/allDay}}"
-						change="handleDateTimePickerChange"
-						displayFormat="hh:mm"
-						minutesStep="15"
-						height="200px" />
+				<VBox visible="{= ${modify>/Type} > 1 ? true : false}">
+					<Label text="Until"/>
+					<DatePicker />
 				</VBox>
-				<VBox>
-					<Label text="End Time" labelFor="endTime" />
-					<TimePickerSliders
-						visible="{= ${allDay>/allDay}}"
-						change="handleDatePickerChange"
-						displayFormat="hh:mm"
-						height="200px" />
-				</VBox>
+				<Label />
+				<HBox visible="{= ${modify>/Type} > 1 ? false : true}" justifyContent="SpaceBetween">
+					<VBox>
+						<Label text="Start Time" labelFor="startTime" />
+						<TimePicker
+							value="{modify>/StartDate}"
+							valueFormat="hh:mm"
+							displayFormat="hh:mm" />
+					</VBox>
+					<VBox>
+						<Label text="End Time" labelFor="endTime" />
+						<TimePicker
+							displayFormat="hh:mm" />
+					</VBox>
+				</HBox>
 			</f:SimpleForm>
 		</l:VerticalLayout>
 	</Dialog>
