@@ -97,16 +97,11 @@ sap.ui.define(
         this.setDefaultTimer();
       },
       onPressCreate: function () {
-        this.onOpenModify("Create Entry", () => {
-          this.byId("modifyId").setText("");
-          this.byId("modifyDescription").setValue(
-            this.default().getProperty("/Description")
-          );
-          this.byId("modifyCategory").setSelectedKey(
-            this.default().getProperty("/Category")
-          );
-          this.byId("modifyStartDate").setDateValue(new Date());
-        });
+        this.onOpenModify(
+          "Create Entry", () => {
+            this.setModifyCreateValues(new Date(), new Date(), new Date())
+          }
+        );
       },
     });
   }

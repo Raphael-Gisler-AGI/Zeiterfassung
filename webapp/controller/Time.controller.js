@@ -14,21 +14,13 @@ sap.ui.define(
         const oItem = oEvent.getSource();
         const entry = oItem.getBindingContext("entries");
         this.onOpenModify("Edit Entry", () => {
-          this.byId("modifyId").setText(entry.getProperty("id"));
-          this.byId("modifyDescription").setValue(
-            entry.getProperty("Description")
-          );
-          this.byId("modifyCategory").setSelectedKey(
-            entry.getProperty("Category")
-          );
-          this.byId("modifyStartDate").setDateValue(
-            new Date(entry.getProperty("Day"))
-          );
-          this.byId("modifyStartTime").setDateValue(
-            new Date(entry.getProperty("StartTime"))
-          );
-          this.byId("modifyEndTime").setDateValue(
-            new Date(entry.getProperty("EndTime"))
+          this.setModifyEditValues(
+            entry.getProperty("id"),
+            entry.getProperty("Description"),
+            entry.getProperty("Category"),
+            entry.getProperty("Day"),
+            entry.getProperty("StartTime"),
+            entry.getProperty("EndTime")
           );
         });
       },

@@ -6,14 +6,6 @@ sap.ui.define(
     return Controller.extend(
       "sap.ui.agi.zeiterfassung.controller.BaseController",
       {
-        onInit: function () {
-          this.getOwnerComponent().setModel(
-            new JSONModel({
-              Description: "",
-            }),
-            "entry"
-          );
-        },
         // Navigation
         onNavigateTime: function () {
           const oRouter = this.getOwnerComponent().getRouter();
@@ -32,10 +24,6 @@ sap.ui.define(
         },
         default: function () {
           return this.getOwnerComponent().getModel("default");
-        },
-        // Refresh Global Models
-        refreshEntries: function () {
-          this.entries().loadData;
         },
         // Create Edit Delete
         baseUrl: "http://localhost:3000/",
@@ -145,6 +133,33 @@ sap.ui.define(
         },
         calcDuration: function (startTime, endTime) {
           return this.formatDate(Math.round((endTime - startTime) / 1000));
+        },
+        setModifyCreateValues: function (date, startTime, endTime) {
+          this.byId("modifyId").setText("");
+          this.byId("modifyDescription").setValue(
+            this.default().getProperty("/Description")
+          );
+          this.byId("modifyCategory").setSelectedKey(
+            this.default().getProperty("/Category")
+          );
+          this.byId("modifyStartDate").setDateValue(date);
+          this.byId("modifyStartTime").setDateValue(startTime);
+          this.byId("modifyEndTime").setDateValue(endTime);
+        },
+        setModifyEditValues: function (
+          id,
+          description,
+          category,
+          day,
+          startTime,
+          endTime
+        ) {
+          this.byId("modifyId").setText(id);
+          this.byId("modifyDescription").setValue(description);
+          this.byId("modifyCategory").setSelectedKey(category);
+          this.byId("modifyStartDate").setDateValue(day);
+          this.byId("modifyStartTime").setDateValue(startTime);
+          this.byId("modifyEndTime").setDateValue(endTime);
         },
       }
     );

@@ -7,12 +7,11 @@
 		<SinglePlanningCalendar
 			id="SPC1"
 			title="My Calendar"
-			appointmentSelect="handleAppointmentSelect"
-			headerDateSelect="handleHeaderDateSelect"
-			startDateChange="handleStartDateChange"
 			enableAppointmentsDragAndDrop="true"
 			enableAppointmentsCreate="true"
 			enableAppointmentsResize="true"
+			appointmentCreate="handleCreate"
+			appointmentDrop="handleDrop"
 			startDate="{path: '/startDate'}"
 			appointments="{entries>/}">
 			<views>
@@ -23,7 +22,10 @@
 			<appointments>
 				<unified:CalendarAppointment
 					title="{entries>Description}"
-					text="{text}"
+					text="{
+						path: 'entries>Category',
+						formatter: '.formatter.categoryText'
+					}"
 					type="{type}"
 					icon="{icon}"
 					startDate="{entries>StartTime}"

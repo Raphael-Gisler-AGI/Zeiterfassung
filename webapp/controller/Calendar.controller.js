@@ -1,32 +1,39 @@
-sap.ui.define(
-  [
-    "sap/ui/core/library",
-    "sap/ui/core/Fragment",
-    "./BaseController",
-    "sap/ui/core/format/DateFormat",
-    "sap/ui/model/json/JSONModel",
-    "sap/ui/unified/library",
-    "sap/m/MessageToast",
-    "sap/ui/core/date/UI5Date",
-  ],
-  function (
-    coreLibrary,
-    Fragment,
-    Controller,
-    DateFormat,
-    JSONModel,
-    unifiedLibrary,
-    MessageToast,
-    UI5Date
-  ) {
-    "use strict";
+sap.ui.define(["./BaseController", "../model/categories"], function (
+  Controller,
+  categories
+) {
+  "use strict";
 
-    return Controller.extend("sap.ui.agi.zeiterfassung.controller.Time", {
-      onInit: function () {
-        this.convertToDate();
-        this.entries().refresh();
-        console.log(this.entries().getData());
-      },
-   });
-  }
-);
+  return Controller.extend("sap.ui.agi.zeiterfassung.controller.Time", {
+    formatter: categories,
+    onInit: function () {
+      this.convertToDate();
+      this.entries().refresh();
+      console.log(this.entries().getData());
+    },
+    handleCreate: function (oEvent) {
+      const startTime = oEvent.getParameter("startDate");
+      const endTime = oEvent.getParameter("endDate");
+      this.onOpenModify("Create Entry", () => {
+        this.setModifyCreateValues(startTime, startTime, endTime);
+      });
+    },
+    handleDrop: function (oEvent) {
+      const entry = oEvent
+        .getParameter("appointment")
+        .getBindingContext("entries");
+      const startTime = oEvent.getParameter("startDate");
+      const endTime = oEvent.getParameter("endDate");
+      this.onOpenModify("Edit Entry", () => {
+        this.setModifyEditValues(
+          entry.getProperty("id"),
+          entry.getProperty("Description"),
+          entry.getProperty("Category"),
+          startTime,
+          startTime,
+          endTime
+        );
+      });
+    },
+  });
+});
