@@ -7,9 +7,8 @@ sap.ui.define(["./BaseController", "../model/categories"], function (
   return Controller.extend("sap.ui.agi.zeiterfassung.controller.Time", {
     formatter: categories,
     onInit: function () {
-      this.convertToDate();
+      this.convertToDate(this.entries().getData());
       this.entries().refresh();
-      console.log(this.entries().getData());
     },
     handleCreate: function (oEvent) {
       const startTime = oEvent.getParameter("startDate");

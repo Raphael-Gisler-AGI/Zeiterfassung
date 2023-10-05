@@ -10,6 +10,9 @@ sap.ui.define(
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Time", {
       formatter: categories,
+      onPressContinue: function (oEvent) {
+        
+      },
       onPressEdit: function (oEvent) {
         const oItem = oEvent.getSource();
         const entry = oItem.getBindingContext("entries");

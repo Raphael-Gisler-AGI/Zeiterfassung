@@ -1,1 +1,29 @@
-{"User":{"Pensum":"50%","Default":{"Description":"Working hard or hardly working","Category":"0"},"Entries":[{"Day":"2023.10.05","StartTime":"2023-10-05T06:30:00.000Z","EndTime":"2023-10-05T11:30:00.000Z","Duration":0,"Description":"Working hard or hardly working","Category":"3","id":"f3ec74299a3f2f182365a309ef2da148"}]}}
+{
+  "User": {
+    "Pensum": "50%",
+    "Default": {
+      "Description": "Working hard or hardly working",
+      "Category": "3"
+    },
+    "Entries": [
+      {
+        "Day": "2023.10.05",
+        "StartTime": "2023-10-05T08:00:00.000Z",
+        "EndTime": "2023-10-05T09:45:00.000Z",
+        "Duration": "1:45",
+        "Description": "ffff",
+        "Category": "3",
+        "id": "1724e77c070195d042d7ef16b8768476"
+      },
+      {
+        "Day": "2023.10.05",
+        "StartTime": "2023-10-05T06:30:00.000Z",
+        "EndTime": "2023-10-05T07:30:00.000Z",
+        "Duration": "1:0",
+        "Description": "hehehehaaaaaaaa",
+        "Category": "3",
+        "id": "28e3a6694dc70d1d6bd524dad3fc9820"
+      }
+    ]
+  }
+}

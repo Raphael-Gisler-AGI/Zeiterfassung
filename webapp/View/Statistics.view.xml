@@ -1,0 +1,6 @@
+<mvc:View
+	controllerName=""
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m">
+	<Text text="kdfjlsajflasd"/>
+</mvc:View>

@@ -25,6 +25,10 @@
         <Button
             press="onPressActivate"
             icon="{= ${timer>/active} ? 'sap-icon://stop' : 'sap-icon://play'}" />
+        <Button
+            visible="{= ${timer>/active}}"
+            press="resetTimer"
+            icon="sap-icon://sys-cancel"/>
         <ToolbarSpacer />
         <Button 
             press="onPressCreate"
@@ -38,5 +42,9 @@
             press="onNavigateCalendar"
             tooltip="Navigate to Calendar"
             icon="sap-icon://calendar"/>
+        <Button
+            press="onNavigateStatistics"
+            tooltip="Navigate to Statistics"
+            icon="sap-icon://bar-chart"/>
     </OverflowToolbar>
 </mvc:View>

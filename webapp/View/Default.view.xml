@@ -13,7 +13,7 @@
 		<TextArea
 			value="{default>/Description}"
 			placeholder="Default Description..."
-			cols="4" />
+			rows="4" />
 		<SelectList
 			items="{categories>/}"
 			selectionChange="onChangeCategory"

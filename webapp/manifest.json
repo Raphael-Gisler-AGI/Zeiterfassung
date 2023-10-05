@@ -77,6 +77,11 @@
           "pattern": "calendar",
           "name": "calendar",
           "target": "calendar"
+        },
+        {
+          "pattern": "statistics",
+          "name": "statistics",
+          "target": "statistics"
         }
       ],
       "targets": {
@@ -87,6 +92,10 @@
         "calendar": {
           "id": "calendar",
           "name": "Calendar"
+        },
+        "statistics": {
+          "id": "statistics",
+          "name": "Statistics"
         }
       }
     }

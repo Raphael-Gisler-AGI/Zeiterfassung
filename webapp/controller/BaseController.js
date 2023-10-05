@@ -15,6 +15,18 @@ sap.ui.define(
           const oRouter = this.getOwnerComponent().getRouter();
           oRouter.navTo("calendar");
         },
+        onNavigateStatistics: function () {
+          const oRouter = this.getOwnerComponent().getRouter();
+          oRouter.navTo("statistics")
+        },
+        // Refresh Global Models
+        refreshEntries: async function () {
+          const data = await fetch(`${this.baseUrl}getEntries`).then((res) => {
+            return res.json();
+          });
+          this.convertToDate(data);
+          this.entries().setData(data);
+        },
         // Get Global Models
         entries: function () {
           return this.getOwnerComponent().getModel("entries");
@@ -30,23 +42,27 @@ sap.ui.define(
         createEntry: async function (data) {
           return await fetch(
             `${this.baseUrl}createEntry?data=${JSON.stringify(data)}`
-          ).then((res) => {
-            return res;
-          });
+          )
+            .then((res) => {
+              return res.status;
+            })
+            .then(this.refreshEntries());
         },
         editEntry: async function (data) {
           return await fetch(
             `${this.baseUrl}editEntry?data=${JSON.stringify(data)}`
-          ).then((res) => {
-            return res;
-          });
+          )
+            .then((res) => {
+              return res.status;
+            })
+            .then(this.refreshEntries());
         },
         deleteTime: async function (id) {
-          return await fetch(`${this.baseUrl}deleteEntry?id=${id}`).then(
-            (res) => {
-              return res;
-            }
-          );
+          return await fetch(`${this.baseUrl}deleteEntry?id=${id}`)
+            .then((res) => {
+              return res.status;
+            })
+            .then(this.refreshEntries());
         },
         saveDefault: async function (data) {
           return await fetch(
@@ -55,14 +71,11 @@ sap.ui.define(
             return res.status;
           });
         },
-        convertToDate: function () {
-          this.entries()
-            .getData()
-            .forEach((entry) => {
-              entry.StartTime = new Date(entry.StartTime);
-              entry.EndTime = new Date(entry.EndTime);
-            });
-          console.log(this.entries().getData())
+        convertToDate: function (entries) {
+          entries.forEach((entry) => {
+            entry.StartTime = new Date(entry.StartTime);
+            entry.EndTime = new Date(entry.EndTime);
+          });
         },
         onOpenModify: function (title, setValues) {
           this.getView().setModel(
@@ -95,7 +108,10 @@ sap.ui.define(
             day.split(".")[0],
             day.split(".")[1] - 1,
             day.split(".")[2],
-            0,0,0,0
+            0,
+            0,
+            0,
+            0
           );
         },
         timeToDate: function (modifyTime, day) {
@@ -114,11 +130,13 @@ sap.ui.define(
           );
           const startTime = this.timeToDate(modifyStartTime, date);
           const endTime = this.timeToDate(modifyEndTime, date);
+          const duration = new Date(endTime - startTime);
+          duration.setHours(duration.getHours() - 1);
           const result = {
             Day: date,
             StartTime: startTime,
             EndTime: endTime,
-            Duration: 0,
+            Duration: `${duration.getHours()}:${duration.getMinutes()}`,
             Description: this.byId("modifyDescription").getValue(),
             Category: this.byId("modifyCategory").getSelectedItem().getKey(),
           };

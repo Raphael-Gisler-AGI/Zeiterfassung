@@ -3,8 +3,8 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:grid="sap.ui.layout.cssgrid"
 	xmlns="sap.m">
-	<grid:CSSGrid gridGap="50px">
-		<ScrollContainer vertical="true">
+	<grid:CSSGrid>
+		<ScrollContainer class="sapUiMediumMargin" vertical="true">
 			<Table
 				id="entryTable"
 				items="{
@@ -44,6 +44,11 @@
 					<Column
 						width="80px"
 						hAlign="Right">
+						<Text text="Continue" />
+					</Column>
+					<Column
+						width="80px"
+						hAlign="Right">
 						<Text text="Edit" />
 					</Column>
 					<Column
@@ -62,14 +67,14 @@
 									text="{
 										path: 'entries>StartTime',
 										type: 'sap.ui.model.type.Date',
-										formatOptions: {pattern: 'hh:mm:ss'}
+										formatOptions: {pattern: 'hh:mm'}
 									}" />
 								<Text text=" - " />
 								<Text
 									text="{
 								path: 'entries>EndTime',
 								type: 'sap.ui.model.type.Date',
-								formatOptions: {pattern: 'hh:mm:ss'}}" />
+								formatOptions: {pattern: 'hh:mm'}}" />
 							</HBox>
 							<Text
 								text="{entries>Duration}" />
@@ -77,6 +82,9 @@
 								path: 'entries>Category',
 								formatter: '.formatter.categoryText'
 							}"/>
+							<Button
+								icon="sap-icon://play"
+								press="onPressContinue" />
 							<Button
 								icon="sap-icon://edit"
 								press="onPressEdit" />
