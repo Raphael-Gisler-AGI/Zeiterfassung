@@ -38,7 +38,7 @@
 					text="{= ${type>/Type} > 1 ? 'From' : 'Day'}"
 					labelFor="startDate" />
 				<DatePicker
-				 	valueFormat="dd.MM.YYYY"
+				 	valueFormat="YYYY.MM.dd"
 					id="modifyStartDate"
 					required="true" />
 				<Label />

@@ -62,6 +62,7 @@ sap.ui.define(
               entry.StartTime = new Date(entry.StartTime);
               entry.EndTime = new Date(entry.EndTime);
             });
+          console.log(this.entries().getData())
         },
         onOpenModify: function (title, setValues) {
           this.getView().setModel(
@@ -89,11 +90,16 @@ sap.ui.define(
             .find((category) => category.id == id).Type;
           this.getView().getModel("type").setProperty("/Type", type);
         },
-        timeToDate: function (modifyTime, date) {
-          const time = new Date();
-          time.setFullYear(date.split(".")[2]);
-          time.setMonth(date.split(".")[1] - 1);
-          time.setDate(date.split(".")[0]);
+        dayToDate: function (day) {
+          return new Date(
+            day.split(".")[0],
+            day.split(".")[1] - 1,
+            day.split(".")[2],
+            0,0,0,0
+          );
+        },
+        timeToDate: function (modifyTime, day) {
+          const time = this.dayToDate(day);
           time.setHours(modifyTime.getHours());
           time.setMinutes(modifyTime.getMinutes());
           return time;
@@ -109,7 +115,7 @@ sap.ui.define(
           const startTime = this.timeToDate(modifyStartTime, date);
           const endTime = this.timeToDate(modifyEndTime, date);
           const result = {
-            Day: this.byId("modifyStartDate").getValue(),
+            Day: date,
             StartTime: startTime,
             EndTime: endTime,
             Duration: 0,

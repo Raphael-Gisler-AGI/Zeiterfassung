@@ -97,11 +97,9 @@ sap.ui.define(
         this.setDefaultTimer();
       },
       onPressCreate: function () {
-        this.onOpenModify(
-          "Create Entry", () => {
-            this.setModifyCreateValues(new Date(), new Date(), new Date())
-          }
-        );
+        this.onOpenModify("Create Entry", () => {
+          this.setModifyCreateValues(new Date(), new Date(), new Date());
+        });
       },
     });
   }

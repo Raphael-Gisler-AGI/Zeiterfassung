@@ -18,7 +18,7 @@ sap.ui.define(["./BaseController", "../model/categories"], function (
         this.setModifyCreateValues(startTime, startTime, endTime);
       });
     },
-    handleDrop: function (oEvent) {
+    handleChange: function (oEvent) {
       const entry = oEvent
         .getParameter("appointment")
         .getBindingContext("entries");

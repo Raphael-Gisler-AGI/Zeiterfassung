@@ -11,7 +11,8 @@
 			enableAppointmentsCreate="true"
 			enableAppointmentsResize="true"
 			appointmentCreate="handleCreate"
-			appointmentDrop="handleDrop"
+			appointmentDrop="handleChange"
+			appointmentResize="handleChange"
 			startDate="{path: '/startDate'}"
 			appointments="{entries>/}">
 			<views>
