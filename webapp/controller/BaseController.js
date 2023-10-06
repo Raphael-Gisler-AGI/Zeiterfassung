@@ -17,7 +17,7 @@ sap.ui.define(
         },
         onNavigateStatistics: function () {
           const oRouter = this.getOwnerComponent().getRouter();
-          oRouter.navTo("statistics")
+          oRouter.navTo("statistics");
         },
         // Refresh Global Models
         refreshEntries: async function () {
@@ -96,12 +96,15 @@ sap.ui.define(
             })
             .then(setValues);
         },
-        onChangeCategoryModify: function (oEvent) {
-          const id = oEvent.getSource().getSelectedKey();
+        changeType: function (id) {
           const type = this.categories()
             .getData()
             .find((category) => category.id == id).Type;
           this.getView().getModel("type").setProperty("/Type", type);
+        },
+        onChangeCategoryModify: function (oEvent) {
+          const id = oEvent.getSource().getSelectedKey();
+          this.changeType(id);
         },
         dayToDate: function (day) {
           return new Date(
@@ -130,13 +133,13 @@ sap.ui.define(
           );
           const startTime = this.timeToDate(modifyStartTime, date);
           const endTime = this.timeToDate(modifyEndTime, date);
-          const duration = new Date(endTime - startTime);
-          duration.setHours(duration.getHours() - 1);
+          const durationDate = new Date(endTime - startTime);
+          const duration = (durationDate.getHours() - 1) + (durationDate.getMinutes() / 60);
           const result = {
             Day: date,
             StartTime: startTime,
             EndTime: endTime,
-            Duration: `${duration.getHours()}:${duration.getMinutes()}`,
+            Duration: duration,
             Description: this.byId("modifyDescription").getValue(),
             Category: this.byId("modifyCategory").getSelectedItem().getKey(),
           };
@@ -155,9 +158,6 @@ sap.ui.define(
         formatDate: function (date) {
           return new Date(date * 1000).toISOString().substring(11, 19);
         },
-        calcDuration: function (startTime, endTime) {
-          return this.formatDate(Math.round((endTime - startTime) / 1000));
-        },
         setModifyCreateValues: function (date, startTime, endTime) {
           this.byId("modifyId").setText("");
           this.byId("modifyDescription").setValue(
@@ -166,6 +166,7 @@ sap.ui.define(
           this.byId("modifyCategory").setSelectedKey(
             this.default().getProperty("/Category")
           );
+          this.changeType(this.default().getProperty("/Category"));
           this.byId("modifyStartDate").setDateValue(date);
           this.byId("modifyStartTime").setDateValue(startTime);
           this.byId("modifyEndTime").setDateValue(endTime);
@@ -181,6 +182,7 @@ sap.ui.define(
           this.byId("modifyId").setText(id);
           this.byId("modifyDescription").setValue(description);
           this.byId("modifyCategory").setSelectedKey(category);
+          this.changeType(category);
           this.byId("modifyStartDate").setDateValue(day);
           this.byId("modifyStartTime").setDateValue(startTime);
           this.byId("modifyEndTime").setDateValue(endTime);

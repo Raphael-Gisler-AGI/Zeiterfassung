@@ -32,19 +32,17 @@ sap.ui.define(
         const id = oItem.getBindingContext("entries").getProperty("id");
         await this.deleteTime(id);
       },
-      onFilterCategory: function (oEvent) {
+      onFilterSearch: function (oEvent) {
         const filter = [];
         const query = oEvent.getParameter("query");
-        console.log(query);
         if (query) {
           filter.push(
             new Filter("Description", FilterOperator.Contains, query)
           );
         }
-        const test = this.byId("entryTable")
+        this.byId("entryTable")
           .getBinding("items")
           .filter(filter, FilterOperator.Contains);
-        console.log(test);
       },
     });
   }

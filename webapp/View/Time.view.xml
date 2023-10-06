@@ -22,8 +22,8 @@
 							<ToolbarSpacer />
 							<SearchField
 								width="20%"
-								search="onFilterCategory"
-								placeholder="Choose a Category">
+								search="onFilterSearch"
+								placeholder="Search for a Description">
 							</SearchField>
 						</content>
 					</Toolbar>

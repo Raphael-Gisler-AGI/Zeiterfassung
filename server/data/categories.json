@@ -1,22 +1,6 @@
 [
-    {
-        "id": 0,
-        "Name": "Gilgen",
-        "Type": 0
-    },
-    {
-        "id": 1,
-        "Name": "Schulung",
-        "Type": 1
-    },
-    {
-        "id": 2,
-        "Name": "Ferien",
-        "Type": 2
-    },
-    {
-        "id": 3,
-        "Name": "BMC",
-        "Type": 0
-    }
+  { "id": 0, "Name": "Gilgen", "Time": 0, "Type": 0 },
+  { "id": 1, "Name": "Schulung", "Time": 0, "Type": 1 },
+  { "id": 2, "Name": "Ferien", "Time": 0, "Type": 2 },
+  { "id": 3, "Name": "BMC", "Time": 0, "Type": 0 }
 ]
