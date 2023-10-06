@@ -44,7 +44,10 @@
 				<Label />
 				<VBox visible="{= ${type>/Type} > 1 ? true : false}">
 					<Label text="Until"/>
-					<DatePicker />
+					<DatePicker
+						valueFormat="YYYY.MM.dd"
+						id="modifyEndDate"
+						required="true"/>
 				</VBox>
 				<Label />
 				<HBox visible="{= ${type>/Type} > 1 ? false : true}" justifyContent="SpaceBetween">

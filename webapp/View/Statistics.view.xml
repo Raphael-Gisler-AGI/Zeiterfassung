@@ -1,6 +1,19 @@
 <mvc:View
-	controllerName=""
-	xmlns:mvc="sap.ui.core.mvc"
-	xmlns="sap.m">
-	<Text text="kdfjlsajflasd"/>
+    controllerName="sap.ui.agi.zeiterfassung.controller.Statistics"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:sl="sap.ui.comp.navpopover"
+    xmlns:smartChart="sap.ui.comp.smartchart">
+    <Page>
+        <content>
+            <smartChart:SmartChart enableAutoBinding="true"
+                entitySet="Products"
+                persistencyKey="SmartChart_Explored"
+                header="Products">
+                <smartChart:semanticObjectController>
+                    <sl:SemanticObjectController />
+                </smartChart:semanticObjectController>
+            </smartChart:SmartChart>
+        </content>
+    </Page>
 </mvc:View>

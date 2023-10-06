@@ -1,6 +1,10 @@
 sap.ui.define(
-  ["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel"],
-  function (Controller, JSONModel) {
+  [
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageToast",
+  ],
+  function (Controller, JSONModel, MessageToast) {
     "use strict";
 
     return Controller.extend(
@@ -29,7 +33,12 @@ sap.ui.define(
         },
         // Get Global Models
         entries: function () {
-          return this.getOwnerComponent().getModel("entries");
+          const entries = this.getOwnerComponent().getModel("entries");
+          if (!Array.isArray(entries.getData())) {
+            this.getOwnerComponent().setModel(new JSONModel([]), "entries");
+            return this.getOwnerComponent().getModel("entries");
+          }
+          return entries;
         },
         categories: function () {
           return this.getOwnerComponent().getModel("categories");
@@ -72,6 +81,7 @@ sap.ui.define(
           });
         },
         convertToDate: function (entries) {
+          console.log(entries);
           entries.forEach((entry) => {
             entry.StartTime = new Date(entry.StartTime);
             entry.EndTime = new Date(entry.EndTime);
@@ -108,9 +118,9 @@ sap.ui.define(
         },
         dayToDate: function (day) {
           return new Date(
-            day.split(".")[0],
-            day.split(".")[1] - 1,
-            day.split(".")[2],
+            day.getFullYear(),
+            day.getMonth(),
+            day.getDay() + 1,
             0,
             0,
             0,
@@ -124,19 +134,35 @@ sap.ui.define(
           return time;
         },
         onOkModify: async function () {
-          const date = this.byId("modifyStartDate").getValue();
+          const type = this.getView().getModel("type").getProperty("/Type");
+          const date = this.byId("modifyStartDate");
           const modifyStartTime = new Date(
             this.byId("modifyStartTime").getDateValue()
           );
           const modifyEndTime = new Date(
             this.byId("modifyEndTime").getDateValue()
           );
-          const startTime = this.timeToDate(modifyStartTime, date);
-          const endTime = this.timeToDate(modifyEndTime, date);
+          let startTime;
+          let endTime;
+          if (type == 2) {
+            startTime = this.dayToDate(date.getDateValue());
+            endTime = this.byId("modifyEndDate").getDateValue();
+          } else {
+            startTime = this.timeToDate(modifyStartTime, date.getDateValue());
+            endTime = this.timeToDate(modifyEndTime, date.getDateValue());
+          }
+          if (startTime > endTime) {
+            MessageToast.show(
+              "The End Time has to be larger than the Start Time"
+            );
+            return;
+          }
           const durationDate = new Date(endTime - startTime);
-          const duration = (durationDate.getHours() - 1) + (durationDate.getMinutes() / 60);
+          const duration =
+            durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
+          const day = type == 2 ? `${date.getValue()} - ${this.byId("modifyEndDate").getValue()}` : date.getValue();
           const result = {
-            Day: date,
+            Day: day,
             StartTime: startTime,
             EndTime: endTime,
             Duration: duration,
