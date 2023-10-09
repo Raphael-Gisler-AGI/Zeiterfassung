@@ -81,7 +81,6 @@ sap.ui.define(
           });
         },
         convertToDate: function (entries) {
-          console.log(entries);
           entries.forEach((entry) => {
             entry.StartTime = new Date(entry.StartTime);
             entry.EndTime = new Date(entry.EndTime);
@@ -157,26 +156,45 @@ sap.ui.define(
             );
             return;
           }
+          const day =
+            type == 2
+              ? `${date.getValue()} - ${this.byId("modifyEndDate").getValue()}`
+              : date.getValue();
+          await this.beforeCreateEntry(
+            day,
+            startTime,
+            endTime,
+            this.byId("modifyDescription").getValue(),
+            this.byId("modifyCategory").getSelectedKey(),
+            this.byId("modifyId").getText()
+          );
+          this.onCloseModify();
+        },
+        beforeCreateEntry: async function (
+          day,
+          startTime,
+          endTime,
+          description,
+          category,
+          id
+        ) {
           const durationDate = new Date(endTime - startTime);
           const duration =
             durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
-          const day = type == 2 ? `${date.getValue()} - ${this.byId("modifyEndDate").getValue()}` : date.getValue();
           const result = {
             Day: day,
             StartTime: startTime,
             EndTime: endTime,
             Duration: duration,
-            Description: this.byId("modifyDescription").getValue(),
-            Category: this.byId("modifyCategory").getSelectedItem().getKey(),
+            Description: description,
+            Category: category,
           };
-          const id = this.byId("modifyId").getText();
           if (id == "") {
             await this.createEntry(result);
           } else {
             result["id"] = id;
             await this.editEntry(result);
           }
-          this.onCloseModify();
         },
         onCloseModify: function () {
           this.byId("modifyDialog").close();

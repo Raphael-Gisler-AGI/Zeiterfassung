@@ -10,9 +10,7 @@ sap.ui.define(
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Time", {
       formatter: categories,
-      onPressContinue: function (oEvent) {
-        
-      },
+      onPressContinue: function (oEvent) {},
       onPressEdit: function (oEvent) {
         const oItem = oEvent.getSource();
         const entry = oItem.getBindingContext("entries");
@@ -21,7 +19,7 @@ sap.ui.define(
             entry.getProperty("id"),
             entry.getProperty("Description"),
             entry.getProperty("Category"),
-            this.dayToDate(entry.getProperty("Day")),
+            this.dayToDate(entry.getProperty("StartTime")),
             entry.getProperty("StartTime"),
             entry.getProperty("EndTime")
           );

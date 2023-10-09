@@ -23,13 +23,16 @@ sap.ui.define(
         this.getTimer().setProperty("/active", true);
         this.runTimer();
       },
+      getTimer: function () {
+        return this.getView().getModel("timer");
+      },
       setDefaultTimer: function () {
         this.getView().setModel(
           new JSONModel({
             description: "",
             category: "",
             active: false,
-            time: 3600,
+            time: 0,
             timeDisplay: "00:00:00",
           }),
           "timer"
@@ -39,9 +42,6 @@ sap.ui.define(
         clearInterval(this.timer);
         Storage.remove("time");
         this.setDefaultTimer();
-      },
-      getTimer: function () {
-        return this.getView().getModel("timer");
       },
       runTimer: function () {
         const timer = this.getView().getModel("timer");
@@ -83,18 +83,15 @@ sap.ui.define(
           return;
         }
         timer.setProperty("/active", false);
-        const startTime = new Date(Storage.get("time"));
-        const endTime = new Date();
-        const duration = new Date(endTime - startTime);
-        const result = {
-          Day: startTime.toISOString().split("T")[0],
-          StartTime: startTime,
-          EndTime: endTime,
-          Duration: `${duration.getUTCHours()}:${duration.getUTCMinutes()}`,
-          Description: timer.getProperty("/description"),
-          Category: timer.getProperty("/category"),
-        };
-        this.createEntry(result);
+        const day = new Date().toISOString();
+        this.beforeCreateEntry(
+          day.split("T")[0].replaceAll("-", "."),
+          new Date(Storage.get("time")),
+          new Date(),
+          timer.getProperty("/description"),
+          timer.getProperty("/category"),
+          ""
+        );
         this.resetTimer();
       },
       onPressCreate: function () {
