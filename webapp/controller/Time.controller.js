@@ -19,7 +19,6 @@ sap.ui.define(
             entry.getProperty("id"),
             entry.getProperty("Description"),
             entry.getProperty("Category"),
-            this.dayToDate(entry.getProperty("StartTime")),
             entry.getProperty("StartTime"),
             entry.getProperty("EndTime")
           );

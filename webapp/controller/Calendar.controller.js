@@ -29,7 +29,6 @@ sap.ui.define(["./BaseController", "../model/categories"], function (
           entry.getProperty("Description"),
           entry.getProperty("Category"),
           startTime,
-          startTime,
           endTime
         );
       });

@@ -120,7 +120,10 @@ sap.ui.define(
             day.getFullYear(),
             day.getMonth(),
             day.getDate(),
-            0, 0, 0, 0
+            0,
+            0,
+            0,
+            0
           );
         },
         timeToDate: function (modifyTime, day) {
@@ -151,6 +154,7 @@ sap.ui.define(
             MessageToast.show(
               "The End Time has to be larger than the Start Time"
             );
+            return;
           }
           const day =
             type == 2
@@ -215,7 +219,6 @@ sap.ui.define(
           id,
           description,
           category,
-          day,
           startTime,
           endTime
         ) {
@@ -223,7 +226,8 @@ sap.ui.define(
           this.byId("modifyDescription").setValue(description);
           this.byId("modifyCategory").setSelectedKey(category);
           this.changeType(category);
-          this.byId("modifyStartDate").setDateValue(day);
+          this.byId("modifyStartDate").setDateValue(this.dayToDate(startTime));
+          this.byId("modifyEndDate").setDateValue(this.dayToDate(endTime));
           this.byId("modifyStartTime").setDateValue(startTime);
           this.byId("modifyEndTime").setDateValue(endTime);
         },

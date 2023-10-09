@@ -38,15 +38,15 @@
 					text="{= ${type>/Type} > 1 ? 'From' : 'Day'}"
 					labelFor="startDate" />
 				<DatePicker
-				 	valueFormat="YYYY.MM.dd"
 					id="modifyStartDate"
+					valueFormat="YYYY.MM.dd"
 					required="true" />
 				<Label />
 				<VBox visible="{= ${type>/Type} > 1 ? true : false}">
 					<Label text="Until"/>
 					<DatePicker
-						valueFormat="YYYY.MM.dd"
 						id="modifyEndDate"
+						valueFormat="YYYY.MM.dd"
 						required="true"/>
 				</VBox>
 				<Label />
