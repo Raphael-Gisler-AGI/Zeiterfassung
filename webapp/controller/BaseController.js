@@ -119,11 +119,8 @@ sap.ui.define(
           return new Date(
             day.getFullYear(),
             day.getMonth(),
-            day.getDay() + 1,
-            0,
-            0,
-            0,
-            0
+            day.getDate(),
+            0, 0, 0, 0
           );
         },
         timeToDate: function (modifyTime, day) {
@@ -154,7 +151,6 @@ sap.ui.define(
             MessageToast.show(
               "The End Time has to be larger than the Start Time"
             );
-            return;
           }
           const day =
             type == 2
