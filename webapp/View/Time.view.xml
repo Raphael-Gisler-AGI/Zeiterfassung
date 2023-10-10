@@ -1,4 +1,4 @@
-<mvc:View
+<mvc:View xmlns:core="sap.ui.core"
 	controllerName="sap.ui.agi.zeiterfassung.controller.Time"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:grid="sap.ui.layout.cssgrid"
@@ -21,10 +21,18 @@
 							<Title text="Entries" level="H1" />
 							<ToolbarSpacer />
 							<SearchField
-								width="20%"
-								search="onFilterSearch"
+								width="30%"
+								liveChange="onFilterSearch"
 								placeholder="Search for a Description">
 							</SearchField>
+							<ComboBox
+								placeholder="Search for a Category"
+								selectionChange="onFilterCategory"
+								items="{categories>/}">
+								<core:ListItem
+									text="{categories>Name}"
+									key="{categories>id}" />
+							</ComboBox>
 						</content>
 					</Toolbar>
 				</headerToolbar>
@@ -58,30 +66,31 @@
 					</Column>
 				</columns>
 				<items>
-					<ColumnListItem vAlign="Middle">
+					<ColumnListItem
+						highlight="{= ${entries>id} === ${timer>/id} ? 'Information' : 'None' }">
 						<cells>
 							<ObjectIdentifier
 								title="{entries>Description}" />
-							<HBox>
-								<Text
-									text="{
-										path: 'entries>StartTime',
-										type: 'sap.ui.model.type.Date',
-										formatOptions: {pattern: 'hh:mm'}
-									}" />
-								<Text text=" - " />
-								<Text
-									text="{
-								path: 'entries>EndTime',
-								type: 'sap.ui.model.type.Date',
-								formatOptions: {pattern: 'hh:mm'}}" />
-							</HBox>
 							<Text
-								text="{entries>Duration}" />
-							<Text text="{
+								text="{
+									path: 'entries>StartTime',
+									type: 'sap.ui.model.type.Date',
+									formatOptions: {pattern: 'hh:mm'}
+								} - {
+									path: 'entries>EndTime',
+									type: 'sap.ui.model.type.Date',
+									formatOptions: {pattern: 'hh:mm'}
+								}" />
+							<Text
+								text="{
+									path: 'entries>Duration',
+									formatter: '.minutesToTime.getTime'
+								}" />
+							<Text
+								text="{
 								path: 'entries>Category',
 								formatter: '.formatter.categoryText'
-							}"/>
+							}" />
 							<Button
 								icon="sap-icon://play"
 								press="onPressContinue" />

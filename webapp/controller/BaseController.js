@@ -46,6 +46,9 @@ sap.ui.define(
         default: function () {
           return this.getOwnerComponent().getModel("default");
         },
+        getTimer: function () {
+          return this.getOwnerComponent().getModel("timer");
+        },
         // Create Edit Delete
         baseUrl: "http://localhost:3000/",
         createEntry: async function (data) {
@@ -85,6 +88,16 @@ sap.ui.define(
             entry.StartTime = new Date(entry.StartTime);
             entry.EndTime = new Date(entry.EndTime);
           });
+        },
+        runTimer: function () {
+          const timer = this.getTimer();
+          this.timer = setInterval(() => {
+            timer.setProperty("/time", timer.getProperty("/time") + 1);
+            timer.setProperty(
+              "/timeDisplay",
+              this.formatDate(timer.getProperty("/time"))
+            );
+          }, 1000);
         },
         onOpenModify: function (title, setValues) {
           this.getView().setModel(
