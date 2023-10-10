@@ -27,7 +27,7 @@ sap.ui.define(
       onPressDelete: async function (oEvent) {
         const oItem = oEvent.getSource();
         const id = oItem.getBindingContext("entries").getProperty("id");
-        await this.deleteTime(id);
+        await this.deleteEntry(id);
       },
       onFilterSearch: function (oEvent) {
         const filter = [];

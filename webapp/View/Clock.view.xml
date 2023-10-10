@@ -3,7 +3,7 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:core="sap.ui.core">
-    <OverflowToolbar>
+    <OverflowToolbar height="60px">
         <Input
             value="{timer>/description}"
             placeholder="Description"
@@ -33,18 +33,5 @@
         <Button 
             press="onPressCreate"
             text="Erstellen" icon="sap-icon://add" />
-        <ToolbarSpacer />
-        <Button
-            press="onNavigateTime"
-            tooltip="Navigate to List"
-            icon="sap-icon://table-chart"/>
-        <Button
-            press="onNavigateCalendar"
-            tooltip="Navigate to Calendar"
-            icon="sap-icon://calendar"/>
-        <Button
-            press="onNavigateStatistics"
-            tooltip="Navigate to Statistics"
-            icon="sap-icon://bar-chart"/>
     </OverflowToolbar>
 </mvc:View>

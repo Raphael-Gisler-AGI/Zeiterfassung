@@ -6,7 +6,13 @@
 	<grid:CSSGrid
 		gridAutoFlow="Column"
 		gridTemplateRows="auto 1fr"
-		gridTemplateColumns="1fr 250px">
+		gridTemplateColumns="250px 1fr 250px">
+		<VBox>
+			<layoutData>
+				<grid:GridItemLayoutData gridRow="1 / 3" />
+			</layoutData>
+			<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Navbar" />
+		</VBox>
 		<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
 		<App id="app" />
 		<VBox class="sapUiSmallMarginBeginEnd">

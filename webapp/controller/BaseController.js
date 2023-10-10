@@ -66,7 +66,7 @@ sap.ui.define(
             })
             .then(this.refreshEntries());
         },
-        deleteTime: async function (id) {
+        deleteEntry: async function (id) {
           return await fetch(`${this.baseUrl}deleteEntry?id=${id}`)
             .then((res) => {
               return res.status;

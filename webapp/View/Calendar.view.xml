@@ -13,7 +13,7 @@
 			appointmentCreate="handleCreate"
 			appointmentDrop="handleChange"
 			appointmentResize="handleChange"
-			startDate="{path: '/startDate'}"
+			appointmentSelect="handleSelect"
 			appointments="{entries>/}">
 			<views>
 				<SinglePlanningCalendarDayView key="DayView" title="Day" />
@@ -22,13 +22,12 @@
 			</views>
 			<appointments>
 				<unified:CalendarAppointment
+					key="{entries>id}"
 					title="{entries>Description}"
 					text="{
 						path: 'entries>Category',
 						formatter: '.formatter.categoryText'
 					}"
-					type="{type}"
-					icon="{icon}"
 					startDate="{entries>StartTime}"
 					endDate="{entries>EndTime}">
 				</unified:CalendarAppointment>
