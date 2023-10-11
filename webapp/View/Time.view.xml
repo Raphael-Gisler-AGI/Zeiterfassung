@@ -84,7 +84,7 @@
 							<Text
 								text="{
 									path: 'entries>Duration',
-									formatter: '.minutesToTime.getTime'
+									formatter: '.formatter.getTime'
 								}" />
 							<Text
 								text="{

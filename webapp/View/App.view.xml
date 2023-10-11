@@ -2,6 +2,7 @@
 	controllerName="sap.ui.agi.zeiterfassung.controller.App"
 	xmlns:grid="sap.ui.layout.cssgrid"
 	xmlns="sap.m"
+    xmlns:tnt="sap.tnt"
 	xmlns:mvc="sap.ui.core.mvc">
 	<grid:CSSGrid
 		gridAutoFlow="Column"
@@ -11,7 +12,22 @@
 			<layoutData>
 				<grid:GridItemLayoutData gridRow="1 / 3" />
 			</layoutData>
-			<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Navbar" />
+			<tnt:SideNavigation>
+				<tnt:NavigationList>
+					<tnt:NavigationListItem
+						href="index.html#/"
+						icon="sap-icon://table-chart"
+						text="Table" />
+					<tnt:NavigationListItem
+						href="index.html#/calendar"
+						icon="sap-icon://calendar"
+						text="Calendar" />
+					<tnt:NavigationListItem
+						href="index.html#/statistics"
+						icon="sap-icon://bar-chart"
+						text="Statistics" />
+				</tnt:NavigationList>
+			</tnt:SideNavigation>
 		</VBox>
 		<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
 		<App id="app" />

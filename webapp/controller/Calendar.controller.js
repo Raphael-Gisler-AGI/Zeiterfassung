@@ -1,18 +1,18 @@
 sap.ui.define(
   [
     "./BaseController",
-    "../model/categories",
+    "../model/formatter",
     "sap/ui/core/Fragment",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
   ],
-  function (BaseController, categories, Fragment, JSONModel, MessageToast) {
+  function (BaseController, formatter, Fragment, JSONModel, MessageToast) {
     "use strict";
 
     return BaseController.extend(
       "sap.ui.agi.zeiterfassung.controller.Calendar",
       {
-        formatter: categories,
+        formatter: formatter,
         onInit: function () {
           this.convertToDate(this.entries().getData());
           this.entries().refresh();
