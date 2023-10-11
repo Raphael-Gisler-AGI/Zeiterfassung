@@ -89,7 +89,7 @@
 							<Text
 								text="{
 								path: 'entries>Category',
-								formatter: '.formatter.categoryText'
+								formatter: '.formatter.getCategoryText'
 							}" />
 							<Button
 								icon="sap-icon://play"

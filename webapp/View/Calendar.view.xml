@@ -25,7 +25,7 @@
 					title="{entries>Description}"
 					text="{
 						path: 'entries>Category',
-						formatter: '.formatter.categoryText'
+						formatter: '.formatter.getCategoryText'
 					}"
 					startDate="{entries>StartTime}"
 					endDate="{entries>EndTime}">

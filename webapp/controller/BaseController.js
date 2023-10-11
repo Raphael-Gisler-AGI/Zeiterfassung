@@ -24,12 +24,14 @@ sap.ui.define(
           oRouter.navTo("statistics");
         },
         // Refresh Global Models
-        refreshEntries: async function () {
-          const data = await fetch(`${this.baseUrl}getEntries`).then((res) => {
-            return res.json();
-          });
-          this.convertToDate(data);
-          this.entries().setData(data);
+        refresh: async function () {
+          const [entries, categories] = await Promise.all([
+            fetch(`${this.baseUrl}getEntries`).then((res) => res.json()),
+            fetch(`${this.baseUrl}getCategories`).then((res) => res.json()),
+          ]);
+          this.convertToDate(entries);
+          this.entries().setData(entries);
+          this.categories().setData(categories)
         },
         // Get Global Models
         entries: function () {
@@ -58,7 +60,7 @@ sap.ui.define(
             .then((res) => {
               return res.status;
             })
-            .then(this.refreshEntries());
+            .then(this.refresh());
         },
         editEntry: async function (data) {
           return await fetch(
@@ -67,14 +69,14 @@ sap.ui.define(
             .then((res) => {
               return res.status;
             })
-            .then(this.refreshEntries());
+            .then(this.refresh());
         },
         deleteEntry: async function (id) {
           return await fetch(`${this.baseUrl}deleteEntry?id=${id}`)
             .then((res) => {
               return res.status;
             })
-            .then(this.refreshEntries());
+            .then(this.refresh());
         },
         saveDefault: async function (data) {
           return await fetch(

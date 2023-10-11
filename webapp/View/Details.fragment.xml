@@ -21,7 +21,7 @@
             <f:SimpleForm>
                 <Title text="{
                     path: 'details>/Category',
-                    formatter: '.formatter.categoryText'
+                    formatter: '.formatter.getCategoryText'
                 }" />
                 <Label
                     labelFor="detailsStartTime"
