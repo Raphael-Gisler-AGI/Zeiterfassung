@@ -1,5 +1,4 @@
 <core:FragmentDefinition
-	controllerName="sap.ui.agi.zeiterfassung.controller.Calendar"
     xmlns="sap.m"
     xmlns:f="sap.ui.layout.form"
     xmlns:core="sap.ui.core">

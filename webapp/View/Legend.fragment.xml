@@ -1,0 +1,16 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:unified="sap.ui.unified"
+    xmlns:core="sap.ui.core">
+    <ResponsivePopover
+        title="Legend"
+        placement="Auto">
+        <PlanningCalendarLegend>
+            <appointmentItems>
+                <unified:CalendarLegendItem text="Projektleistung" type="Type01" />
+                <unified:CalendarLegendItem text="Nicht-Projektleistung" type="Type02" />
+                <unified:CalendarLegendItem text="Tages/Halbtages-Leistungen" type="Type03" />
+            </appointmentItems>
+        </PlanningCalendarLegend>
+    </ResponsivePopover>
+</core:FragmentDefinition>

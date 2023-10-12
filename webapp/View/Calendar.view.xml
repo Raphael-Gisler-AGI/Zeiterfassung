@@ -13,7 +13,13 @@
 			appointmentDrop="handleChange"
 			appointmentResize="handleChange"
 			appointmentSelect="handleSelect"
-			appointments="{entries>/}">
+			appointments="{entries>/}"
+			legend="SinglePlanningCalendarLegend">
+			<actions>
+				<Button
+					press="onPressLegend"
+					icon="sap-icon://legend" />
+			</actions>
 			<views>
 				<SinglePlanningCalendarDayView key="DayView" title="Day" />
 				<SinglePlanningCalendarWeekView key="WeekView" title="Week" />
@@ -26,6 +32,10 @@
 					text="{
 						path: 'entries>Category',
 						formatter: '.formatter.getCategoryText'
+					}"
+					type="{
+						path: 'entries>Category',
+						formatter: '.formatter.getCalendarType'
 					}"
 					startDate="{entries>StartTime}"
 					endDate="{entries>EndTime}">

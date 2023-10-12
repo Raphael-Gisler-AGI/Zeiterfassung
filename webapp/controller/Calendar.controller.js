@@ -85,6 +85,21 @@ sap.ui.define(
             );
           });
         },
+        onPressLegend: function (oEvent) {
+          if (!this.pLegend) {
+            this.pLegend = Fragment.load({
+              id: this.getView().getId(),
+              name: "sap.ui.agi.zeiterfassung.view.Legend",
+              controller: this,
+            }).then((oPopover) => {
+              this.getView().addDependent(oPopover);
+              return oPopover;
+            });
+          }
+          this.pLegend.then(function (oPopover) {
+            oPopover.openBy(oEvent.getSource());
+          });
+        },
       }
     );
   }
