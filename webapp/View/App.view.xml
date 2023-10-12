@@ -6,7 +6,7 @@
 	xmlns:mvc="sap.ui.core.mvc">
 	<grid:CSSGrid
 		gridAutoFlow="Column"
-		gridTemplateRows="auto 1fr"
+		gridTemplateRows="60px 1fr"
 		gridTemplateColumns="250px 1fr 250px">
 		<VBox>
 			<layoutData>

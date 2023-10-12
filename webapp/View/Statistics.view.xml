@@ -2,29 +2,31 @@
     controllerName="sap.ui.agi.zeiterfassung.controller.Statistics"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc">
-    <List
-        id="statisticList"
-        items="{categories>/}">
-        <headerToolbar>
-            <Toolbar>
-                <Title text="Statistics" />
-                <ToolbarSpacer />
-                <Button
-                    press="onPressSort"
-                    icon="{= ${sorting>/sortingState} ? 'sap-icon://sort-descending' : 'sap-icon://sort-ascending'}" />
-            </Toolbar>
-        </headerToolbar>
-        <items>
-            <ObjectListItem
-                title="{categories>Name}"
-                number="{
+    <ScrollContainer class="sapUiMediumMargin" height="90vh" vertical="true">
+        <List
+            id="statisticList"
+            items="{categories>/}">
+            <headerToolbar>
+                <Toolbar>
+                    <Title text="Statistics" />
+                    <ToolbarSpacer />
+                    <Button
+                        press="onPressSort"
+                        icon="{= ${sorting>/sortingState} ? 'sap-icon://sort-descending' : 'sap-icon://sort-ascending'}" />
+                </Toolbar>
+            </headerToolbar>
+            <items>
+                <ObjectListItem
+                    title="{categories>Name}"
+                    number="{
                     path: 'categories>Time',
                     formatter: '.formatter.getTime'
                 }"
-                numberUnit="{
+                    numberUnit="{
                     path: 'categories>Type',
                     formatter: '.formatter.getCategoryType'
                 }" />
-        </items>
-    </List>
+            </items>
+        </List>
+    </ScrollContainer>
 </mvc:View>

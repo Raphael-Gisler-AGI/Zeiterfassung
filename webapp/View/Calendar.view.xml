@@ -3,7 +3,7 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:unified="sap.ui.unified"
 	xmlns="sap.m">
-	<ScrollContainer height="100vh" vertical="true">
+	<ScrollContainer height="90vh" vertical="true">
 		<SinglePlanningCalendar
 			title="My Calendar"
 			enableAppointmentsDragAndDrop="true"

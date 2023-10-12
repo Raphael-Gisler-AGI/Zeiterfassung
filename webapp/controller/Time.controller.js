@@ -34,8 +34,8 @@ sap.ui.define(
           category: entry.getProperty("Category"),
           active: true,
           id: entry.getProperty("id"),
-          time: entry.getProperty("Duration"),
-          timeDisplay: this.formatDate(entry.getProperty("Duration")),
+          time: entry.getProperty("Duration") * 60,
+          timeDisplay: this.formatDate(entry.getProperty("Duration") * 60),
         });
         this.getTimer().refresh();
         this.runTimer();
