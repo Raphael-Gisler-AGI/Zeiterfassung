@@ -28,7 +28,9 @@
       "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {},
-        "sap.m": {}
+        "sap.f": {},
+        "sap.m": {},
+        "sap.tnt": {}
       }
     },
     "models": {

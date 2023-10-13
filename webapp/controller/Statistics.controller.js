@@ -19,7 +19,8 @@ sap.ui.define(
             }),
             "sorting"
           );
-          // items.sort(sorter);
+          this.getView().setModel(new JSONModel({ hours: 0 }), "statistics");
+          this.getHoursInMonth();
         },
         onAfterRendering: function () {
           this.sortList();
@@ -41,6 +42,23 @@ sap.ui.define(
           const sortingState = sorting.getProperty("/sortingState");
           sorting.setProperty("/sortingState", !sortingState);
           this.sortList();
+        },
+        getHoursInMonth: function () {
+          let hours = 0;
+          const entries = this.entries().getData();
+          const currentDate = new Date(
+            new Date().getFullYear(),
+            new Date().getMonth()
+          );
+          entries.forEach((entry) => {
+            const day = entry.Day.split(".");
+            if (
+              currentDate.toString() == new Date(day[0], day[1] - 1).toString()
+            ) {
+              hours += entry.Duration;
+            }
+          });
+          this.getView().getModel("statistics").setProperty("/hours", hours);
         },
       }
     );

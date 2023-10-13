@@ -1,27 +1,26 @@
 sap.ui.define(
   [
     "./BaseController",
+    "../model/formatter",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
-    "sap/ui/util/Storage",
   ],
-  function (BaseController, JSONModel, MessageToast, Storage) {
+  function (BaseController, formatter, JSONModel, MessageToast) {
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Clock", {
+      formatter: formatter,
       onInit: function () {
         this.convertToDate(this.entries().getData());
         this.setDefaultTimer();
-        if (!Storage.get("time")) {
+        if (!localStorage.getItem("startTime")) {
           return;
         }
-        const time = Math.round(
-          (new Date() - new Date(Storage.get("time"))) / 1000
-        );
-        this.getTimer().setProperty("/time", time);
-        this.getTimer().setProperty("/timeDisplay", this.formatDate(time));
-        this.getTimer().setProperty("/active", true);
-        this.runTimer();
+        const newDuration =
+          Math.floor(new Date() - new Date(localStorage.getItem("startTime"))) /
+          1000;
+        console.log(newDuration);
+        this.getTimer().setProperty("/time", newDuration);
       },
       setDefaultTimer: function () {
         this.getOwnerComponent().setModel(
@@ -31,62 +30,49 @@ sap.ui.define(
             active: false,
             id: "",
             time: 0,
-            timeDisplay: "00:00:00",
           }),
           "timer"
         );
       },
-      resetTimer: function () {
-        clearInterval(this.timer);
-        Storage.remove("time");
-        this.setDefaultTimer();
-      },
       onPressActivate: function () {
-        if (!this.getTimer().getProperty("/active")) {
-          this.getTimer().setProperty("/active", true);
-          Storage.put("time", new Date());
-          this.runTimer();
-        } else {
-          this.onSave();
+        this.getTimer().setProperty("/active", true);
+        localStorage.setItem("startTime", new Date());
+        this.runTimer();
+      },
+      onPressReset: function () {
+        clearInterval(this.timer);
+        this.setDefaultTimer();
+        localStorage.clear();
+        this.getTimer().setProperty("/active", false);
+      },
+      onPressSave: async function () {
+        const timer = this.getTimer();
+        const description = timer.getProperty("/description");
+        const category = timer.getProperty("/category");
+        if (!description) {
+          MessageToast.show("Please add a description");
+          return;
         }
+        if (!category) {
+          MessageToast.show("Please select a category");
+          return;
+        }
+        const day = new Date().toISOString();
+        this.beforeCreateEntry(
+          day.split("T")[0].replaceAll("-", "."),
+          new Date(localStorage.getItem("startTime")),
+          new Date(),
+          description,
+          category,
+          timer.getProperty("/id")
+        );
+        this.onPressReset();
       },
       onSetCategory: function (oEvent) {
         this.getTimer().setProperty(
           "/category",
           oEvent.getSource().getSelectedKey()
         );
-      },
-      onSave: async function () {
-        let errorMessage = "";
-        const timer = this.getTimer();
-        if (!timer.getProperty("/category")) {
-          errorMessage = "Please select a category";
-        }
-        if (!timer.getProperty("/description")) {
-          errorMessage = "Please add a description";
-        }
-        if (errorMessage != "") {
-          MessageToast.show(errorMessage);
-          return;
-        }
-        timer.setProperty("/active", false);
-        const day = new Date().toISOString();
-        this.beforeCreateEntry(
-          day.split("T")[0].replaceAll("-", "."),
-          new Date(Storage.get("time")),
-          new Date(),
-          timer.getProperty("/description"),
-          timer.getProperty("/category"),
-          timer.getProperty("/id")
-        );
-        this.resetTimer();
-      },
-      onPressCreate: function () {
-        this.onOpenModify("Create Entry", () => {
-          const startTime = new Date();
-          startTime.setHours(startTime.getHours() - 1);
-          this.setModifyCreateValues(new Date(), startTime, new Date());
-        });
       },
     });
   }

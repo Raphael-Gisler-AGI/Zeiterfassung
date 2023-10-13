@@ -2,7 +2,7 @@
 	controllerName="sap.ui.agi.zeiterfassung.controller.Time"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m">
-	<ScrollContainer class="sapUiMediumMargin" height="90vh" vertical="true">
+	<ScrollContainer height="90vh" vertical="true">
 		<Table
 			id="entryTable"
 			items="{
@@ -77,12 +77,12 @@
 						<Text
 							text="{
 									path: 'entries>StartTime',
-									type: 'sap.ui.model.type.Date',
-									formatOptions: {pattern: 'hh:mm'}
+									type: 'sap.ui.model.type.Time',
+									formatOptions: {pattern: 'HH:mm'}
 								} - {
 									path: 'entries>EndTime',
-									type: 'sap.ui.model.type.Date',
-									formatOptions: {pattern: 'hh:mm'}
+									type: 'sap.ui.model.type.Time',
+									formatOptions: {pattern: 'HH:mm'}
 								}" />
 						<Text
 							text="{

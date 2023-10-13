@@ -31,7 +31,7 @@ sap.ui.define(
           ]);
           this.convertToDate(entries);
           this.entries().setData(entries);
-          this.categories().setData(categories)
+          this.categories().setData(categories);
         },
         // Get Global Models
         entries: function () {
@@ -95,11 +95,14 @@ sap.ui.define(
           const timer = this.getTimer();
           this.timer = setInterval(() => {
             timer.setProperty("/time", timer.getProperty("/time") + 1);
-            timer.setProperty(
-              "/timeDisplay",
-              this.formatDate(timer.getProperty("/time"))
-            );
           }, 1000);
+        },
+        onPressCreate: function () {
+          this.onOpenModify("Create Entry", () => {
+            const startTime = new Date();
+            startTime.setHours(startTime.getHours() - 1);
+            this.setModifyCreateValues(new Date(), startTime, new Date());
+          });
         },
         onOpenModify: function (title, setValues) {
           this.getView().setModel(
@@ -120,11 +123,15 @@ sap.ui.define(
             })
             .then(setValues);
         },
-        changeType: function (id) {
-          const type = this.categories()
+        getCategoryType: function (category) {
+          return this.categories()
             .getData()
-            .find((category) => category.id == id).Type;
-          this.getView().getModel("type").setProperty("/Type", type);
+            .find((c) => c.id == category).Type;
+        },
+        changeType: function (id) {
+          this.getView()
+            .getModel("type")
+            .setProperty("/Type", this.getCategoryType(id));
         },
         onChangeCategoryModify: function (oEvent) {
           const id = oEvent.getSource().getSelectedKey();
@@ -214,18 +221,22 @@ sap.ui.define(
         onCloseModify: function () {
           this.byId("modifyDialog").close();
         },
-        formatDate: function (date) {
-          return new Date(date * 1000).toISOString().substring(11, 19);
+        setRoundedMinutes: function (time) {
+          return time.setMinutes(Math.round(time.getMinutes() / 15) * 15);
         },
         setModifyCreateValues: function (date, startTime, endTime) {
+          const category = this.default().getProperty("/Category");
+          const type = this.getCategoryType(category);
+          if (type == 0) {
+            this.setRoundedMinutes(startTime);
+            this.setRoundedMinutes(endTime);
+          }
           this.byId("modifyId").setText("");
           this.byId("modifyDescription").setValue(
             this.default().getProperty("/Description")
           );
-          this.byId("modifyCategory").setSelectedKey(
-            this.default().getProperty("/Category")
-          );
-          this.changeType(this.default().getProperty("/Category"));
+          this.byId("modifyCategory").setSelectedKey(category);
+          this.changeType(category);
           this.byId("modifyStartDate").setDateValue(date);
           this.byId("modifyStartTime").setDateValue(startTime);
           this.byId("modifyEndTime").setDateValue(endTime);

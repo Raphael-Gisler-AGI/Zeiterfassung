@@ -3,7 +3,7 @@
     xmlns:f="sap.ui.layout.form"
     xmlns:core="sap.ui.core">
     <ResponsivePopover
-        class="sapUiContentPadding"
+        class="sapUiSmallContentPadding"
         title="{details>/Description}"
         placement="Auto">
         <beginButton>
@@ -25,8 +25,7 @@
                 <Label
                     labelFor="detailsStartTime"
                     text="From" />
-                <Text
-                    text="{
+                <Text text="{
                     path: 'details>/StartTime',
                     type: 'sap.ui.model.type.Date',
                     formatOptions: {pattern: 'hh:mm'}
@@ -34,8 +33,7 @@
                 <Label
                     labelFor="detailsEndTime"
                     text="To" />
-                <Text
-                    text="{
+                <Text text="{
                     path: 'details>/EndTime',
                     type: 'sap.ui.model.type.Date',
                     formatOptions: {pattern: 'hh:mm'}

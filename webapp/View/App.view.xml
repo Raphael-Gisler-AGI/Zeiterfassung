@@ -1,41 +1,55 @@
 <mvc:View
+	xmlns:uxap="sap.uxap"
+	xmlns:cssgrid="sap.ui.layout.cssgrid"
 	controllerName="sap.ui.agi.zeiterfassung.controller.App"
-	xmlns:grid="sap.ui.layout.cssgrid"
 	xmlns="sap.m"
-    xmlns:tnt="sap.tnt"
-	xmlns:mvc="sap.ui.core.mvc">
-	<grid:CSSGrid
-		gridAutoFlow="Column"
-		gridTemplateRows="60px 1fr"
-		gridTemplateColumns="250px 1fr 250px">
-		<VBox>
-			<layoutData>
-				<grid:GridItemLayoutData gridRow="1 / 3" />
-			</layoutData>
+	xmlns:tnt="sap.tnt"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:f="sap.f"
+	height="100vh">
+	<tnt:ToolPage
+		id="toolPage">
+		<tnt:header>
+			<f:ShellBar
+				title="Zeiterfassung"
+				showMenuButton="true"
+				menuButtonPressed="onPressMenu">
+			</f:ShellBar>
+		</tnt:header>
+		<tnt:sideContent>
 			<tnt:SideNavigation>
 				<tnt:NavigationList>
-					<tnt:NavigationListItem
-						href="index.html#/"
-						icon="sap-icon://table-chart"
-						text="Table" />
-					<tnt:NavigationListItem
-						href="index.html#/calendar"
-						icon="sap-icon://calendar"
-						text="Calendar" />
-					<tnt:NavigationListItem
-						href="index.html#/statistics"
-						icon="sap-icon://bar-chart"
-						text="Statistics" />
+					<tnt:items>
+						<tnt:NavigationListItem
+							href="index.html#/"
+							icon="sap-icon://table-chart"
+							text="Table" />
+						<tnt:NavigationListItem
+							href="index.html#/calendar"
+							icon="sap-icon://calendar"
+							text="Calendar" />
+						<tnt:NavigationListItem
+							href="index.html#/statistics"
+							icon="sap-icon://bar-chart"
+							text="Statistics" />
+					</tnt:items>
 				</tnt:NavigationList>
 			</tnt:SideNavigation>
-		</VBox>
-		<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
-		<App id="app" />
-		<VBox class="sapUiSmallMarginBeginEnd">
-			<layoutData>
-				<grid:GridItemLayoutData gridRow="1 / 3" />
-			</layoutData>
-			<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Default" />
-		</VBox>
-	</grid:CSSGrid>
+		</tnt:sideContent>
+		<tnt:mainContents>
+			<cssgrid:CSSGrid
+				gridTemplateColumns="80% 19%" gridGap="1%">
+				<App id="app" />
+				<VBox>
+					<Button
+						press="onPressCreate"
+						class="sapUiSmallMarginBottom"
+					 	icon="sap-icon://create-entry-time"
+						text="Create" />
+					<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
+					<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Default" />
+				</VBox>
+			</cssgrid:CSSGrid>
+		</tnt:mainContents>
+	</tnt:ToolPage>
 </mvc:View>

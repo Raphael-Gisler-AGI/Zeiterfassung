@@ -1,6 +1,9 @@
 sap.ui.define([], function () {
   "use strict";
   return {
+    getDisplayTime: function (date) {
+      return new Date(date * 1000).toISOString().substring(11, 19);
+    },
     getCategoryText: function (id) {
       const categories = this.getOwnerComponent()
         .getModel("categories")

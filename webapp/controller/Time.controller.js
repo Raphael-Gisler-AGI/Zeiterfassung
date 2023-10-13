@@ -5,7 +5,6 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
-    "sap/ui/util/Storage",
   ],
   function (
     BaseController,
@@ -13,7 +12,6 @@ sap.ui.define(
     Filter,
     FilterOperator,
     MessageToast,
-    Storage
   ) {
     "use strict";
 
@@ -25,17 +23,18 @@ sap.ui.define(
           return;
         }
         const entry = oEvent.getSource().getBindingContext("entries");
+        const duration = entry.getProperty("Duration") * 60
         const startTime = new Date(
-          new Date().getTime() - entry.getProperty("Duration") * 60000
+          new Date().getTime() - duration * 1000
         );
-        Storage.put("time", startTime);
+        localStorage.setItem("startTime", startTime);
         this.getTimer().setData({
           description: entry.getProperty("Description"),
           category: entry.getProperty("Category"),
           active: true,
           id: entry.getProperty("id"),
-          time: entry.getProperty("Duration") * 60,
-          timeDisplay: this.formatDate(entry.getProperty("Duration") * 60),
+          time: duration,
+          timeDisplay: new Date(duration).toISOString().substring(11, 19),
         });
         this.getTimer().refresh();
         this.runTimer();

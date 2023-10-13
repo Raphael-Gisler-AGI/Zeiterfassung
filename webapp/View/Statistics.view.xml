@@ -2,7 +2,15 @@
     controllerName="sap.ui.agi.zeiterfassung.controller.Statistics"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc">
-    <ScrollContainer class="sapUiMediumMargin" height="90vh" vertical="true">
+    <ScrollContainer height="90vh" vertical="true">
+        <HBox>
+            <ObjectNumber
+                class="sapMObjectNumberLarge"
+                number="{
+                    path: 'statistics>/hours',
+                    formatter: '.formatter.getTime'
+                }" />
+        </HBox>
         <List
             id="statisticList"
             items="{categories>/}">
@@ -19,13 +27,13 @@
                 <ObjectListItem
                     title="{categories>Name}"
                     number="{
-                    path: 'categories>Time',
-                    formatter: '.formatter.getTime'
-                }"
+                        path: 'categories>Time',
+                        formatter: '.formatter.getTime'
+                    }"
                     numberUnit="{
-                    path: 'categories>Type',
-                    formatter: '.formatter.getCategoryType'
-                }" />
+                        path: 'categories>Type',
+                        formatter: '.formatter.getCategoryType'
+                    }" />
             </items>
         </List>
     </ScrollContainer>
