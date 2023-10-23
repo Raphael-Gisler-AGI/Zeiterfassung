@@ -3,8 +3,11 @@
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc">
     <ScrollContainer height="90vh" vertical="true">
-        <HBox>
+        <HBox
+            class="sapUiSmallMargin"
+            alignItems="Center">
             <ObjectNumber
+                tooltip="Hours worked this month"
                 class="sapMObjectNumberLarge"
                 number="{
                     path: 'statistics>/hours',

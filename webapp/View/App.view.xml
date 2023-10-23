@@ -1,5 +1,4 @@
 <mvc:View
-	xmlns:uxap="sap.uxap"
 	xmlns:cssgrid="sap.ui.layout.cssgrid"
 	controllerName="sap.ui.agi.zeiterfassung.controller.App"
 	xmlns="sap.m"
@@ -44,7 +43,7 @@
 					<Button
 						press="onPressCreate"
 						class="sapUiSmallMarginBottom"
-					 	icon="sap-icon://create-entry-time"
+						icon="sap-icon://create-entry-time"
 						text="Create" />
 					<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
 					<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Default" />

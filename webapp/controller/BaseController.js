@@ -3,25 +3,25 @@ sap.ui.define(
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
+    "sap/ui/core/routing/History",
+    "sap/ui/core/UIComponent",
   ],
-  function (Controller, JSONModel, MessageToast) {
+  function (Controller, JSONModel, MessageToast, History, UIComponent) {
     "use strict";
 
     return Controller.extend(
       "sap.ui.agi.zeiterfassung.controller.BaseController",
       {
         // Navigation
-        onNavigateTime: function () {
-          const oRouter = this.getOwnerComponent().getRouter();
-          oRouter.navTo("time");
-        },
-        onNavigateCalendar: function () {
-          const oRouter = this.getOwnerComponent().getRouter();
-          oRouter.navTo("calendar");
-        },
-        onNavigateStatistics: function () {
-          const oRouter = this.getOwnerComponent().getRouter();
-          oRouter.navTo("statistics");
+        onNavBack: function () {
+          const router = UIComponent.getRouterFor(this);
+          const oHistory = History.getInstance();
+          const sPreviousHash = oHistory.getPreviousHash();
+          if (sPreviousHash !== undefined) {
+            window.history.go(-1);
+          } else {
+            router.navTo("time", {});
+          }
         },
         // Refresh Global Models
         refresh: async function () {

@@ -1,0 +1,11 @@
+<mvc:View
+    controllerName="sap.ui.agi.zeiterfassung.controller.NotFound"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    height="100%">
+    <Page
+        showNavButton="true"
+        navButtonPress="onNavBack">
+        <IllustratedMessage illustrationType="sapIllus-PageNotFound" />
+    </Page>
+</mvc:View>

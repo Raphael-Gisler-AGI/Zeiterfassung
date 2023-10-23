@@ -98,6 +98,11 @@
         "statistics": {
           "id": "statistics",
           "name": "Statistics"
+        },
+        "notFound": {
+          "id": "notFound",
+          "name": "NotFound",
+          "transition": "show"
         }
       }
     }

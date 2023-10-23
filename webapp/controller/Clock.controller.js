@@ -16,11 +16,13 @@ sap.ui.define(
         if (!localStorage.getItem("startTime")) {
           return;
         }
+        MessageToast.show("heheheha", {duration: 900000});
         const newDuration =
           Math.floor(new Date() - new Date(localStorage.getItem("startTime"))) /
           1000;
-        console.log(newDuration);
         this.getTimer().setProperty("/time", newDuration);
+        this.getTimer().setProperty("/active", true);
+        this.runTimer();
       },
       setDefaultTimer: function () {
         this.getOwnerComponent().setModel(
@@ -44,6 +46,7 @@ sap.ui.define(
         this.setDefaultTimer();
         localStorage.clear();
         this.getTimer().setProperty("/active", false);
+        this.byId("clockCategory").setSelectedKey("");
       },
       onPressSave: async function () {
         const timer = this.getTimer();

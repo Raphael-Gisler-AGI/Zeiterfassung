@@ -4,18 +4,22 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m">
     <Panel
-        headerText="Timer"
         expanded="true"
         expandable="true">
+        <headerToolbar>
+            <Toolbar>
+                <Title text="Timer" />
+                <ToolbarSpacer />
+                <Button
+                    press="onPressReset"
+                    tooltip="Reset the timer"
+                    icon="sap-icon://reset" />
+            </Toolbar>
+        </headerToolbar>
         <content>
             <HBox
                 width="100%"
-                justifyContent="SpaceAround">
-                <Button
-                    press="onPressReset"
-                    visible="{timer>/active}"
-                    width="50px"
-                    icon="sap-icon://reset" />
+                justifyContent="Center">
                 <Button
                     press="onPressSave"
                     visible="{timer>/active}"
@@ -39,6 +43,7 @@
                 value="{timer>/description}"
                 placeholder="Description" />
             <ComboBox
+                id="clockCategory"
                 width="100%"
                 required="true"
                 placeholder="Choose a Category..."

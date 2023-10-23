@@ -1,9 +1,7 @@
-sap.ui.define(["./BaseController", "sap/ui/model/json/JSONModel"], function (
-  Controller
-) {
+sap.ui.define(["./BaseController"], function (BaseController) {
   "use strict";
 
-  return Controller.extend("sap.ui.demo.nav.controller.App", {
+  return BaseController.extend("sap.ui.demo.nav.controller.App", {
     onPressMenu: function () {
       const toolPage = this.byId("toolPage");
       toolPage.setSideExpanded(!toolPage.getSideExpanded());

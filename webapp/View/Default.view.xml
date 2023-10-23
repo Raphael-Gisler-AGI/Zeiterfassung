@@ -3,8 +3,12 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m">
 	<Panel
-		headerText="Default Values"
 		expandable="true">
+		<headerToolbar>
+			<Toolbar>
+				<Title text="Default Values" />
+			</Toolbar>
+		</headerToolbar>
 		<content>
 			<TextArea
 				width="100%"
