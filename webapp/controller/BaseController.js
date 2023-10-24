@@ -13,7 +13,7 @@ sap.ui.define(
       "sap.ui.agi.zeiterfassung.controller.BaseController",
       {
         // Navigation
-        onNavBack: function () {
+        onNavBack() {
           const router = UIComponent.getRouterFor(this);
           const oHistory = History.getInstance();
           const sPreviousHash = oHistory.getPreviousHash();
@@ -35,12 +35,7 @@ sap.ui.define(
         },
         // Get Global Models
         entries: function () {
-          const entries = this.getOwnerComponent().getModel("entries");
-          if (!Array.isArray(entries.getData())) {
-            this.getOwnerComponent().setModel(new JSONModel([]), "entries");
-            return this.getOwnerComponent().getModel("entries");
-          }
-          return entries;
+          return this.getOwnerComponent().getModel("entries");
         },
         categories: function () {
           return this.getOwnerComponent().getModel("categories");
@@ -50,6 +45,9 @@ sap.ui.define(
         },
         getTimer: function () {
           return this.getOwnerComponent().getModel("timer");
+        },
+        messages: function () {
+          return this.getOwnerComponent().getModel("messages");
         },
         // Create Edit Delete
         baseUrl: "http://localhost:3000/",
@@ -86,16 +84,15 @@ sap.ui.define(
           });
         },
         convertToDate: function (entries) {
+          console.log(entries)
           entries.forEach((entry) => {
             entry.StartTime = new Date(entry.StartTime);
             entry.EndTime = new Date(entry.EndTime);
           });
         },
-        runTimer: function () {
-          const timer = this.getTimer();
-          this.timer = setInterval(() => {
-            timer.setProperty("/time", timer.getProperty("/time") + 1);
-          }, 1000);
+        getDuration: function (startTime, endTime) {
+          const durationDate = new Date(endTime - startTime);
+          return durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
         },
         onPressCreate: function () {
           this.onOpenModify("Create Entry", () => {
@@ -211,7 +208,7 @@ sap.ui.define(
             Description: description,
             Category: category,
           };
-          if (id == "") {
+          if (!id) {
             await this.createEntry(result);
           } else {
             result["id"] = id;

@@ -55,11 +55,6 @@
 				<Column
 					width="80px"
 					hAlign="Right">
-					<Text text="Continue" />
-				</Column>
-				<Column
-					width="80px"
-					hAlign="Right">
 					<Text text="Edit" />
 				</Column>
 				<Column
@@ -70,7 +65,7 @@
 			</columns>
 			<items>
 				<ColumnListItem
-					highlight="{= ${entries>id} === ${timer>/id} ? 'Information' : 'None' }">
+					highlight="{= !${entries>id} ? 'Information' : 'None'}">
 					<cells>
 						<ObjectIdentifier
 							title="{entries>Description}" />
@@ -94,9 +89,6 @@
 								path: 'entries>Category',
 								formatter: '.formatter.getCategoryText'
 							}" />
-						<Button
-							icon="sap-icon://play"
-							press="onPressContinue" />
 						<Button
 							icon="sap-icon://edit"
 							press="onPressEdit" />

@@ -6,39 +6,11 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
   ],
-  function (
-    BaseController,
-    formatter,
-    Filter,
-    FilterOperator,
-    MessageToast,
-  ) {
+  function (BaseController, formatter, Filter, FilterOperator, MessageToast) {
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Time", {
       formatter: formatter,
-      onPressContinue: function (oEvent) {
-        if (this.getTimer().getProperty("/active")) {
-          MessageToast.show("Please end the current timer first");
-          return;
-        }
-        const entry = oEvent.getSource().getBindingContext("entries");
-        const duration = entry.getProperty("Duration") * 60
-        const startTime = new Date(
-          new Date().getTime() - duration * 1000
-        );
-        localStorage.setItem("startTime", startTime);
-        this.getTimer().setData({
-          description: entry.getProperty("Description"),
-          category: entry.getProperty("Category"),
-          active: true,
-          id: entry.getProperty("id"),
-          time: duration,
-          timeDisplay: new Date(duration).toISOString().substring(11, 19),
-        });
-        this.getTimer().refresh();
-        this.runTimer();
-      },
       onPressEdit: function (oEvent) {
         const oItem = oEvent.getSource();
         const entry = oItem.getBindingContext("entries");

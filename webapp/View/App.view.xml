@@ -6,49 +6,60 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:f="sap.f"
 	height="100vh">
-	<tnt:ToolPage
-		id="toolPage">
-		<tnt:header>
-			<f:ShellBar
-				title="Zeiterfassung"
-				showMenuButton="true"
-				menuButtonPressed="onPressMenu">
-			</f:ShellBar>
-		</tnt:header>
-		<tnt:sideContent>
-			<tnt:SideNavigation>
-				<tnt:NavigationList>
-					<tnt:items>
-						<tnt:NavigationListItem
-							href="index.html#/"
-							icon="sap-icon://table-chart"
-							text="Table" />
-						<tnt:NavigationListItem
-							href="index.html#/calendar"
-							icon="sap-icon://calendar"
-							text="Calendar" />
-						<tnt:NavigationListItem
-							href="index.html#/statistics"
-							icon="sap-icon://bar-chart"
-							text="Statistics" />
-					</tnt:items>
-				</tnt:NavigationList>
-			</tnt:SideNavigation>
-		</tnt:sideContent>
-		<tnt:mainContents>
-			<cssgrid:CSSGrid
-				gridTemplateColumns="80% 19%" gridGap="1%">
-				<App id="app" />
-				<VBox>
-					<Button
-						press="onPressCreate"
-						class="sapUiSmallMarginBottom"
-						icon="sap-icon://create-entry-time"
-						text="Create" />
-					<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
-					<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Default" />
-				</VBox>
-			</cssgrid:CSSGrid>
-		</tnt:mainContents>
-	</tnt:ToolPage>
+	<Page
+		showHeader="false">
+		<tnt:ToolPage
+			id="toolPage">
+			<tnt:header>
+				<f:ShellBar
+					title="Zeiterfassung"
+					showMenuButton="true"
+					menuButtonPressed="onPressMenu">
+				</f:ShellBar>
+			</tnt:header>
+			<tnt:sideContent>
+				<tnt:SideNavigation>
+					<tnt:NavigationList>
+						<tnt:items>
+							<tnt:NavigationListItem
+								href="index.html#/"
+								icon="sap-icon://table-chart"
+								text="Table" />
+							<tnt:NavigationListItem
+								href="index.html#/calendar"
+								icon="sap-icon://calendar"
+								text="Calendar" />
+							<tnt:NavigationListItem
+								href="index.html#/statistics"
+								icon="sap-icon://bar-chart"
+								text="Statistics" />
+						</tnt:items>
+					</tnt:NavigationList>
+				</tnt:SideNavigation>
+			</tnt:sideContent>
+			<tnt:mainContents>
+				<cssgrid:CSSGrid
+					gridTemplateColumns="80% 19%" gridGap="1%">
+					<App id="app" />
+					<VBox>
+						<Button
+							press="onPressCreate"
+							class="sapUiSmallMarginBottom"
+							icon="sap-icon://create-entry-time"
+							text="Create" />
+						<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
+						<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Default" />
+					</VBox>
+				</cssgrid:CSSGrid>
+			</tnt:mainContents>
+		</tnt:ToolPage>
+		<footer>
+			<OverflowToolbar>
+				<Button
+					id="messagePopoverButton"
+					press="onPressFooterButton"
+					ariaHasPopup="Dialog" />
+			</OverflowToolbar>
+		</footer>
+	</Page>
 </mvc:View>

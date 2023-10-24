@@ -21,15 +21,9 @@
                 width="100%"
                 justifyContent="Center">
                 <Button
-                    press="onPressSave"
-                    visible="{timer>/active}"
+                    press="onPressClock"
                     width="50px"
-                    icon="sap-icon://save" />
-                <Button
-                    press="onPressActivate"
-                    visible="{= ${timer>/active} ? false : true}"
-                    width="50px"
-                    icon="sap-icon://media-play" />
+                    icon="{= ${timer>/active} ? 'sap-icon://save' : 'sap-icon://media-play'}" />
             </HBox>
             <ObjectNumber
                 textAlign="Center"
@@ -41,6 +35,7 @@
             <TextArea
                 width="100%"
                 value="{timer>/description}"
+                change="onChangeDescription"
                 placeholder="Description" />
             <ComboBox
                 id="clockCategory"

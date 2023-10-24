@@ -46,17 +46,8 @@ sap.ui.define(
         getHoursInMonth: function () {
           let hours = 0;
           const entries = this.entries().getData();
-          const currentDate = new Date(
-            new Date().getFullYear(),
-            new Date().getMonth()
-          );
           entries.forEach((entry) => {
-            const day = entry.Day.split(".");
-            if (
-              currentDate.toString() == new Date(day[0], day[1] - 1).toString()
-            ) {
-              hours += entry.Duration;
-            }
+            hours += entry.Duration
           });
           this.getView().getModel("statistics").setProperty("/hours", hours);
         },

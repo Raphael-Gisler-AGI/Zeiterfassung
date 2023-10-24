@@ -9,7 +9,7 @@ sap.ui.define([], function () {
         .getModel("categories")
         .getData();
       const category = categories.find((category) => category.id == id);
-      if (!category.Name) {
+      if (!category?.Name) {
         return id;
       }
       return category.Name;
@@ -35,7 +35,7 @@ sap.ui.define([], function () {
       const type = this.getOwnerComponent()
         .getModel("categories")
         .getData()
-        .find((c) => c.id == category).Type;
+        .find((c) => c.id == category)?.Type;
       switch (type) {
         case 0:
           return "Type01";
