@@ -10,7 +10,7 @@ sap.ui.define(
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Clock", {
       formatter: formatter,
-      onInit: function () {
+      onInit() {
         this.setDefaultTimer();
         if (!localStorage.getItem("startTime")) {
           return;
@@ -31,9 +31,10 @@ sap.ui.define(
         this.getTimer().setProperty("/description", description);
         this.getTimer().setProperty("/category", category);
         this.byId("clockCategory").setSelectedKey(category);
+        this.getTimer().setProperty("/active", true);
         this.addTimerToEntries();
       },
-      setDefaultTimer: function () {
+      setDefaultTimer() {
         this.getOwnerComponent().setModel(
           new JSONModel({
             description: "",
@@ -44,29 +45,7 @@ sap.ui.define(
           "timer"
         );
       },
-      addTimerToEntries: function () {
-        this.getTimer().setProperty("/active", true);
-        const category =
-          this.getTimer().getProperty("/category") ||
-          this.default().getProperty("/category");
-        const endTime = new Date();
-        this.entries()
-          .getData()
-          .push({
-            Day: "Active Timer",
-            StartTime: new Date(localStorage.getItem("startTime")),
-            EndTime: endTime,
-            Duration: this.getDuration(
-              new Date(localStorage.getItem("startTime")),
-              endTime
-            ),
-            Description: this.getTimer().getProperty("/description"),
-            Category: category,
-          });
-        this.entries().refresh();
-        this.runTimer();
-      },
-      runTimer: function () {
+      runTimer() {
         const timer = this.getTimer();
         const current = this.getRunningEntry();
         this.timer = setInterval(() => {
@@ -82,7 +61,7 @@ sap.ui.define(
           }
         }, 1000);
       },
-      onPressClock: function () {
+      onPressClock() {
         const active = this.getTimer().getProperty("/active");
         if (active) {
           this.saveTimer();
@@ -92,18 +71,26 @@ sap.ui.define(
           this.addTimerToEntries();
         }
       },
-      onPressReset: function () {
+      onPressReset() {
         clearInterval(this.timer);
         if (this.getTimer().getProperty("/active")) {
           this.entries().getData().pop();
           this.entries().refresh();
+          const index = this.messages()
+            .getData()
+            .map((message) => message.title)
+            .indexOf("Timer");
+          console.log(index);
+          this.messages().getData().splice(index, 1);
+          this.messages().refresh(true);
+          console.log(this.messages().getData())
         }
         this.byId("clockCategory").setSelectedKey("");
         localStorage.clear();
         this.getTimer().setProperty("/active", false);
         this.setDefaultTimer();
       },
-      saveTimer: async function () {
+      async saveTimer() {
         const timer = this.getTimer();
         const description = timer.getProperty("/description");
         const category = timer.getProperty("/category");
@@ -126,18 +113,18 @@ sap.ui.define(
         );
         this.onPressReset();
       },
-      getRunningEntry: function () {
+      getRunningEntry() {
         const entries = this.entries().getData();
         return entries[entries.length - 1];
       },
-      onSetCategory: function (oEvent) {
+      onSetCategory(oEvent) {
         const category = oEvent.getSource().getSelectedKey();
         localStorage.setItem("category", category);
         this.getRunningEntry().Category = category;
         this.entries().refresh();
         this.getTimer().setProperty("/category", category);
       },
-      onChangeDescription: function (oEvent) {
+      onChangeDescription(oEvent) {
         const description = oEvent.getSource().getValue();
         localStorage.setItem("description", description);
         this.getRunningEntry().Description = description;

@@ -31,7 +31,6 @@ sap.ui.define(
               });
               this.setModel(new JSONModel([]), "entries");
             } else {
-              console.log(entries.getData());
               entries.getData().forEach((entry) => {
                 entry.StartTime = new Date(entry.StartTime);
                 entry.EndTime = new Date(entry.EndTime);

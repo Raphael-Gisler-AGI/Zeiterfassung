@@ -24,34 +24,61 @@ sap.ui.define(
           }
         },
         // Refresh Global Models
-        refresh: async function () {
+        async refresh() {
           const [entries, categories] = await Promise.all([
             fetch(`${this.baseUrl}getEntries`).then((res) => res.json()),
             fetch(`${this.baseUrl}getCategories`).then((res) => res.json()),
           ]);
-          this.convertToDate(entries);
+          entries.forEach((entry) => {
+            entry.StartTime = new Date(entry.StartTime);
+            entry.EndTime = new Date(entry.EndTime);
+          });
           this.entries().setData(entries);
+          if (this.getTimer().getProperty("/active")) {
+            this.addTimerToEntries();
+          }
           this.categories().setData(categories);
         },
+        addTimerToEntries() {
+          const category =
+            this.getTimer().getProperty("/category") ||
+            this.default().getProperty("/category");
+          const endTime = new Date();
+          this.entries()
+            .getData()
+            .push({
+              Day: "Active Timer",
+              StartTime: new Date(localStorage.getItem("startTime")),
+              EndTime: endTime,
+              Duration: this.getDuration(
+                new Date(localStorage.getItem("startTime")),
+                endTime
+              ),
+              Description: this.getTimer().getProperty("/description"),
+              Category: category,
+            });
+          this.entries().refresh();
+          this.runTimer();
+        },
         // Get Global Models
-        entries: function () {
+        entries() {
           return this.getOwnerComponent().getModel("entries");
         },
-        categories: function () {
+        categories() {
           return this.getOwnerComponent().getModel("categories");
         },
-        default: function () {
+        default() {
           return this.getOwnerComponent().getModel("default");
         },
-        getTimer: function () {
+        getTimer() {
           return this.getOwnerComponent().getModel("timer");
         },
-        messages: function () {
+        messages() {
           return this.getOwnerComponent().getModel("messages");
         },
         // Create Edit Delete
         baseUrl: "http://localhost:3000/",
-        createEntry: async function (data) {
+        async createEntry(data) {
           return await fetch(
             `${this.baseUrl}createEntry?data=${JSON.stringify(data)}`
           )
@@ -60,7 +87,7 @@ sap.ui.define(
             })
             .then(this.refresh());
         },
-        editEntry: async function (data) {
+        async editEntry(data) {
           return await fetch(
             `${this.baseUrl}editEntry?data=${JSON.stringify(data)}`
           )
@@ -69,39 +96,32 @@ sap.ui.define(
             })
             .then(this.refresh());
         },
-        deleteEntry: async function (id) {
+        async deleteEntry(id) {
           return await fetch(`${this.baseUrl}deleteEntry?id=${id}`)
             .then((res) => {
               return res.status;
             })
             .then(this.refresh());
         },
-        saveDefault: async function (data) {
+        async saveDefault(data) {
           return await fetch(
             `${this.baseUrl}saveDefault?data=${JSON.stringify(data)}`
           ).then((res) => {
             return res.status;
           });
         },
-        convertToDate: function (entries) {
-          console.log(entries)
-          entries.forEach((entry) => {
-            entry.StartTime = new Date(entry.StartTime);
-            entry.EndTime = new Date(entry.EndTime);
-          });
-        },
-        getDuration: function (startTime, endTime) {
+        getDuration(startTime, endTime) {
           const durationDate = new Date(endTime - startTime);
           return durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
         },
-        onPressCreate: function () {
+        onPressCreate() {
           this.onOpenModify("Create Entry", () => {
             const startTime = new Date();
             startTime.setHours(startTime.getHours() - 1);
             this.setModifyCreateValues(new Date(), startTime, new Date());
           });
         },
-        onOpenModify: function (title, setValues) {
+        onOpenModify(title, setValues) {
           this.getView().setModel(
             new JSONModel({
               Type: 0,
@@ -120,21 +140,21 @@ sap.ui.define(
             })
             .then(setValues);
         },
-        getCategoryType: function (category) {
+        getCategoryType(category) {
           return this.categories()
             .getData()
             .find((c) => c.id == category).Type;
         },
-        changeType: function (id) {
+        changeType(id) {
           this.getView()
             .getModel("type")
             .setProperty("/Type", this.getCategoryType(id));
         },
-        onChangeCategoryModify: function (oEvent) {
+        onChangeCategoryModify(oEvent) {
           const id = oEvent.getSource().getSelectedKey();
           this.changeType(id);
         },
-        dayToDate: function (day) {
+        dayToDate(day) {
           return new Date(
             day.getFullYear(),
             day.getMonth(),
@@ -145,13 +165,13 @@ sap.ui.define(
             0
           );
         },
-        timeToDate: function (modifyTime, day) {
+        timeToDate(modifyTime, day) {
           const time = this.dayToDate(day);
           time.setHours(modifyTime.getHours());
           time.setMinutes(modifyTime.getMinutes());
           return time;
         },
-        onOkModify: async function () {
+        async onOkModify() {
           const type = this.getView().getModel("type").getProperty("/Type");
           const date = this.byId("modifyStartDate");
           const modifyStartTime = new Date(
@@ -189,7 +209,7 @@ sap.ui.define(
           );
           this.onCloseModify();
         },
-        beforeCreateEntry: async function (
+        async beforeCreateEntry(
           day,
           startTime,
           endTime,
@@ -215,13 +235,13 @@ sap.ui.define(
             await this.editEntry(result);
           }
         },
-        onCloseModify: function () {
+        onCloseModify() {
           this.byId("modifyDialog").close();
         },
-        setRoundedMinutes: function (time) {
+        setRoundedMinutes(time) {
           return time.setMinutes(Math.round(time.getMinutes() / 15) * 15);
         },
-        setModifyCreateValues: function (date, startTime, endTime) {
+        setModifyCreateValues(date, startTime, endTime) {
           const category = this.default().getProperty("/Category");
           const type = this.getCategoryType(category);
           if (type == 0) {
@@ -238,13 +258,7 @@ sap.ui.define(
           this.byId("modifyStartTime").setDateValue(startTime);
           this.byId("modifyEndTime").setDateValue(endTime);
         },
-        setModifyEditValues: function (
-          id,
-          description,
-          category,
-          startTime,
-          endTime
-        ) {
+        setModifyEditValues(id, description, category, startTime, endTime) {
           this.byId("modifyId").setText(id);
           this.byId("modifyDescription").setValue(description);
           this.byId("modifyCategory").setSelectedKey(category);

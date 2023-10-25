@@ -1,10 +1,10 @@
 sap.ui.define([], function () {
   "use strict";
   return {
-    getDisplayTime: function (date) {
+    getDisplayTime(date) {
       return new Date(date * 1000).toISOString().substring(11, 19);
     },
-    getCategoryText: function (id) {
+    getCategoryText(id) {
       const categories = this.getOwnerComponent()
         .getModel("categories")
         .getData();
@@ -14,12 +14,12 @@ sap.ui.define([], function () {
       }
       return category.Name;
     },
-    getTime: function (value) {
+    getTime(value) {
       const round = 1000;
       const hours = Math.round((value / 60) * round) / round;
       return `${hours}h`;
     },
-    getCategoryType: function (type) {
+    getCategoryType(type) {
       switch (type) {
         case 0:
           return "Projektleistungen";
@@ -31,7 +31,7 @@ sap.ui.define([], function () {
           return type;
       }
     },
-    getCalendarType: function (category) {
+    getCalendarType(category) {
       const type = this.getOwnerComponent()
         .getModel("categories")
         .getData()
@@ -46,6 +46,46 @@ sap.ui.define([], function () {
         default:
           return "Type01";
       }
+    },
+    getMessageIcon(messages) {
+      if (messages.length === 0) {
+        return "None";
+      }
+      let icon;
+      loop: for (let i = 0; i < messages.length; i++) {
+        switch (messages[i].type) {
+          case "Error":
+            icon = "error";
+            break loop;
+          case "Information":
+            icon = "information";
+            break;
+          case "Success":
+            icon = icon != "information" ? "success" : icon;
+            break;
+        }
+      }
+      return `sap-icon://${icon}`;
+    },
+    getMessageType(messages) {
+      if (messages.length == 0) {
+        return "Neutral";
+      }
+      let type;
+      loop: for (let i = 0; i < messages.length; i++) {
+        switch (messages[i].type) {
+          case "Error":
+            type = "Negative";
+            break loop;
+          case "Information":
+            type = "Neutral";
+            break;
+          case "Success":
+            type = type != "Critical" ? "Success" : type;
+            break;
+        }
+      }
+      return type;
     },
   };
 });

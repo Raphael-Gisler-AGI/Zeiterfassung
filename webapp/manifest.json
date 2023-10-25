@@ -84,6 +84,11 @@
           "pattern": "statistics",
           "name": "statistics",
           "target": "statistics"
+        },
+        {
+          "pattern": "notFound",
+          "name": "notFound",
+          "target": "notFound"
         }
       ],
       "targets": {

@@ -1,15 +1,17 @@
 sap.ui.define(
   [
     "./BaseController",
+    "../model/formatter",
     "sap/m/MessagePopover",
     "sap/m/MessageItem",
     "sap/m/Link",
     "sap/ui/model/json/JSONModel",
   ],
-  function (BaseController, MessagePopover, MessageItem, Link, JSONModel) {
+  function (BaseController, formatter, MessagePopover, MessageItem) {
     "use strict";
     let messagePopover;
     return BaseController.extend("sap.ui.demo.nav.controller.App", {
+      formatter: formatter,
       onInit() {
         const messageTemplate = new MessageItem({
           type: "{messages>type}",
@@ -17,7 +19,6 @@ sap.ui.define(
           description: "{messages>description}",
           subtitle: "{messages>subtitle}",
         });
-        console.log(this.messages().getData());
         this.messages().refresh()
         messagePopover = new MessagePopover({
           items: {

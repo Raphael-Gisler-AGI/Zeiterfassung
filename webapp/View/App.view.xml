@@ -1,12 +1,13 @@
 <mvc:View
-	xmlns:cssgrid="sap.ui.layout.cssgrid"
 	controllerName="sap.ui.agi.zeiterfassung.controller.App"
+	xmlns:cssgrid="sap.ui.layout.cssgrid"
 	xmlns="sap.m"
 	xmlns:tnt="sap.tnt"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:f="sap.f"
-	height="100vh">
+	height="calc(100vh - 4px)">
 	<Page
+		showFooter="{= ${messages>/}.length > 0}"
 		showHeader="false">
 		<tnt:ToolPage
 			id="toolPage">
@@ -58,6 +59,14 @@
 				<Button
 					id="messagePopoverButton"
 					press="onPressFooterButton"
+					icon="{
+						path: 'messages>/',
+						formatter: '.formatter.getMessageIcon'
+					}"
+					type="{
+						path: 'messages>/',
+						formatter: '.formatter.getMessageType'
+					}"
 					ariaHasPopup="Dialog" />
 			</OverflowToolbar>
 		</footer>
