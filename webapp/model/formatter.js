@@ -87,5 +87,9 @@ sap.ui.define([], function () {
       }
       return type;
     },
+    timepicker(time) {
+      console.log(time)
+      return `${time.getHours()}:${time.getMinutes()}`
+    }
   };
 });

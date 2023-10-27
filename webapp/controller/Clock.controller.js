@@ -80,10 +80,8 @@ sap.ui.define(
             .getData()
             .map((message) => message.title)
             .indexOf("Timer");
-          console.log(index);
           this.messages().getData().splice(index, 1);
           this.messages().refresh(true);
-          console.log(this.messages().getData())
         }
         this.byId("clockCategory").setSelectedKey("");
         localStorage.clear();

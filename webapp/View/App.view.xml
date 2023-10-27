@@ -49,7 +49,7 @@
 							icon="sap-icon://create-entry-time"
 							text="Create" />
 						<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Clock" />
-						<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Default" />
+						<mvc:XMLView viewName="sap.ui.agi.zeiterfassung.view.Favorites" />
 					</VBox>
 				</cssgrid:CSSGrid>
 			</tnt:mainContents>

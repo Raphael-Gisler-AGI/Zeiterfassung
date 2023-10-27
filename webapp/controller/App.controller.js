@@ -19,7 +19,7 @@ sap.ui.define(
           description: "{messages>description}",
           subtitle: "{messages>subtitle}",
         });
-        this.messages().refresh()
+        this.messages().refresh();
         messagePopover = new MessagePopover({
           items: {
             path: "messages>/",
@@ -27,6 +27,20 @@ sap.ui.define(
           },
         });
         this.byId("messagePopoverButton").addDependent(messagePopover);
+      },
+      onPressCreate() {
+        const date = new Date();
+        this.onOpenModify({
+          title: "Create Entry",
+          creationType: 0,
+          description: "",
+          category: undefined,
+          type: 0,
+          startDay: date,
+          endDay: date,
+          startTime: `${date.getHours()}:${date.getMinutes()}`,
+          endTime: `${date.getHours()}:${date.getMinutes()}`,
+        });
       },
       onPressMenu() {
         const toolPage = this.byId("toolPage");

@@ -50,9 +50,9 @@
         "type": "sap.ui.model.json.JSONModel",
         "uri": "http://localhost:3000/getCategories"
       },
-      "default": {
+      "favorites": {
         "type": "sap.ui.model.json.JSONModel",
-        "uri": "http://localhost:3000/getDefault"
+        "uri": "http://localhost:3000/getFavorites"
       }
     },
     "routing": {

@@ -18,14 +18,19 @@ sap.ui.define(
           MessageToast.show("Please stop the timer before editing");
           return;
         }
-        this.onOpenModify("Edit Entry", () => {
-          this.setModifyEditValues(
-            entry.getProperty("id"),
-            entry.getProperty("Description"),
-            entry.getProperty("Category"),
-            entry.getProperty("StartTime"),
-            entry.getProperty("EndTime")
-          );
+        const startTime = entry.getProperty("StartTime");
+        const endTime = entry.getProperty("EndTime");
+        this.onOpenModify({
+          id: entry.getProperty("id"),
+          title: "Edit Entry",
+          creationType: 1,
+          description: entry.getProperty("Description"),
+          category: entry.getProperty("Category"),
+          type: 0,
+          startDay: startTime,
+          endDay: endTime,
+          startTime: this.formatTime(startTime),
+          endTime: this.formatTime(endTime),
         });
       },
       onPressDelete: async function (oEvent) {
@@ -35,7 +40,7 @@ sap.ui.define(
           MessageToast.show("Please stop the timer before deleting");
           return;
         }
-        await this.deleteEntry(id);
+        await this.beforeDeleteEntry(id);
       },
       filter: [new Filter(), new Filter()],
       onFilterSearch: function (oEvent) {

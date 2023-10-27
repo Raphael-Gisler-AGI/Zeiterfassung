@@ -19,8 +19,10 @@ app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
 
-app.get("/createEntry", (req, res) => {
-  const entry = JSON.parse(req.query.data);
+app.use(express.json());
+
+app.post("/createEntry", (req, res) => {
+  const entry = req.body;
   entry["id"] = crypto.randomBytes(16).toString("hex");
   file.Entries.push(entry);
   categories[entry.Category].Time += entry.Duration;
@@ -70,12 +72,13 @@ function findDelete(id) {
   file.Entries.splice(index, 1);
 }
 
-app.get("/saveDefault", (req, res) => {
-  const settings = JSON.parse(req.query.data);
-  file.Default.Description = settings.Description;
-  file.Default.Category = settings.Category;
+app.post("/createFavorite", (req, res) => {
+  const favorite = req.body;
+  favorite["id"] = crypto.randomBytes(16).toString("hex");
+  file.Favorites.push(favorite);
   res.sendStatus(saveEntry());
 });
+
 function saveEntry() {
   return save(fileName, file);
 }
@@ -91,8 +94,8 @@ function save(path, file) {
   return 200;
 }
 
-app.get("/getDefault", (req, res) => {
-  res.send(file.Default);
+app.get("/getFavorites", (req, res) => {
+  res.send(file.Favorites);
 });
 
 app.get("/getEntries", (req, res) => {

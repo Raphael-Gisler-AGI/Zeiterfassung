@@ -3,7 +3,7 @@
 	xmlns:l="sap.ui.layout"
 	xmlns:f="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
-	<Dialog id="modifyDialog" title="Title">
+	<Dialog id="modifyDialog" title="{modify>/title}">
 		<beginButton>
 			<Button text="OK" type="Emphasized" press="onOkModify" />
 		</beginButton>
@@ -20,54 +20,60 @@
 				singleContainerFullSize="false">
 				<Label
 					visible="false"
-					id="modifyId"/>
+					id="modifyId" />
 				<Label text="Description" labelFor="appDescription" />
 				<TextArea
-					required="true"
-					id="modifyDescription"/>
+					value="{modify>/description}"
+					required="true" />
 				<Label text="Category" labelFor="category" />
 				<ComboBox
-					id="modifyCategory"
-					selectionChange="onChangeCategoryModify"
-					items="{categories>/}">
+					selectedKey="{modify>/category}"
+					selectionChange="setModifyType"
+					items="{categories>/}"
+					required="true">
 					<core:Item
 						key="{categories>id}"
 						text="{categories>Name}" />
 				</ComboBox>
 				<Label
-					text="{= ${type>/Type} > 1 ? 'From' : 'Day'}"
+					text="{= ${modify>/type} > 1 ? 'From' : 'Day'}"
 					labelFor="startDate" />
 				<DatePicker
-					id="modifyStartDate"
-					valueFormat="YYYY.MM.dd"
+					value="{
+						path:'modify>/startDay',
+						type: 'sap.ui.model.type.Date'
+					}"
 					required="true" />
 				<Label />
-				<VBox visible="{= ${type>/Type} > 1 ? true : false}">
-					<Label text="Until"/>
+				<VBox visible="{= ${modify>/type} > 1 ? true : false}">
+					<Label text="Until" />
 					<DatePicker
-						id="modifyEndDate"
+						value="{
+							path:'modify>/endDay',
+							type: 'sap.ui.model.type.Date'
+						}"
 						valueFormat="YYYY.MM.dd"
-						required="true"/>
+						required="true" />
 				</VBox>
 				<Label />
-				<HBox visible="{= ${type>/Type} > 1 ? false : true}" justifyContent="SpaceBetween">
+				<HBox
+					visible="{= ${modify>/type} > 1 ? false : true}"
+					justifyContent="SpaceBetween">
 					<VBox>
 						<Label text="Start Time" labelFor="startTime" />
 						<TimePicker
-							id="modifyStartTime"
-							minutesStep="{= ${type>/Type} > 0 ? 1 : 15}"
-							support2400="true"
-							valueFormat="HH:mm"
-							displayFormat="HH:mm" />
+							value="{modify>/startTime}"
+							displayFormat="HH:mm"
+							valueFormat="HH:mm" />
 					</VBox>
 					<VBox>
 						<Label text="End Time" labelFor="endTime" />
 						<TimePicker
-							id="modifyEndTime"
-							minutesStep="{= ${type>/Type} > 0 ? 1 : 15}"
+							value="{modify>/endTime}"
+							minutesStep="{= ${modify>/type} > 0 ? 1 : 15}"
 							support2400="true"
 							valueFormat="HH:mm"
-							displayFormat="HH:mm"/>
+							displayFormat="HH:mm" />
 					</VBox>
 				</HBox>
 			</f:SimpleForm>

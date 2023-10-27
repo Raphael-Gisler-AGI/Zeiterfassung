@@ -16,8 +16,17 @@ sap.ui.define(
         handleCreate(oEvent) {
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
-          this.onOpenModify("Create Entry", () => {
-            this.setModifyCreateValues(startTime, startTime, endTime);
+          const date = new Date();
+          this.onOpenModify({
+            title: "Create Entry",
+            creationType: 0,
+            description: "",
+            category: undefined,
+            type: 0,
+            startDay: date,
+            endDay: date,
+            startTime: `${startTime.getHours()}:${startTime.getMinutes()}`,
+            endTime: `${endTime.getHours()}:${endTime.getMinutes()}`,
           });
         },
         handleChange(oEvent) {
@@ -26,14 +35,17 @@ sap.ui.define(
             .getBindingContext("entries");
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
-          this.onOpenModify("Edit Entry", () => {
-            this.setModifyEditValues(
-              entry.getProperty("id"),
-              entry.getProperty("Description"),
-              entry.getProperty("Category"),
-              startTime,
-              endTime
-            );
+          this.onOpenModify({
+            id: entry.getProperty("id"),
+            title: "Edit Entry",
+            creationType: 1,
+            description: entry.getProperty("Description"),
+            category: entry.getProperty("Category"),
+            type: 0,
+            startDay: startTime,
+            endDay: endTime,
+            startTime: `${startTime.getHours()}:${startTime.getMinutes()}`,
+            endTime: `${endTime.getHours()}:${endTime.getMinutes()}`,
           });
         },
         handleSelect(oEvent) {
@@ -62,12 +74,7 @@ sap.ui.define(
         },
         async handleDeleteDetails() {
           const id = this.getView().getModel("details").getProperty("/id");
-          const res = await this.deleteEntry(id);
-          if (res == 200) {
-            MessageToast.show("Deleted your entry");
-          } else {
-            MessageToast.show("Could not delete your entry");
-          }
+          await this.beforeDeleteEntry(id);
         },
         handleEditDetails: async function () {
           const details = this.getView().getModel("details");

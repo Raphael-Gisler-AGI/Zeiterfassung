@@ -1,17 +1,26 @@
 sap.ui.define(
   [
     "sap/ui/core/mvc/Controller",
+    "../model/formatter",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/ui/core/routing/History",
     "sap/ui/core/UIComponent",
   ],
-  function (Controller, JSONModel, MessageToast, History, UIComponent) {
+  function (
+    Controller,
+    formatter,
+    JSONModel,
+    MessageToast,
+    History,
+    UIComponent
+  ) {
     "use strict";
 
     return Controller.extend(
       "sap.ui.agi.zeiterfassung.controller.BaseController",
       {
+        formatter: formatter,
         // Navigation
         onNavBack() {
           const router = UIComponent.getRouterFor(this);
@@ -39,10 +48,13 @@ sap.ui.define(
           }
           this.categories().setData(categories);
         },
+        async refreshFavorites() {
+          const res = await fetch(`${this.baseUrl}getFavorites`);
+          const favorites = await res.json();
+          this.favorites().setData(favorites);
+        },
         addTimerToEntries() {
-          const category =
-            this.getTimer().getProperty("/category") ||
-            this.default().getProperty("/category");
+          const category = this.getTimer().getProperty("/category") || "";
           const endTime = new Date();
           this.entries()
             .getData()
@@ -67,8 +79,8 @@ sap.ui.define(
         categories() {
           return this.getOwnerComponent().getModel("categories");
         },
-        default() {
-          return this.getOwnerComponent().getModel("default");
+        favorites() {
+          return this.getOwnerComponent().getModel("favorites");
         },
         getTimer() {
           return this.getOwnerComponent().getModel("timer");
@@ -76,12 +88,19 @@ sap.ui.define(
         messages() {
           return this.getOwnerComponent().getModel("messages");
         },
+        modify() {
+          return this.getView().getModel("modify");
+        },
         // Create Edit Delete
         baseUrl: "http://localhost:3000/",
         async createEntry(data) {
-          return await fetch(
-            `${this.baseUrl}createEntry?data=${JSON.stringify(data)}`
-          )
+          return await fetch(`${this.baseUrl}createEntry`, {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+            body: JSON.stringify(data),
+          })
             .then((res) => {
               return res.status;
             })
@@ -103,170 +122,148 @@ sap.ui.define(
             })
             .then(this.refresh());
         },
-        async saveDefault(data) {
-          return await fetch(
-            `${this.baseUrl}saveDefault?data=${JSON.stringify(data)}`
-          ).then((res) => {
-            return res.status;
-          });
+        async createFavorite(data) {
+          console.log(data);
+          return await fetch(`${this.baseUrl}createFavorite`, {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((res) => {
+              return res.status;
+            })
+            .then(this.refreshFavorites());
+        },
+        // Before CRUD
+        async beforeCreate() {
+          const modifyData = this.getView().getModel("modify").getData();
+          const data = {
+            Day: modifyData.startDay,
+            StartTime: modifyData.startTime,
+            EndTime: modifyData.endTime,
+            Duration: modifyData.duration,
+            Description: modifyData.description,
+            Category: modifyData.category,
+          };
+          let res = 0;
+          switch (modifyData.creationType) {
+            case 0:
+              res = await this.createEntry(data);
+              break;
+            case 1:
+              data["id"] = modifyData.id;
+              res = await this.editEntry(data);
+              break;
+            case 2:
+              res = await this.createFavorite(data);
+              break;
+          }
+          console.log(res);
+        },
+        async beforeDeleteEntry(id) {
+          const res = await this.deleteEntry(id);
+          this.displayResponse(
+            res,
+            "Entry has been deleted",
+            "Failed to delete an entry\nPlease try again"
+          );
+        },
+        displayResponse(res, successMessage, rejectMessage) {
+          if (res === 200) {
+            MessageToast.show(successMessage);
+          } else {
+            MessageToast.show(rejectMessage);
+          }
         },
         getDuration(startTime, endTime) {
           const durationDate = new Date(endTime - startTime);
           return durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
         },
-        onPressCreate() {
-          this.onOpenModify("Create Entry", () => {
-            const startTime = new Date();
-            startTime.setHours(startTime.getHours() - 1);
-            this.setModifyCreateValues(new Date(), startTime, new Date());
-          });
-        },
-        onOpenModify(title, setValues) {
-          this.getView().setModel(
-            new JSONModel({
-              Type: 0,
-            }),
-            "type"
-          );
+        onOpenModify(modifyModel) {
+          this.getView().setModel(new JSONModel(modifyModel), "modify");
           if (!this.pDialog) {
             this.pDialog = this.loadFragment({
               name: "sap.ui.agi.zeiterfassung.view.Modify",
             });
           }
-          this.pDialog
-            .then(function (oDialog) {
-              oDialog.setTitle(title);
-              oDialog.open();
-            })
-            .then(setValues);
+          this.pDialog.then(function (oDialog) {
+            oDialog.open();
+          });
         },
         getCategoryType(category) {
           return this.categories()
             .getData()
             .find((c) => c.id == category).Type;
         },
-        changeType(id) {
-          this.getView()
-            .getModel("type")
-            .setProperty("/Type", this.getCategoryType(id));
-        },
-        onChangeCategoryModify(oEvent) {
+        setModifyType(oEvent) {
           const id = oEvent.getSource().getSelectedKey();
-          this.changeType(id);
+          this.modify().setProperty("/type", this.getCategoryType(id));
         },
-        dayToDate(day) {
-          return new Date(
-            day.getFullYear(),
-            day.getMonth(),
-            day.getDate(),
-            0,
-            0,
-            0,
-            0
-          );
+        dateToDay(date) {
+          let month = date.getMonth() + 1;
+          month = month < 10 ? `0${month}` : month;
+          return `${date.getFullYear()}.${month}.${date.getDate()}`;
         },
-        timeToDate(modifyTime, day) {
-          const time = this.dayToDate(day);
-          time.setHours(modifyTime.getHours());
-          time.setMinutes(modifyTime.getMinutes());
-          return time;
+        timeToDate(date, time) {
+          if (!date) {
+            return undefined;
+          }
+          return new Date(`${date} ${time}`);
         },
         async onOkModify() {
-          const type = this.getView().getModel("type").getProperty("/Type");
-          const date = this.byId("modifyStartDate");
-          const modifyStartTime = new Date(
-            this.byId("modifyStartTime").getDateValue()
-          );
-          const modifyEndTime = new Date(
-            this.byId("modifyEndTime").getDateValue()
-          );
-          let startTime;
-          let endTime;
-          if (type == 2) {
-            startTime = this.dayToDate(date.getDateValue());
-            endTime = this.byId("modifyEndDate").getDateValue();
-          } else {
-            startTime = this.timeToDate(modifyStartTime, date.getDateValue());
-            endTime = this.timeToDate(modifyEndTime, date.getDateValue());
+          const modify = this.getView().getModel("modify").getData();
+          // Error handling
+          if (modify.creationType != 2) {
+            if (!modify.description) {
+              MessageToast.show("Please fill in a description");
+              return;
+            }
+            if (!modify.category) {
+              MessageToast.show("Please select a category");
+              return;
+            }
+            if (!modify.startDay) {
+              MessageToast.show("no startday?");
+              return;
+            }
           }
-          if (startTime > endTime) {
+          if (modify.startDay) {
+            modify.startDay = this.dateToDay(modify.startDay);
+          }
+          if (modify.endDay) {
+            modify.endDay = this.dateToDay(modify.endDay);
+          }
+          // Formatting Time
+          modify.startTime = this.timeToDate(
+            modify.startDay,
+            modify.type != 2 ? modify.startTime || "00:00" : "00:00"
+          );
+          modify.endTime = this.timeToDate(
+            modify.type != 2 ? modify.startDay : modify.endDay,
+            modify.type != 2 ? modify.endTime || "00:00" : "00:00"
+          );
+          // Set the duration
+          modify.duration = this.getDuration(modify.startTime, modify.endTime);
+          // Format Day
+          if (modify.type == 2) {
+            modify.startDay = `${modify.startDay} - ${modify.endDay}`;
+          }
+          if (modify.startTime > modify.endTime) {
             MessageToast.show(
               "The End Time has to be larger than the Start Time"
             );
             return;
           }
-          const day =
-            type == 2
-              ? `${date.getValue()} - ${this.byId("modifyEndDate").getValue()}`
-              : date.getValue();
-          await this.beforeCreateEntry(
-            day,
-            startTime,
-            endTime,
-            this.byId("modifyDescription").getValue(),
-            this.byId("modifyCategory").getSelectedKey(),
-            this.byId("modifyId").getText()
-          );
+          await this.beforeCreate();
           this.onCloseModify();
-        },
-        async beforeCreateEntry(
-          day,
-          startTime,
-          endTime,
-          description,
-          category,
-          id
-        ) {
-          const durationDate = new Date(endTime - startTime);
-          const duration =
-            durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
-          const result = {
-            Day: day,
-            StartTime: startTime,
-            EndTime: endTime,
-            Duration: duration,
-            Description: description,
-            Category: category,
-          };
-          if (!id) {
-            await this.createEntry(result);
-          } else {
-            result["id"] = id;
-            await this.editEntry(result);
-          }
         },
         onCloseModify() {
           this.byId("modifyDialog").close();
         },
-        setRoundedMinutes(time) {
-          return time.setMinutes(Math.round(time.getMinutes() / 15) * 15);
-        },
-        setModifyCreateValues(date, startTime, endTime) {
-          const category = this.default().getProperty("/Category");
-          const type = this.getCategoryType(category);
-          if (type == 0) {
-            this.setRoundedMinutes(startTime);
-            this.setRoundedMinutes(endTime);
-          }
-          this.byId("modifyId").setText("");
-          this.byId("modifyDescription").setValue(
-            this.default().getProperty("/Description")
-          );
-          this.byId("modifyCategory").setSelectedKey(category);
-          this.changeType(category);
-          this.byId("modifyStartDate").setDateValue(date);
-          this.byId("modifyStartTime").setDateValue(startTime);
-          this.byId("modifyEndTime").setDateValue(endTime);
-        },
-        setModifyEditValues(id, description, category, startTime, endTime) {
-          this.byId("modifyId").setText(id);
-          this.byId("modifyDescription").setValue(description);
-          this.byId("modifyCategory").setSelectedKey(category);
-          this.changeType(category);
-          this.byId("modifyStartDate").setDateValue(this.dayToDate(startTime));
-          this.byId("modifyEndDate").setDateValue(this.dayToDate(endTime));
-          this.byId("modifyStartTime").setDateValue(startTime);
-          this.byId("modifyEndTime").setDateValue(endTime);
+        formatTime(time) {
+          return `${time.getHours()}:${time.getMinutes()}`;
         },
       }
     );
