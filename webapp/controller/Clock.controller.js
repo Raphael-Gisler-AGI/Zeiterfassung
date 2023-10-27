@@ -45,22 +45,6 @@ sap.ui.define(
           "timer"
         );
       },
-      runTimer() {
-        const timer = this.getTimer();
-        const current = this.getRunningEntry();
-        this.timer = setInterval(() => {
-          timer.setProperty("/time", timer.getProperty("/time") + 1);
-          if (timer.getProperty("/time") % 60 == 0) {
-            const endTime = new Date();
-            current.EndTime = endTime;
-            current.Duration = this.getDuration(
-              new Date(localStorage.getItem("startTime")),
-              endTime
-            );
-            this.entries().refresh();
-          }
-        }, 1000);
-      },
       onPressClock() {
         const active = this.getTimer().getProperty("/active");
         if (active) {
@@ -101,19 +85,19 @@ sap.ui.define(
           return;
         }
         const day = new Date().toISOString();
-        this.beforeCreateEntry(
-          day.split("T")[0].replaceAll("-", "."),
-          new Date(localStorage.getItem("startTime")),
-          new Date(),
-          description,
-          category,
-          timer.getProperty("/id")
+        this.getView().setModel(
+          new JSONModel({
+            creationType: 0,
+            startDay: day.split("T")[0].replaceAll("-", "."),
+            startTime: Date.parse(localStorage.getItem("startTime")),
+            endTime: Date.now(),
+            description: description,
+            category: category,
+          }),
+          "modify"
         );
+        await this.beforeCreate();
         this.onPressReset();
-      },
-      getRunningEntry() {
-        const entries = this.entries().getData();
-        return entries[entries.length - 1];
       },
       onSetCategory(oEvent) {
         const category = oEvent.getSource().getSelectedKey();

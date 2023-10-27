@@ -1,7 +1,4 @@
-sap.ui.define(["./BaseController", "sap/ui/model/json/JSONModel"], function (
-  BaseController,
-  JSONModel
-) {
+sap.ui.define(["./BaseController"], function (BaseController) {
   "use strict";
 
   return BaseController.extend(
@@ -20,9 +17,13 @@ sap.ui.define(["./BaseController", "sap/ui/model/json/JSONModel"], function (
           endTime: undefined,
         });
       },
-      onPressDeleteFavorite() {
-        
-      }
+      async onPressDeleteFavorite(oEvent) {
+        const id = oEvent
+          .getSource()
+          .getBindingContext("favorites")
+          .getProperty("id");
+        await this.deleteFavorite(id);
+      },
     }
   );
 });

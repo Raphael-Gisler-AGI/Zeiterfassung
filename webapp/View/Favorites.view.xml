@@ -33,7 +33,9 @@
 					<cells>
 						<Text text="{favorites>Description}" />
 						<Button icon="sap-icon://edit" />
-						<Button icon="sap-icon://delete" />
+						<Button
+							press="onPressDeleteFavorite"
+							icon="sap-icon://delete" />
 					</cells>
 				</ColumnListItem>
 			</items>

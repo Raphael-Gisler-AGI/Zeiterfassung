@@ -30,7 +30,7 @@ app.post("/createEntry", (req, res) => {
     res.sendStatus(400);
     return;
   }
-  res.sendStatus(200);
+  res.json(response());
 });
 
 app.get("/editEntry", (req, res) => {
@@ -51,11 +51,11 @@ app.get("/editEntry", (req, res) => {
     res.sendStatus(400);
     return;
   }
-  res.sendStatus(200);
+  res.json(response());
 });
 
-app.get("/deleteEntry", (req, res) => {
-  const id = req.query.id;
+app.delete("/deleteEntry/:id", (req, res) => {
+  const { id } = req.params;
   const entry = file.Entries.find((entry) => entry.id == id);
   categories.find((category) => category.id == entry.Category).Time -=
     entry.Duration;
@@ -64,19 +64,38 @@ app.get("/deleteEntry", (req, res) => {
     res.sendStatus(400);
     return;
   }
-  res.sendStatus(200);
+  res.json(response());
 });
 
 function findDelete(id) {
   const index = file.Entries.map((entry) => entry.id).indexOf(id);
   file.Entries.splice(index, 1);
 }
+function response() {
+  return {
+    entries: file.Entries,
+    categories: categories,
+  };
+}
 
+// Favorite
 app.post("/createFavorite", (req, res) => {
   const favorite = req.body;
   favorite["id"] = crypto.randomBytes(16).toString("hex");
   file.Favorites.push(favorite);
-  res.sendStatus(saveEntry());
+  saveEntry();
+  res.json(file.Favorites);
+});
+app.delete("/deleteFavorite/:id", (req, res) => {
+  const { id } = req.params;
+  const index = file.Favorites.map((favorite) => favorite.id).indexOf(id);
+  file.Favorites.splice(index, 1);
+  if (index < 0) {
+    res.sendStatus(400);
+    return;
+  }
+  saveEntry();
+  res.json(file.Favorites);
 });
 
 function saveEntry() {

@@ -33,11 +33,8 @@ sap.ui.define(
           }
         },
         // Refresh Global Models
-        async refresh() {
-          const [entries, categories] = await Promise.all([
-            fetch(`${this.baseUrl}getEntries`).then((res) => res.json()),
-            fetch(`${this.baseUrl}getCategories`).then((res) => res.json()),
-          ]);
+        async refresh(newData) {
+          const { entries, categories } = newData;
           entries.forEach((entry) => {
             entry.StartTime = new Date(entry.StartTime);
             entry.EndTime = new Date(entry.EndTime);
@@ -47,11 +44,6 @@ sap.ui.define(
             this.addTimerToEntries();
           }
           this.categories().setData(categories);
-        },
-        async refreshFavorites() {
-          const res = await fetch(`${this.baseUrl}getFavorites`);
-          const favorites = await res.json();
-          this.favorites().setData(favorites);
         },
         addTimerToEntries() {
           const category = this.getTimer().getProperty("/category") || "";
@@ -91,51 +83,53 @@ sap.ui.define(
         modify() {
           return this.getView().getModel("modify");
         },
+
         // Create Edit Delete
         baseUrl: "http://localhost:3000/",
         async createEntry(data) {
-          return await fetch(`${this.baseUrl}createEntry`, {
+          const res = await fetch(`${this.baseUrl}createEntry`, {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },
             body: JSON.stringify(data),
-          })
-            .then((res) => {
-              return res.status;
-            })
-            .then(this.refresh());
+          });
+          this.refresh(await res.json());
+          return res.status;
         },
         async editEntry(data) {
-          return await fetch(
+          const res = await fetch(
             `${this.baseUrl}editEntry?data=${JSON.stringify(data)}`
-          )
-            .then((res) => {
-              return res.status;
-            })
-            .then(this.refresh());
+          );
+          this.refresh(await res.json());
+          return res.status;
         },
         async deleteEntry(id) {
-          return await fetch(`${this.baseUrl}deleteEntry?id=${id}`)
-            .then((res) => {
-              return res.status;
-            })
-            .then(this.refresh());
+          const res = await fetch(`${this.baseUrl}deleteEntry/${id}`, {
+            method: "DELETE",
+          });
+          this.refresh(await res.json());
+          return res.status;
         },
         async createFavorite(data) {
-          console.log(data);
-          return await fetch(`${this.baseUrl}createFavorite`, {
+          const res = await fetch(`${this.baseUrl}createFavorite`, {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },
             body: JSON.stringify(data),
-          })
-            .then((res) => {
-              return res.status;
-            })
-            .then(this.refreshFavorites());
+          });
+          this.favorites().setData(await res.json());
+          return res.status;
         },
+        async deleteFavorite(id) {
+          const res = await fetch(`${this.baseUrl}deleteFavorite/${id}`, {
+            method: "DELETE",
+          });
+          this.favorites().setData(await res.json());
+          return res.status;
+        },
+
         // Before CRUD
         async beforeCreate() {
           const modifyData = this.getView().getModel("modify").getData();
@@ -143,7 +137,10 @@ sap.ui.define(
             Day: modifyData.startDay,
             StartTime: modifyData.startTime,
             EndTime: modifyData.endTime,
-            Duration: modifyData.duration,
+            Duration: this.getDuration(
+              modifyData.startTime,
+              modifyData.endTime
+            ),
             Description: modifyData.description,
             Category: modifyData.category,
           };
@@ -157,6 +154,7 @@ sap.ui.define(
               res = await this.editEntry(data);
               break;
             case 2:
+              delete data["Duration"];
               res = await this.createFavorite(data);
               break;
           }
@@ -164,6 +162,7 @@ sap.ui.define(
         },
         async beforeDeleteEntry(id) {
           const res = await this.deleteEntry(id);
+          console.log(res);
           this.displayResponse(
             res,
             "Entry has been deleted",
@@ -176,6 +175,26 @@ sap.ui.define(
           } else {
             MessageToast.show(rejectMessage);
           }
+        },
+        runTimer() {
+          const timer = this.getTimer();
+          const current = this.getRunningEntry();
+          this.timer = setInterval(() => {
+            timer.setProperty("/time", timer.getProperty("/time") + 1);
+            if (timer.getProperty("/time") % 60 == 0) {
+              const endTime = new Date();
+              current.EndTime = endTime;
+              current.Duration = this.getDuration(
+                new Date(localStorage.getItem("startTime")),
+                endTime
+              );
+              this.entries().refresh();
+            }
+          }, 1000);
+        },
+        getRunningEntry() {
+          const entries = this.entries().getData();
+          return entries[entries.length - 1];
         },
         getDuration(startTime, endTime) {
           const durationDate = new Date(endTime - startTime);
@@ -229,6 +248,12 @@ sap.ui.define(
               return;
             }
           }
+          if (modify.startTime > modify.endTime) {
+            MessageToast.show(
+              "The End Time has to be larger than the Start Time"
+            );
+            return;
+          }
           if (modify.startDay) {
             modify.startDay = this.dateToDay(modify.startDay);
           }
@@ -244,17 +269,9 @@ sap.ui.define(
             modify.type != 2 ? modify.startDay : modify.endDay,
             modify.type != 2 ? modify.endTime || "00:00" : "00:00"
           );
-          // Set the duration
-          modify.duration = this.getDuration(modify.startTime, modify.endTime);
           // Format Day
           if (modify.type == 2) {
             modify.startDay = `${modify.startDay} - ${modify.endDay}`;
-          }
-          if (modify.startTime > modify.endTime) {
-            MessageToast.show(
-              "The End Time has to be larger than the Start Time"
-            );
-            return;
           }
           await this.beforeCreate();
           this.onCloseModify();
