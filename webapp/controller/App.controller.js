@@ -30,16 +30,19 @@ sap.ui.define(
       },
       onPressCreate() {
         const date = new Date();
+        const startDate = new Date(
+          new Date().setHours(new Date().getHours() - 1)
+        );
         this.onOpenModify({
           title: "Create Entry",
           creationType: 0,
           description: "",
           category: undefined,
           type: 0,
-          startDay: date,
+          startDay: startDate,
           endDay: date,
-          startTime: `${date.getHours()}:${date.getMinutes()}`,
-          endTime: `${date.getHours()}:${date.getMinutes()}`,
+          startTime: this.formatTime(startDate),
+          endTime: this.formatTime(date)
         });
       },
       onPressMenu() {

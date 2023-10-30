@@ -5,6 +5,7 @@
 	<ScrollContainer height="90vh" vertical="true">
 		<Table
 			id="entryTable"
+			autoPopinMode="true"
 			items="{
 					path: 'entries>/',
 					sorter: [
@@ -40,7 +41,8 @@
 				</Toolbar>
 			</headerToolbar>
 			<columns>
-				<Column>
+				<Column
+					width="40%">
 					<Text text="Description" />
 				</Column>
 				<Column>
@@ -72,12 +74,10 @@
 						<Text
 							text="{
 									path: 'entries>StartTime',
-									type: 'sap.ui.model.type.Time',
-									formatOptions: {pattern: 'HH:mm'}
+									formatter: '.formatter.getDate'
 								} - {
 									path: 'entries>EndTime',
-									type: 'sap.ui.model.type.Time',
-									formatOptions: {pattern: 'HH:mm'}
+									formatter: '.formatter.getDate'
 								}" />
 						<Text
 							text="{

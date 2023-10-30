@@ -33,9 +33,11 @@ app.post("/createEntry", (req, res) => {
   res.json(response());
 });
 
-app.get("/editEntry", (req, res) => {
-  const entry = JSON.parse(req.query.data);
-  const oldEntry = file.Entries.find((e) => e.id == entry.id);
+app.patch("/editEntry/:id", (req, res) => {
+  const { id } = req.params;
+  const entry = req.body;
+  entry.id = id;
+  const oldEntry = file.Entries.find((e) => e.id == id);
   const category = categories.find((category) => category.id == entry.Category);
   category.Time += entry.Duration;
   if (entry.Category == oldEntry.Category) {
@@ -44,9 +46,8 @@ app.get("/editEntry", (req, res) => {
     categories.find((category) => category.id == oldEntry.Category).Time -=
       oldEntry.Duration;
   }
-  Math.round(category.Time);
-  file.Entries.push(entry);
-  findDelete(entry.id);
+  const index = file.Entries.map((entry) => entry.id).indexOf(id);
+  file.Entries[index] = entry;
   if (saveEntry() == 400 || saveCategories() == 400) {
     res.sendStatus(400);
     return;
@@ -83,6 +84,15 @@ app.post("/createFavorite", (req, res) => {
   const favorite = req.body;
   favorite["id"] = crypto.randomBytes(16).toString("hex");
   file.Favorites.push(favorite);
+  saveEntry();
+  res.json(file.Favorites);
+});
+app.patch("/editFavorite/:id", (req, res) => {
+  const { id } = req.params;
+  const favorite = req.body;
+  favorite.id = id;
+  const index = file.Favorites.map((favorite) => favorite.id).indexOf(id);
+  file.Favorites[index] = favorite;
   saveEntry();
   res.json(file.Favorites);
 });

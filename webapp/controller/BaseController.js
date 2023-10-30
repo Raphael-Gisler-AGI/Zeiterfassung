@@ -97,10 +97,14 @@ sap.ui.define(
           this.refresh(await res.json());
           return res.status;
         },
-        async editEntry(data) {
-          const res = await fetch(
-            `${this.baseUrl}editEntry?data=${JSON.stringify(data)}`
-          );
+        async editEntry(data, id) {
+          const res = await fetch(`${this.baseUrl}editEntry/${id}`, {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+          });
           this.refresh(await res.json());
           return res.status;
         },
@@ -118,6 +122,17 @@ sap.ui.define(
               "Content-type": "application/json; charset=UTF-8",
             },
             body: JSON.stringify(data),
+          });
+          this.favorites().setData(await res.json());
+          return res.status;
+        },
+        async editFavorite(data, id) {
+          const res = await fetch(`${this.baseUrl}editFavorite/${id}`, {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
           });
           this.favorites().setData(await res.json());
           return res.status;
@@ -150,12 +165,15 @@ sap.ui.define(
               res = await this.createEntry(data);
               break;
             case 1:
-              data["id"] = modifyData.id;
-              res = await this.editEntry(data);
+              res = await this.editEntry(data, modifyData.id);
               break;
             case 2:
               delete data["Duration"];
               res = await this.createFavorite(data);
+              break;
+            case 3:
+              delete data["Duration"];
+              res = await this.editFavorite(data, modifyData.id);
               break;
           }
           console.log(res);
@@ -198,7 +216,10 @@ sap.ui.define(
         },
         getDuration(startTime, endTime) {
           const durationDate = new Date(endTime - startTime);
-          return durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
+          return (
+            durationDate.getMinutes() + (durationDate.getHours() - 1) * 60 ||
+            undefined
+          );
         },
         onOpenModify(modifyModel) {
           this.getView().setModel(new JSONModel(modifyModel), "modify");
@@ -214,7 +235,7 @@ sap.ui.define(
         getCategoryType(category) {
           return this.categories()
             .getData()
-            .find((c) => c.id == category).Type;
+            .find((c) => c.id == category)?.Type;
         },
         setModifyType(oEvent) {
           const id = oEvent.getSource().getSelectedKey();
@@ -226,15 +247,12 @@ sap.ui.define(
           return `${date.getFullYear()}.${month}.${date.getDate()}`;
         },
         timeToDate(date, time) {
-          if (!date) {
-            return undefined;
-          }
-          return new Date(`${date} ${time}`);
+          return Date.parse(`${date} ${time}`);
         },
         async onOkModify() {
           const modify = this.getView().getModel("modify").getData();
           // Error handling
-          if (modify.creationType != 2) {
+          if (modify.creationType < 2) {
             if (!modify.description) {
               MessageToast.show("Please fill in a description");
               return;
@@ -261,14 +279,20 @@ sap.ui.define(
             modify.endDay = this.dateToDay(modify.endDay);
           }
           // Formatting Time
-          modify.startTime = this.timeToDate(
-            modify.startDay,
-            modify.type != 2 ? modify.startTime || "00:00" : "00:00"
-          );
-          modify.endTime = this.timeToDate(
-            modify.type != 2 ? modify.startDay : modify.endDay,
-            modify.type != 2 ? modify.endTime || "00:00" : "00:00"
-          );
+          modify.startTime = modify.startTime
+            ? this.timeToDate(
+                modify.startDay || this.dateToDay(new Date()),
+                modify.type != 2 ? modify.startTime || "00:00" : "00:00"
+              )
+            : undefined;
+          modify.endTime = modify.endTime
+            ? this.timeToDate(
+                modify.type != 2
+                  ? modify.startDay || this.dateToDay(new Date())
+                  : modify.endDay || this.dateToDay(new Date()),
+                modify.type != 2 ? modify.endTime || "00:00" : "00:00"
+              )
+            : undefined;
           // Format Day
           if (modify.type == 2) {
             modify.startDay = `${modify.startDay} - ${modify.endDay}`;
@@ -280,7 +304,14 @@ sap.ui.define(
           this.byId("modifyDialog").close();
         },
         formatTime(time) {
-          return `${time.getHours()}:${time.getMinutes()}`;
+          if (!time) {
+            return undefined;
+          }
+          return `${
+            time.getHours() < 10 ? "0" + time.getHours() : time.getHours()
+          }:${
+            time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
+          }`;
         },
       }
     );

@@ -4,6 +4,9 @@ sap.ui.define([], function () {
     getDisplayTime(date) {
       return new Date(date * 1000).toISOString().substring(11, 19);
     },
+    getDate(date) {
+      return new Date(date).toLocaleTimeString().split(":", 2).join(":");
+    },
     getCategoryText(id) {
       const categories = this.getOwnerComponent()
         .getModel("categories")
@@ -88,8 +91,7 @@ sap.ui.define([], function () {
       return type;
     },
     timepicker(time) {
-      console.log(time)
-      return `${time.getHours()}:${time.getMinutes()}`
-    }
+      return `${time.getHours()}:${time.getMinutes()}`;
+    },
   };
 });
