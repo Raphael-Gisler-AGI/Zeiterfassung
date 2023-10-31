@@ -47,17 +47,15 @@ sap.ui.define(
         },
         addTimerToEntries() {
           const category = this.getTimer().getProperty("/category") || "";
-          const endTime = new Date();
+          const startTime = Date.parse(localStorage.getItem("startTime"));
+          const endTime = Date.now();
           this.entries()
             .getData()
             .push({
               Day: "Active Timer",
-              StartTime: new Date(localStorage.getItem("startTime")),
+              StartTime: startTime,
               EndTime: endTime,
-              Duration: this.getDuration(
-                new Date(localStorage.getItem("startTime")),
-                endTime
-              ),
+              Duration: this.getDuration(startTime, endTime),
               Description: this.getTimer().getProperty("/description"),
               Category: category,
             });
@@ -169,10 +167,12 @@ sap.ui.define(
               break;
             case 2:
               delete data["Duration"];
+              data.Name = modifyData.name;
               res = await this.createFavorite(data);
               break;
             case 3:
               delete data["Duration"];
+              data.Name = modifyData.name;
               res = await this.editFavorite(data, modifyData.id);
               break;
           }
@@ -216,10 +216,9 @@ sap.ui.define(
         },
         getDuration(startTime, endTime) {
           const durationDate = new Date(endTime - startTime);
-          return (
-            durationDate.getMinutes() + (durationDate.getHours() - 1) * 60 ||
-            undefined
-          );
+          const result =
+            durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
+          return result === NaN ? undefined : result;
         },
         onOpenModify(modifyModel) {
           this.getView().setModel(new JSONModel(modifyModel), "modify");
@@ -242,6 +241,7 @@ sap.ui.define(
           this.modify().setProperty("/type", this.getCategoryType(id));
         },
         dateToDay(date) {
+          date = new Date(date);
           let month = date.getMonth() + 1;
           month = month < 10 ? `0${month}` : month;
           return `${date.getFullYear()}.${month}.${date.getDate()}`;
@@ -306,6 +306,9 @@ sap.ui.define(
         formatTime(time) {
           if (!time) {
             return undefined;
+          }
+          if (typeof time == "number") {
+            time = new Date(time);
           }
           return `${
             time.getHours() < 10 ? "0" + time.getHours() : time.getHours()

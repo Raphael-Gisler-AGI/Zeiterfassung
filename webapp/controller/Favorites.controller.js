@@ -1,4 +1,7 @@
-sap.ui.define(["./BaseController"], function (BaseController) {
+sap.ui.define(["./BaseController", "sap/m/MessageToast"], function (
+  BaseController,
+  MessageToast
+) {
   "use strict";
 
   return BaseController.extend(
@@ -8,6 +11,7 @@ sap.ui.define(["./BaseController"], function (BaseController) {
         this.onOpenModify({
           title: "Create Favorite",
           creationType: 2,
+          name: "",
           description: undefined,
           category: undefined,
           type: 0,
@@ -17,33 +21,57 @@ sap.ui.define(["./BaseController"], function (BaseController) {
           endTime: undefined,
         });
       },
-      onPressEditFavorite(oEvent) {
-        const {
-          id,
-          Description,
-          Category,
-          StartTime,
-          EndTime,
-        } = oEvent.getSource().getBindingContext("favorites").getObject();
+      onPressAddFavorite() {
+        const favorite = this.getSelectedItem();
+        if (!favorite) {
+          return this.showError();
+        }
+        this.onOpenModify({
+          title: "Create Entry",
+          creationType: 0,
+          description: favorite.Description || undefined,
+          category: favorite.Category || undefined,
+          type: this.getCategoryType(favorite.Category) || undefined,
+          startDay: new Date(favorite.StartTime) || undefined,
+          endDay: new Date(favorite.EndTime) || undefined,
+          startTime: this.formatTime(favorite.StartTime) || undefined,
+          endTime: this.formatTime(favorite.EndTime) || undefined,
+        });
+      },
+      onPressEditFavorite() {
+        const favorite = this.getSelectedItem();
+        if (!favorite?.id) {
+          return this.showError();
+        }
         this.onOpenModify({
           title: "Edit Favorite",
           creationType: 3,
-          id: id,
-          description: Description || undefined,
-          category: Category || undefined,
-          type: this.getCategoryType(Category),
-          startDay: StartTime || undefined,
-          endDay: EndTime || undefined,
-          startTime: this.formatTime(StartTime),
-          endTime: this.formatTime(EndTime) || undefined,
+          id: favorite.id,
+          name: favorite.Name,
+          description: favorite.Description || undefined,
+          category: favorite.Category || undefined,
+          type: this.getCategoryType(favorite.Category),
+          startDay: new Date(favorite.StartTime) || undefined,
+          endDay: new Date(favorite.EndTime) || undefined,
+          startTime: this.formatTime(favorite.StartTime) || undefined,
+          endTime: this.formatTime(favorite.EndTime) || undefined,
         });
       },
-      async onPressDeleteFavorite(oEvent) {
-        const id = oEvent
-          .getSource()
-          .getBindingContext("favorites")
-          .getProperty("id");
-        await this.deleteFavorite(id);
+      async onPressDeleteFavorite() {
+        const favorite = this.getSelectedItem();
+        if (!favorite?.id) {
+          return this.showError();
+        }
+        await this.deleteFavorite(favorite.id);
+      },
+      getSelectedItem() {
+        return this.byId("favoriteList")
+          .getSelectedItem()
+          ?.getBindingContext("favorites")
+          ?.getObject();
+      },
+      showError() {
+        MessageToast.show("Please select a favorite and try again");
       },
     }
   );

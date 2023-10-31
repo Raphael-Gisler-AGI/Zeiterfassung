@@ -13,10 +13,12 @@ sap.ui.define(
 
         const entries = this.getModel("entries");
         const categories = this.getModel("categories");
+        const favorites = this.getModel("favorites");
 
         this.setModel(new JSONModel([]), "messages");
         this.setModel(new JSONModel([]), "entries");
         this.setModel(new JSONModel([]), "categories");
+        this.setModel(new JSONModel([]), "favorites");
 
         const errors = [];
         Promise.all([
@@ -31,11 +33,6 @@ sap.ui.define(
               });
               this.setModel(new JSONModel([]), "entries");
             } else {
-              entries.getData().forEach((entry) => {
-                entry.StartTime = new Date(entry.StartTime);
-                entry.EndTime = new Date(entry.EndTime);
-              });
-              entries.refresh();
               this.setModel(entries, "entries");
             }
           }),
@@ -51,6 +48,20 @@ sap.ui.define(
               this.setModel(new JSONModel([]), "categories");
             } else {
               this.setModel(categories, "categories");
+            }
+          }),
+          favorites.dataLoaded().then(() => {
+            if (!Array.isArray(favorites.getData())) {
+              errors.push({
+                type: "Error",
+                title: "Favorites",
+                subtitle: "Connection to server failed",
+                description:
+                  "Your Favorites couldn't be fetched from the server.\nPlease check your internet connection",
+              });
+              this.setModel(new JSONModel([]), "favorites");
+            } else {
+              this.setModel(favorites, "favorites");
             }
           }),
         ]).then(() => {

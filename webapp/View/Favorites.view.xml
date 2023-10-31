@@ -15,32 +15,28 @@
 					press="onPressCreateFavorite" />
 			</Toolbar>
 		</headerToolbar>
-		<Table
-			items="{favorites>/}">
-			<columns>
-				<Column>
-					<Text text="Name" />
-				</Column>
-				<Column width="auto" hAlign="Right">
-					<Text text="Edit" />
-				</Column>
-				<Column width="auto" hAlign="Right">
-					<Text text="Delete" />
-				</Column>
-			</columns>
-			<items>
-				<ColumnListItem>
-					<cells>
-						<Text text="{favorites>Description}" />
-						<Button
-							press="onPressEditFavorite"
-							icon="sap-icon://edit" />
-						<Button
-							press="onPressDeleteFavorite"
-							icon="sap-icon://delete" />
-					</cells>
-				</ColumnListItem>
-			</items>
-		</Table>
+		<ScrollContainer
+			height="250px"
+			vertical="true">
+			<List
+				id="favoriteList"
+				mode="SingleSelectMaster"
+				includeItemInSelection="true"
+				items="{favorites>/}">
+				<StandardListItem
+					title="{favorites>Name}" />
+			</List>
+		</ScrollContainer>
+		<HBox justifyContent="SpaceAround" class="sapUiSmallMarginTop">
+			<Button
+				press="onPressAddFavorite"
+				icon="sap-icon://add" />
+			<Button
+				press="onPressEditFavorite"
+				icon="sap-icon://edit" />
+			<Button
+				press="onPressDeleteFavorite"
+				icon="sap-icon://delete" />
+		</HBox>
 	</Panel>
 </mvc:View>

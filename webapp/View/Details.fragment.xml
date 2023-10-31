@@ -27,16 +27,14 @@
                     text="From" />
                 <Text text="{
                     path: 'details>/StartTime',
-                    type: 'sap.ui.model.type.Time',
-                    formatOptions: {pattern: 'HH:mm'}
+					formatter: '.formatter.getDate'
                 }" />
                 <Label
                     labelFor="detailsEndTime"
                     text="To" />
                 <Text text="{
                     path: 'details>/EndTime',
-                    type: 'sap.ui.model.type.Time',
-                    formatOptions: {pattern: 'HH:mm'}
+					formatter: '.formatter.getDate'
                 }" />
             </f:SimpleForm>
         </content>

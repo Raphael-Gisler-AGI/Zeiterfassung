@@ -4,9 +4,8 @@ sap.ui.define(
     "../model/formatter",
     "sap/ui/core/Fragment",
     "sap/ui/model/json/JSONModel",
-    "sap/m/MessageToast",
   ],
-  function (BaseController, formatter, Fragment, JSONModel, MessageToast) {
+  function (BaseController, formatter, Fragment, JSONModel) {
     "use strict";
 
     return BaseController.extend(
@@ -23,10 +22,10 @@ sap.ui.define(
             description: "",
             category: undefined,
             type: 0,
-            startDay: date,
-            endDay: date,
-            startTime: `${startTime.getHours()}:${startTime.getMinutes()}`,
-            endTime: `${endTime.getHours()}:${endTime.getMinutes()}`,
+            startDay: new Date(date),
+            endDay: new Date(date),
+            startTime: this.formatTime(startTime),
+            endTime: this.formatTime(endTime),
           });
         },
         handleChange(oEvent) {
@@ -42,10 +41,10 @@ sap.ui.define(
             description: entry.getProperty("Description"),
             category: entry.getProperty("Category"),
             type: 0,
-            startDay: startTime,
-            endDay: endTime,
-            startTime: `${startTime.getHours()}:${startTime.getMinutes()}`,
-            endTime: `${endTime.getHours()}:${endTime.getMinutes()}`,
+            startDay: new Date(startTime),
+            endDay: new Date(endTime),
+            startTime: this.formatTime(startTime),
+            endTime: this.formatTime(endTime),
           });
         },
         handleSelect(oEvent) {
@@ -78,14 +77,19 @@ sap.ui.define(
         },
         handleEditDetails: async function () {
           const details = this.getView().getModel("details");
-          this.onOpenModify("Edit Entry", () => {
-            this.setModifyEditValues(
-              details.getProperty("/id"),
-              details.getProperty("/Description"),
-              details.getProperty("/Category"),
-              details.getProperty("/StartTime"),
-              details.getProperty("/EndTime")
-            );
+          const startTime = details.getProperty("/StartTime");
+          const endTime = details.getProperty("/EndTime");
+          this.onOpenModify({
+            title: "Create Favorite",
+            creationType: 1,
+            id: details.getProperty("/id"),
+            description: details.getProperty("/Description"),
+            category: details.getProperty("/Category"),
+            type: 0,
+            startDay: new Date(startTime),
+            endDay: new Date(endTime),
+            startTime: this.formatTime(startTime),
+            endTime: this.formatTime(endTime),
           });
         },
         onPressLegend: function (oEvent) {

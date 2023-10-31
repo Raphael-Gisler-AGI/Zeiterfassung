@@ -42,7 +42,7 @@ sap.ui.define(
           startDay: startDate,
           endDay: date,
           startTime: this.formatTime(startDate),
-          endTime: this.formatTime(date)
+          endTime: this.formatTime(date),
         });
       },
       onPressMenu() {

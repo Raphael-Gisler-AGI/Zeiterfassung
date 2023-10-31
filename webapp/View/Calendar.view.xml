@@ -2,9 +2,11 @@
 	controllerName="sap.ui.agi.zeiterfassung.controller.Calendar"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:unified="sap.ui.unified"
+	xmlns:dnd="sap.ui.core.dnd"
 	xmlns="sap.m">
 	<ScrollContainer height="90vh" vertical="true">
 		<SinglePlanningCalendar
+			id="SPC1"
 			title="My Calendar"
 			enableAppointmentsDragAndDrop="true"
 			enableAppointmentsCreate="true"
@@ -38,8 +40,14 @@
 						path: 'entries>Category',
 						formatter: '.formatter.getCalendarType'
 					}"
-					startDate="{entries>StartTime}"
-					endDate="{entries>EndTime}">
+					startDate="{
+						path: 'entries>StartTime',
+						formatter: '.formatter.getDateAsObject'
+					}"
+					endDate="{
+						path: 'entries>EndTime',
+						formatter: '.formatter.getDateAsObject'
+					}">
 				</unified:CalendarAppointment>
 			</appointments>
 		</SinglePlanningCalendar>

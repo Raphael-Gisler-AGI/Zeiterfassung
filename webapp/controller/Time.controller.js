@@ -27,8 +27,8 @@ sap.ui.define(
           description: entry.getProperty("Description"),
           category: entry.getProperty("Category"),
           type: 0,
-          startDay: startTime,
-          endDay: endTime,
+          startDay: new Date(startTime),
+          endDay: new Date(endTime),
           startTime: this.formatTime(startTime),
           endTime: this.formatTime(endTime),
         });

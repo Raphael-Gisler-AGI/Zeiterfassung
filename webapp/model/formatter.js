@@ -4,6 +4,9 @@ sap.ui.define([], function () {
     getDisplayTime(date) {
       return new Date(date * 1000).toISOString().substring(11, 19);
     },
+    getDateAsObject(date) {
+      return new Date(date);
+    },
     getDate(date) {
       return new Date(date).toLocaleTimeString().split(":", 2).join(":");
     },
@@ -89,9 +92,6 @@ sap.ui.define([], function () {
         }
       }
       return type;
-    },
-    timepicker(time) {
-      return `${time.getHours()}:${time.getMinutes()}`;
     },
   };
 });
