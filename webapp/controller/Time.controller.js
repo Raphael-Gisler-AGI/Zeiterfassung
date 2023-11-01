@@ -43,29 +43,47 @@ sap.ui.define(
         }
         await this.beforeDeleteEntry(id);
       },
-      filter: [new Filter(), new Filter()],
+
+      // Event handler, lösen Re-Filter aus
+      // setFilter --> holt sich ALLE filter und baut den Filter direkt auf
+      // Einzelen Filter holen mit byId('')
+
       onFilterSearch: function (oEvent) {
-        const query = oEvent.getParameter("newValue");
-        this.filter[0] = new Filter(
-          "Description",
-          FilterOperator.Contains,
-          query ? query : ""
-        );
-        this.setFilter(FilterOperator.Contains);
+        this.applyFilter();
       },
       onFilterCategory: function (oEvent) {
-        const id = oEvent.getSource().getSelectedKey();
-        if (id) {
-          this.filter[1] = new Filter("Category", FilterOperator.EQ, id);
-        } else {
-          this.filter[1] = new Filter();
-        }
-        this.setFilter(FilterOperator.EQ);
+        this.applyFilter();
       },
-      setFilter: function (operation) {
+      applyFilter: function (operation) {
+        const aFilters = [];
+
+        // Nicht über byId, sondern separates Filter-Model und Properties von dort holen...
+
+        const sDesc = this.byId('inputDescript').getValue();
+        if (sDesc) {
+          aFilters.push(
+            new Filter(
+              "Description",
+              FilterOperator.Contains,
+              sDesc
+            )
+          )
+        }
+
+        const sCat = this.byId('inputCat').getValue();
+        if (sCat) {
+          aFilters.push(
+            new Filter(
+              "Category",
+              FilterOperator.EQ,
+              sCat
+            )
+          )
+        }
+
         this.byId("entryTable")
           .getBinding("items")
-          .filter(this.filter, operation);
+          .filter(aFilters);
       },
     });
   }

@@ -15,11 +15,12 @@
 				<f:ShellBar
 					title="Zeiterfassung"
 					showMenuButton="true"
-					menuButtonPressed="onPressMenu">
+					menuButtonPressed=".onShellbarMenuPress">
 				</f:ShellBar>
 			</tnt:header>
 			<tnt:sideContent>
 				<tnt:SideNavigation>
+					<!-- Navigation Event und Routing mit navTo() Funktion //-->
 					<tnt:NavigationList>
 						<tnt:items>
 							<tnt:NavigationListItem
@@ -44,7 +45,7 @@
 					<App id="app" />
 					<VBox>
 						<Button
-							press="onPressCreate"
+							press=".onPressCreate"
 							class="sapUiSmallMarginBottom"
 							icon="sap-icon://create-entry-time"
 							text="Create" />

@@ -33,7 +33,7 @@ sap.ui.define(
         const startDate = new Date(
           new Date().setHours(new Date().getHours() - 1)
         );
-        this.onOpenModify({
+        this.dialogXXXXXOpen({
           title: "Create Entry",
           creationType: 0,
           description: "",
@@ -46,10 +46,11 @@ sap.ui.define(
         });
       },
       onPressMenu() {
+        //oEvent.getSource().getParent().getParent();
         const toolPage = this.byId("toolPage");
         toolPage.setSideExpanded(!toolPage.getSideExpanded());
       },
-      onPressFooterButton(oEvent) {
+      onPressFooterButton(oEvent) { // onPressMessageToggleButton
         messagePopover.toggle(oEvent.getSource());
       },
     });

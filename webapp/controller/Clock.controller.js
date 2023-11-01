@@ -57,6 +57,7 @@ sap.ui.define(
       },
       onPressReset() {
         clearInterval(this.timer);
+        this.timer = undefined;
         if (this.getTimer().getProperty("/active")) {
           this.entries().getData().pop();
           this.entries().refresh();

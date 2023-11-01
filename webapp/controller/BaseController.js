@@ -21,6 +21,8 @@ sap.ui.define(
       "sap.ui.agi.zeiterfassung.controller.BaseController",
       {
         formatter: formatter,
+
+
         // Navigation
         onNavBack() {
           const router = UIComponent.getRouterFor(this);
@@ -32,7 +34,9 @@ sap.ui.define(
             router.navTo("time", {});
           }
         },
+
         // Refresh Global Models
+        // Nameing falsch setData, o.ä. 
         async refresh(newData) {
           const { entries, categories } = newData;
           entries.forEach((entry) => {
@@ -45,12 +49,12 @@ sap.ui.define(
           }
           this.categories().setData(categories);
         },
+
         addTimerToEntries() {
           const category = this.getTimer().getProperty("/category") || -1;
           const startTime = Date.parse(localStorage.getItem("startTime"));
           const endTime = Date.now();
-          this.entries()
-            .getData()
+          this.getEntries()
             .push({
               Day: "Active Timer",
               StartTime: startTime,
@@ -59,12 +63,17 @@ sap.ui.define(
               Description: this.getTimer().getProperty("/description"),
               Category: category,
             });
-          this.entries().refresh();
+          this.getEntriesModel().refresh();
           this.runTimer();
         },
+
         // Get Global Models
-        entries() {
-          return this.getOwnerComponent().getModel("entries");
+        // Funktionen für Model Zugriffe eindeutiger bezeichnen
+        getEntriesModel() {
+          return this.getModel("entries");
+        },
+        getEntries() {
+          return this.getEntriesModel().getData();
         },
         categories() {
           return this.getOwnerComponent().getModel("categories");
@@ -76,36 +85,30 @@ sap.ui.define(
           return this.getOwnerComponent().getModel("timer");
         },
         messages() {
-          return this.getOwnerComponent().getModel("messages");
+          return  ;
         },
         modify() {
           return this.getView().getModel("modify");
         },
 
+        getModel(sModelName = '') {
+          let oModel = this.getView().getModel(sModelName);
+          if (!oModel) {
+            oModel = this.getOwnerComponent().getModel("sModelName")
+          }
+          return oModel;
+        },
+
         // Create Edit Delete
-        baseUrl: "http://localhost:3000/",
+        baseUrl: "http://localhost:3000", // An den Anfang
         async createEntry(data) {
-          const res = await fetch(`${this.baseUrl}createEntry`, {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-            },
-            body: JSON.stringify(data),
-          });
-          this.refresh(await res.json());
-          return res.status;
+          this._postEntry(data, '/createEntry', 'POST')
         },
+
         async editEntry(data, id) {
-          const res = await fetch(`${this.baseUrl}editEntry/${id}`, {
-            method: "PATCH",
-            body: JSON.stringify(data),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-            },
-          });
-          this.refresh(await res.json());
-          return res.status;
+          this._postEntry(data, '/editEntry/${id}', 'PATCH')
         },
+
         async deleteEntry(id) {
           const res = await fetch(`${this.baseUrl}deleteEntry/${id}`, {
             method: "DELETE",
@@ -113,6 +116,19 @@ sap.ui.define(
           this.refresh(await res.json());
           return res.status;
         },
+
+        async _postEntry(data, path, method) {
+          const res = await fetch(`${this.baseUrl}${path}`, {
+            method: method,
+            body: JSON.stringify(data),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+          });
+          this.refresh(await res.json());
+          return res.status;
+        },
+
         async createFavorite(data) {
           const res = await fetch(`${this.baseUrl}createFavorite`, {
             method: "POST",
@@ -144,7 +160,7 @@ sap.ui.define(
         },
 
         // Before CRUD
-        async beforeCreate() {
+        async beforeCreate() { // Name eher in richtung handle oder process
           const modifyData = this.getView().getModel("modify").getData();
           const data = {
             Day: modifyData.startDay,
@@ -158,15 +174,22 @@ sap.ui.define(
             Category: modifyData.category,
           };
           let res = 0;
+
+          const CREATION_TYPE = {
+            CREATE_ENTRY: 0,
+            UPDATE_ENDTRY: 1
+          }
+
           switch (modifyData.creationType) {
-            case 0:
+            case CREATION_TYPE.CREATE_ENTRY: // enums
               res = await this.createEntry(data);
               break;
             case 1:
               res = await this.editEntry(data, modifyData.id);
               break;
             case 2:
-              delete data["Day"];
+              
+              delete data.Day; // data["Day"];
               delete data["Duration"];
               data.Name = modifyData.name;
               res = await this.createFavorite(data);
@@ -199,7 +222,16 @@ sap.ui.define(
         runTimer() {
           const timer = this.getTimer();
           const current = this.getRunningEntry();
+
+          if (this.timer) {
+            this.timer.clearIntervall();
+          }
+
           this.timer = setInterval(() => {
+
+            // Effektive Duration berechnen und in /time setzen, weil Intervall nicht 
+            // zwingend gegeben ist...
+
             timer.setProperty("/time", timer.getProperty("/time") + 1);
             if (timer.getProperty("/time") % 60 == 0) {
               const endTime = new Date();
@@ -208,12 +240,19 @@ sap.ui.define(
                 new Date(localStorage.getItem("startTime")),
                 endTime
               );
+
+                // setRunningEntry() --> model.setProperty('/lastindex', current);
+
               this.entries().refresh();
             }
           }, 1000);
         },
+
         getRunningEntry() {
           const entries = this.entries().getData();
+
+          // Prüfung, ob wirklich running?
+
           return entries[entries.length - 1];
         },
         getDuration(startTime, endTime) {
@@ -222,7 +261,8 @@ sap.ui.define(
             durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
           return result === NaN ? undefined : result;
         },
-        onOpenModify(modifyModel) {
+        // Handler in echtem Controller
+        openModifyDialog(modifyModel) {
           this.getView().setModel(new JSONModel(modifyModel), "modify");
           if (!this.pDialog) {
             this.pDialog = this.loadFragment({
@@ -256,6 +296,18 @@ sap.ui.define(
             `${date || this.dateToDay(new Date())} ${time || "00:00"}`
           );
         },
+
+        validateDialogdata(modify) {
+          // Prüfungen, entweder message toast oder nachrichten sammeln
+
+          return true;
+
+          // Prüfung 
+          // if (this._validateDialogData() !== true) {
+          //   MessageToast();
+          // }
+        },
+
         modifyErrorHandling(modify) {
           if (modify.creationType < 2) {
             if (!modify.description) {

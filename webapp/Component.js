@@ -22,6 +22,10 @@ sap.ui.define(
 
         const errors = [];
         Promise.all([
+          // this._waitForModel(entries),
+          // this._waitForModel(categories),
+// Wiederholender Code auslagern in eigene 'generische' Funktion
+
           entries.dataLoaded().then(() => {
             if (!Array.isArray(entries.getData())) {
               errors.push({

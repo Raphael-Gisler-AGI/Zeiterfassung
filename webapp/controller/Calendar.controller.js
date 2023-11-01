@@ -12,7 +12,8 @@ sap.ui.define(
       "sap.ui.agi.zeiterfassung.controller.Calendar",
       {
         formatter: formatter,
-        handleCreate(oEvent) {
+
+        handleCreate(oEvent) { // on...
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
           const date = new Date();
@@ -28,6 +29,7 @@ sap.ui.define(
             endTime: this.formatTime(endTime),
           });
         },
+
         handleChange(oEvent) {
           const entry = oEvent
             .getParameter("appointment")
@@ -48,6 +50,7 @@ sap.ui.define(
             endTime: this.formatTime(endTime),
           });
         },
+
         handleSelect(oEvent) {
           if (!oEvent.getParameter("appointment")) {
             return;
@@ -72,9 +75,9 @@ sap.ui.define(
             oPopover.openBy(oEvent.getParameter("appointment"));
           });
         },
-        async handleDeleteDetails() {
+        handleDeleteDetails() {
           const id = this.getView().getModel("details").getProperty("/id");
-          await this.beforeDeleteEntry(id);
+          this.beforeDeleteEntry(id);
         },
         handleEditDetails: async function () {
           const details = this.getView().getModel("details");
