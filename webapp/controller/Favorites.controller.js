@@ -59,7 +59,7 @@ sap.ui.define(["./BaseController", "sap/m/MessageToast"], function (
       },
       async onPressDeleteFavorite() {
         const favorite = this.getSelectedItem();
-        if (!favorite?.id) {
+        if (!favorite) {
           return this.showError();
         }
         await this.deleteFavorite(favorite.id);
