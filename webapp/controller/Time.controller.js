@@ -20,13 +20,14 @@ sap.ui.define(
         }
         const startTime = entry.getProperty("StartTime");
         const endTime = entry.getProperty("EndTime");
+        const category = entry.getProperty("Category")
         this.onOpenModify({
           id: entry.getProperty("id"),
           title: "Edit Entry",
           creationType: 1,
           description: entry.getProperty("Description"),
-          category: entry.getProperty("Category"),
-          type: 0,
+          category: category,
+          type: this.getCategoryType(category),
           startDay: new Date(startTime),
           endDay: new Date(endTime),
           startTime: this.formatTime(startTime),

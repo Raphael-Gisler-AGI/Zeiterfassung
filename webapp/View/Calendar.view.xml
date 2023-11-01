@@ -2,11 +2,9 @@
 	controllerName="sap.ui.agi.zeiterfassung.controller.Calendar"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:unified="sap.ui.unified"
-	xmlns:dnd="sap.ui.core.dnd"
 	xmlns="sap.m">
 	<ScrollContainer height="90vh" vertical="true">
 		<SinglePlanningCalendar
-			id="SPC1"
 			title="My Calendar"
 			enableAppointmentsDragAndDrop="true"
 			enableAppointmentsCreate="true"
@@ -24,9 +22,9 @@
 					icon="sap-icon://legend" />
 			</actions>
 			<views>
-				<SinglePlanningCalendarDayView key="DayView" title="Day" />
 				<SinglePlanningCalendarWeekView key="WeekView" title="Week" />
 				<SinglePlanningCalendarMonthView key="MonthView" title="Month" />
+				<SinglePlanningCalendarDayView key="DayView" title="Day" />
 			</views>
 			<appointments>
 				<unified:CalendarAppointment

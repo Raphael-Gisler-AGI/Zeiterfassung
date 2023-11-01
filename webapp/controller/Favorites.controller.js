@@ -71,7 +71,7 @@ sap.ui.define(["./BaseController", "sap/m/MessageToast"], function (
           ?.getObject();
       },
       showError() {
-        MessageToast.show("Please select a favorite and try again");
+        MessageToast.show("Please select a favorite in the list above and try again");
       },
     }
   );

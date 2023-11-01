@@ -34,13 +34,14 @@ sap.ui.define(
             .getBindingContext("entries");
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
+          const category = entry.getProperty("Category");
           this.onOpenModify({
             id: entry.getProperty("id"),
             title: "Edit Entry",
             creationType: 1,
             description: entry.getProperty("Description"),
-            category: entry.getProperty("Category"),
-            type: 0,
+            category: category,
+            type: this.getCategoryType(category),
             startDay: new Date(startTime),
             endDay: new Date(endTime),
             startTime: this.formatTime(startTime),
@@ -79,13 +80,14 @@ sap.ui.define(
           const details = this.getView().getModel("details");
           const startTime = details.getProperty("/StartTime");
           const endTime = details.getProperty("/EndTime");
+          const category = details.getProperty("/Category")
           this.onOpenModify({
             title: "Create Favorite",
             creationType: 1,
             id: details.getProperty("/id"),
             description: details.getProperty("/Description"),
-            category: details.getProperty("/Category"),
-            type: 0,
+            category: category,
+            type: this.getCategoryType(category),
             startDay: new Date(startTime),
             endDay: new Date(endTime),
             startTime: this.formatTime(startTime),

@@ -38,7 +38,7 @@ sap.ui.define(
         this.getOwnerComponent().setModel(
           new JSONModel({
             description: "",
-            category: "",
+            category: -1,
             active: false,
             time: 0,
           }),
@@ -100,7 +100,7 @@ sap.ui.define(
         this.onPressReset();
       },
       onSetCategory(oEvent) {
-        const category = oEvent.getSource().getSelectedKey();
+        const category = oEvent.getSource().getSelectedKey() || -1;
         localStorage.setItem("category", category);
         this.getRunningEntry().Category = category;
         this.entries().refresh();

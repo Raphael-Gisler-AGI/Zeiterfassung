@@ -46,7 +46,7 @@ sap.ui.define(
           this.categories().setData(categories);
         },
         addTimerToEntries() {
-          const category = this.getTimer().getProperty("/category") || "";
+          const category = this.getTimer().getProperty("/category") || -1;
           const startTime = Date.parse(localStorage.getItem("startTime"));
           const endTime = Date.now();
           this.entries()
@@ -166,11 +166,13 @@ sap.ui.define(
               res = await this.editEntry(data, modifyData.id);
               break;
             case 2:
+              delete data["Day"];
               delete data["Duration"];
               data.Name = modifyData.name;
               res = await this.createFavorite(data);
               break;
             case 3:
+              delete data["Day"];
               delete data["Duration"];
               data.Name = modifyData.name;
               res = await this.editFavorite(data, modifyData.id);
@@ -247,31 +249,50 @@ sap.ui.define(
           return `${date.getFullYear()}.${month}.${date.getDate()}`;
         },
         timeToDate(date, time) {
-          return Date.parse(`${date} ${time}`);
+          if (!date && !time) {
+            return undefined;
+          }
+          return Date.parse(
+            `${date || this.dateToDay(new Date())} ${time || "00:00"}`
+          );
+        },
+        modifyErrorHandling(modify) {
+          if (modify.creationType < 2) {
+            if (!modify.description) {
+              return "Please fill in a description";
+            }
+            if (!modify.category) {
+              return "Please select a category";
+            }
+            if (!modify.startDay) {
+              return "Please select a start day";
+            }
+            if (modify.type != 2) {
+              if (!modify.startTime) {
+                return "Please select a start time";
+              }
+              if (!modify.endTime) {
+                return "Please select an end time";
+              }
+            } else {
+              if (!modify.endDay) {
+                return "Please select an end day";
+              }
+            }
+          }
+          if (modify.startTime > modify.endTime) {
+            return "The End Time has to be larger than the Start Time";
+          }
+          return "";
         },
         async onOkModify() {
           const modify = this.getView().getModel("modify").getData();
           // Error handling
-          if (modify.creationType < 2) {
-            if (!modify.description) {
-              MessageToast.show("Please fill in a description");
-              return;
-            }
-            if (!modify.category) {
-              MessageToast.show("Please select a category");
-              return;
-            }
-            if (!modify.startDay) {
-              MessageToast.show("no startday?");
-              return;
-            }
+          const error = this.modifyErrorHandling(modify);
+          if (error != "") {
+            return MessageToast.show(error);
           }
-          if (modify.startTime > modify.endTime) {
-            MessageToast.show(
-              "The End Time has to be larger than the Start Time"
-            );
-            return;
-          }
+          // Format Days
           if (modify.startDay) {
             modify.startDay = this.dateToDay(modify.startDay);
           }
@@ -279,20 +300,14 @@ sap.ui.define(
             modify.endDay = this.dateToDay(modify.endDay);
           }
           // Formatting Time
-          modify.startTime = modify.startTime
-            ? this.timeToDate(
-                modify.startDay || this.dateToDay(new Date()),
-                modify.type != 2 ? modify.startTime || "00:00" : "00:00"
-              )
-            : undefined;
-          modify.endTime = modify.endTime
-            ? this.timeToDate(
-                modify.type != 2
-                  ? modify.startDay || this.dateToDay(new Date())
-                  : modify.endDay || this.dateToDay(new Date()),
-                modify.type != 2 ? modify.endTime || "00:00" : "00:00"
-              )
-            : undefined;
+          modify.startTime = this.timeToDate(
+            modify.startDay,
+            modify.type != 2 ? modify.startTime : "00:00"
+          );
+          modify.endTime = this.timeToDate(
+            modify.type != 2 ? modify.startDay : modify.endDay,
+            modify.type != 2 ? modify.endTime : "00:00"
+          );
           // Format Day
           if (modify.type == 2) {
             modify.startDay = `${modify.startDay} - ${modify.endDay}`;

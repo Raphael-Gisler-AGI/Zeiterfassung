@@ -16,7 +16,7 @@ sap.ui.define([], function () {
         .getData();
       const category = categories.find((category) => category.id == id);
       if (!category?.Name) {
-        return id;
+        return "N/A";
       }
       return category.Name;
     },
