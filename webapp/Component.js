@@ -7,6 +7,7 @@ sap.ui.define(
         interfaces: ["sap.ui.core.IAsyncContentCreation"],
         manifest: "json",
       },
+      errors: [],
       init() {
         UIComponent.prototype.init.apply(this, arguments);
         this.getRouter().initialize();
@@ -20,53 +21,34 @@ sap.ui.define(
         this.setModel(new JSONModel([]), "categories");
         this.setModel(new JSONModel([]), "favorites");
 
-        const errors = [];
         Promise.all([
-          entries.dataLoaded().then(() => {
-            if (!Array.isArray(entries.getData())) {
-              errors.push({
-                type: "Error",
-                title: "Entries",
-                subtitle: "Connection to server failed",
-                description:
-                  "Your entries couldn't be fetched from the server.\nPlease check your internet connection",
-              });
-              this.setModel(new JSONModel([]), "entries");
-            } else {
-              this.setModel(entries, "entries");
-            }
+          this.waitForModel(entries, "Entries").then((entries) => {
+            this.setModel(entries, "entries");
           }),
-          categories.dataLoaded().then(() => {
-            if (!Array.isArray(categories.getData())) {
-              errors.push({
-                type: "Error",
-                title: "Categories",
-                subtitle: "Connection to server failed",
-                description:
-                  "The categories couldn't be fetched from the server.\nPlease check your internet connection",
-              });
-              this.setModel(new JSONModel([]), "categories");
-            } else {
-              this.setModel(categories, "categories");
-            }
+          this.waitForModel(categories, "Categories").then((categories) => {
+            this.setModel(categories, "categories");
           }),
-          favorites.dataLoaded().then(() => {
-            if (!Array.isArray(favorites.getData())) {
-              errors.push({
-                type: "Error",
-                title: "Favorites",
-                subtitle: "Connection to server failed",
-                description:
-                  "Your Favorites couldn't be fetched from the server.\nPlease check your internet connection",
-              });
-              this.setModel(new JSONModel([]), "favorites");
-            } else {
-              this.setModel(favorites, "favorites");
-            }
+          this.waitForModel(favorites, "Favorites").then((favorites) => {
+            this.setModel(favorites, "favorites");
           }),
         ]).then(() => {
-          errors.push(...this.getModel("messages").getData());
-          this.setModel(new JSONModel(errors), "messages");
+          this.errors.push(...this.getModel("messages").getData());
+          this.setModel(new JSONModel(this.errors), "messages");
+        });
+      },
+
+      async waitForModel(model, errorTitle) {
+        return await model.dataLoaded().then(() => {
+          if (Array.isArray(model.getData())) {
+            return model;
+          }
+          this.errors.push({
+            type: "Error",
+            title: errorTitle,
+            subtitle: "Connection to server failed",
+            description: `Your ${errorTitle} couldn't be fetched from the server.\nPlease check your internet connection`,
+          });
+          return new JSONModel([]);
         });
       },
     });
