@@ -22,7 +22,7 @@
                     <Title text="Statistics" />
                     <ToolbarSpacer />
                     <Button
-                        press="onPressSort"
+                        press=".onPressSort"
                         icon="{= ${sorting>/sortingState} ? 'sap-icon://sort-descending' : 'sap-icon://sort-ascending'}" />
                 </Toolbar>
             </headerToolbar>

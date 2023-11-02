@@ -12,7 +12,7 @@
 				<Button
 					tooltip="Create a Favorite"
 					icon="sap-icon://create"
-					press="onPressCreateFavorite" />
+					press=".onPressCreateFavorite" />
 			</Toolbar>
 		</headerToolbar>
 		<ScrollContainer
@@ -29,13 +29,13 @@
 		</ScrollContainer>
 		<HBox justifyContent="SpaceAround" class="sapUiSmallMarginTop">
 			<Button
-				press="onPressAddFavorite"
+				press=".onPressAddFavorite"
 				icon="sap-icon://add" />
 			<Button
-				press="onPressEditFavorite"
+				press=".onPressEditFavorite"
 				icon="sap-icon://edit" />
 			<Button
-				press="onPressDeleteFavorite"
+				press=".onPressDeleteFavorite"
 				icon="sap-icon://delete" />
 		</HBox>
 	</Panel>

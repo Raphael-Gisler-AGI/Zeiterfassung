@@ -91,10 +91,10 @@
 							}" />
 						<Button
 							icon="sap-icon://edit"
-							press="onPressEdit" />
+							press=".onPressEdit" />
 						<Button
 							icon="sap-icon://delete"
-							press="onPressDelete" />
+							press=".onPressDelete" />
 					</cells>
 				</ColumnListItem>
 			</items>

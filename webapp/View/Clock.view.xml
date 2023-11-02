@@ -11,7 +11,7 @@
                 <Title text="Timer" />
                 <ToolbarSpacer />
                 <Button
-                    press="onPressReset"
+                    press=".onPressReset"
                     tooltip="Reset the timer"
                     icon="sap-icon://reset" />
             </Toolbar>

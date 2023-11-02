@@ -5,7 +5,7 @@
     height="100%">
     <Page
         showNavButton="true"
-        navButtonPress="onNavBack">
+        navButtonPress=".onNavBack">
         <IllustratedMessage illustrationType="sapIllus-PageNotFound" />
     </Page>
 </mvc:View>

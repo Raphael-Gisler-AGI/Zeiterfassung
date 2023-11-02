@@ -18,7 +18,7 @@
 			legend="SinglePlanningCalendarLegend">
 			<actions>
 				<Button
-					press="onPressLegend"
+					press=".onPressLegend"
 					icon="sap-icon://legend" />
 			</actions>
 			<views>

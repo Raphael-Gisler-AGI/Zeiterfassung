@@ -45,7 +45,7 @@ sap.ui.define(
           endTime: this.formatTime(date),
         });
       },
-      onPressMenu() {
+      onShellbarMenuPress() {
         const toolPage = this.byId("toolPage");
         toolPage.setSideExpanded(!toolPage.getSideExpanded());
       },

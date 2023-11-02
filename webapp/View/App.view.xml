@@ -15,7 +15,7 @@
 				<f:ShellBar
 					title="Zeiterfassung"
 					showMenuButton="true"
-					menuButtonPressed="onPressMenu">
+					menuButtonPressed=".onShellbarMenuPress">
 				</f:ShellBar>
 			</tnt:header>
 			<tnt:sideContent>
@@ -58,7 +58,7 @@
 			<OverflowToolbar>
 				<Button
 					id="messagePopoverButton"
-					press="onPressFooterButton"
+					press=".onPressFooterButton"
 					icon="{
 						path: 'messages>/',
 						formatter: '.formatter.getMessageIcon'
