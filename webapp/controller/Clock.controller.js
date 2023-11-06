@@ -80,7 +80,7 @@ sap.ui.define(
           MessageToast.show("Please add a description");
           return;
         }
-        if (!category) {
+        if (!category || category < 0) {
           MessageToast.show("Please select a category");
           return;
         }
