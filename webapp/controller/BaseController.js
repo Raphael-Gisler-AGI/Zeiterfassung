@@ -21,7 +21,7 @@ sap.ui.define(
       "sap.ui.agi.zeiterfassung.controller.BaseController",
       {
         formatter: formatter,
-        baseUrl: "http://localhost:3000/",
+        baseUrl: "http://localhost:3000",
 
         // Navigation
         onNavBack() {
@@ -62,7 +62,6 @@ sap.ui.define(
               Category: category,
             });
           this.getEntriesModel().refresh();
-          this.runTimer();
         },
         // Get Global Models
         getModel(modelName) {
@@ -100,20 +99,20 @@ sap.ui.define(
           return res.status;
         },
         async createEntry(data) {
-          return await this._postEntry("createEntry", "POST", data);
+          return await this._postEntry("/createEntry", "POST", data);
         },
         async editEntry(data, id) {
-          return await this._postEntry(`editEntry/${id}`, "PATCH", data);
+          return await this._postEntry(`/editEntry/${id}`, "PATCH", data);
         },
         async deleteEntry(id) {
-          const res = await fetch(`${this.baseUrl}deleteEntry/${id}`, {
+          const res = await fetch(`${this.baseUrl}/deleteEntry/${id}`, {
             method: "DELETE",
           });
           this.refresh(await res.json());
           return res.status;
         },
         async createFavorite(data) {
-          const res = await fetch(`${this.baseUrl}createFavorite`, {
+          const res = await fetch(`${this.baseUrl}/createFavorite`, {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
@@ -124,7 +123,7 @@ sap.ui.define(
           return res.status;
         },
         async editFavorite(data, id) {
-          const res = await fetch(`${this.baseUrl}editFavorite/${id}`, {
+          const res = await fetch(`${this.baseUrl}/editFavorite/${id}`, {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: {
@@ -135,7 +134,7 @@ sap.ui.define(
           return res.status;
         },
         async deleteFavorite(id) {
-          const res = await fetch(`${this.baseUrl}deleteFavorite/${id}`, {
+          const res = await fetch(`${this.baseUrl}/deleteFavorite/${id}`, {
             method: "DELETE",
           });
           this.getFavoritesModel().setData(await res.json());
@@ -146,6 +145,7 @@ sap.ui.define(
         async beforeCreate() {
           const modifyData = this.getView().getModel("modify").getData();
           const data = {
+            Day: modifyData.startDay,
             StartTime: modifyData.startTime,
             EndTime: modifyData.endTime,
             Duration: this.getDuration(
@@ -164,11 +164,13 @@ sap.ui.define(
               res = await this.editEntry(data, modifyData.id);
               break;
             case 2:
+              delete data["Day"];
               delete data["Duration"];
               data.Name = modifyData.name;
               res = await this.createFavorite(data);
               break;
             case 3:
+              delete data["Day"];
               delete data["Duration"];
               data.Name = modifyData.name;
               res = await this.editFavorite(data, modifyData.id);
@@ -191,22 +193,6 @@ sap.ui.define(
           } else {
             MessageToast.show(rejectMessage);
           }
-        },
-        runTimer() {
-          const timer = this.getTimer();
-          const current = this.getRunningEntry();
-          this.timer = setInterval(() => {
-            timer.setProperty("/time", timer.getProperty("/time") + 1);
-            if (timer.getProperty("/time") % 60 == 0) {
-              const endTime = new Date();
-              current.EndTime = endTime;
-              current.Duration = this.getDuration(
-                new Date(localStorage.getItem("startTime")),
-                endTime
-              );
-              this.getEntriesModel().refresh();
-            }
-          }, 1000);
         },
         getRunningEntry() {
           const entries = this.getEntriesModel().getData();
@@ -304,6 +290,10 @@ sap.ui.define(
             modify.type != 2 ? modify.startDay : modify.endDay,
             modify.type != 2 ? modify.endTime : "00:00"
           );
+          // Format Day
+          if (modify.type == 2) {
+            modify.startDay = `${modify.startDay} - ${modify.endDay}`;
+          }
           await this.beforeCreate();
           this.onCloseModify();
         },

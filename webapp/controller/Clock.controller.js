@@ -33,6 +33,7 @@ sap.ui.define(
         this.byId("clockCategory").setSelectedKey(category);
         this.getTimer().setProperty("/active", true);
         this.addTimerToEntries();
+        this.runTimer();
       },
       setDefaultTimer() {
         this.getOwnerComponent().setModel(
@@ -53,10 +54,28 @@ sap.ui.define(
           this.getTimer().setProperty("/active", true);
           localStorage.setItem("startTime", new Date());
           this.addTimerToEntries();
+          this.runTimer();
         }
+      },
+      runTimer() {
+        const timer = this.getTimer();
+        const current = this.getRunningEntry();
+        this.timer = setInterval(() => {
+          timer.setProperty("/time", timer.getProperty("/time") + 1);
+          if (timer.getProperty("/time") % 60 == 0) {
+            const endTime = new Date();
+            current.EndTime = endTime;
+            current.Duration = this.getDuration(
+              new Date(localStorage.getItem("startTime")),
+              endTime
+            );
+            this.getEntriesModel().refresh();
+          }
+        }, 1000);
       },
       onPressReset() {
         clearInterval(this.timer);
+        this.timer = undefined;
         if (this.getTimer().getProperty("/active")) {
           this.getEntriesModel().getData().pop();
           this.getEntriesModel().refresh();
