@@ -60,17 +60,16 @@ sap.ui.define(
       runTimer() {
         const timer = this.getTimer();
         const current = this.getRunningEntry();
+        const startTime = new Date(localStorage.getItem("startTime"));
         this.timer = setInterval(() => {
-          timer.setProperty("/time", timer.getProperty("/time") + 1);
-          if (timer.getProperty("/time") % 60 == 0) {
-            const endTime = new Date();
-            current.EndTime = endTime;
-            current.Duration = this.getDuration(
-              new Date(localStorage.getItem("startTime")),
-              endTime
-            );
-            this.getEntriesModel().refresh();
-          }
+          timer.setProperty("/time", (new Date() - startTime) / 1000);
+          const endTime = new Date();
+          current.EndTime = endTime;
+          current.Duration = this.getDuration(
+            new Date(localStorage.getItem("startTime")),
+            endTime
+          );
+          this.getEntriesModel().refresh();
         }, 1000);
       },
       onPressReset() {

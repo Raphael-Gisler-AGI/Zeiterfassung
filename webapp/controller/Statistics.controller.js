@@ -47,7 +47,7 @@ sap.ui.define(
           let hours = 0;
           const entries = this.getEntriesModel().getData();
           entries.forEach((entry) => {
-            hours += entry.Duration
+            hours += entry.Duration;
           });
           this.getView().getModel("statistics").setProperty("/hours", hours);
         },

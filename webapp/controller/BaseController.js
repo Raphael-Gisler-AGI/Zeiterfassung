@@ -107,8 +107,8 @@ sap.ui.define(
         async createEntry(data) {
           return await this._postEntry("/createEntry", "POST", data);
         },
-        async editEntry(data, id) {
-          return await this._postEntry(`/editEntry/${id}`, "PATCH", data);
+        async updateEntry(data, id) {
+          return await this._postEntry(`/updateEntry/${id}`, "PATCH", data);
         },
         async deleteEntry(id) {
           const res = await fetch(`${this.baseUrl}/deleteEntry/${id}`, {
@@ -128,8 +128,8 @@ sap.ui.define(
           this.getFavoritesModel().setData(await res.json());
           return res.status;
         },
-        async editFavorite(data, id) {
-          const res = await fetch(`${this.baseUrl}/editFavorite/${id}`, {
+        async updateFavorite(data, id) {
+          const res = await fetch(`${this.baseUrl}/updateFavorite/${id}`, {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: {
@@ -166,17 +166,17 @@ sap.ui.define(
               res = await this.createEntry(data);
               break;
             case this.CREATION_TYPE.UPDATE_ENTRY:
-              res = await this.editEntry(data, modifyData.id);
+              res = await this.updateEntry(data, modifyData.id);
               break;
             case this.CREATION_TYPE.CREATE_FAVORITE:
-              delete data["Duration"];
+              delete data.Duration;
               data.Name = modifyData.name;
               res = await this.createFavorite(data);
               break;
             case this.CREATION_TYPE.UPDATE_FAVORITE:
-              delete data["Duration"];
+              delete data.Duration;
               data.Name = modifyData.name;
-              res = await this.editFavorite(data, modifyData.id);
+              res = await this.updateFavorite(data, modifyData.id);
               break;
           }
           console.log(res);
@@ -227,18 +227,19 @@ sap.ui.define(
           const id = oEvent.getSource().getSelectedKey();
           this.modify().setProperty("/type", this.getCategoryType(id));
         },
-        dateToDay(date) {
-          date = new Date(date);
-          let month = date.getMonth() + 1;
-          month = month < 10 ? `0${month}` : month;
-          return `${date.getFullYear()}.${month}.${date.getDate()}`;
+        dateToString(date) {
+          return `${date.getFullYear()} ${
+            date.getMonth() + 1
+          } ${date.getDate()}`;
         },
         timeToDate(date, time) {
           if (!date && !time) {
             return undefined;
           }
-          return Date.parse(
-            `${date || this.dateToDay(new Date())} ${time || "00:00"}`
+          return new Date(
+            `${this.dateToString(date) || this.dateToString(new Date())} ${
+              time || "00:00"
+            }`
           );
         },
         modifyErrorHandling(modify) {
@@ -276,13 +277,6 @@ sap.ui.define(
           const error = this.modifyErrorHandling(modify);
           if (error != "") {
             return MessageToast.show(error);
-          }
-          // Format Days
-          if (modify.startDay) {
-            modify.startDay = this.dateToDay(modify.startDay);
-          }
-          if (modify.endDay) {
-            modify.endDay = this.dateToDay(modify.endDay);
           }
           // Formatting Time
           modify.startTime = this.timeToDate(
