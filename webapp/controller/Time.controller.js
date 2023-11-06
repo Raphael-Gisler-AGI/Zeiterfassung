@@ -21,7 +21,7 @@ sap.ui.define(
         const startTime = entry.getProperty("StartTime");
         const endTime = entry.getProperty("EndTime");
         const category = entry.getProperty("Category")
-        this.onOpenModify({
+        this.dialogModifyOpen({
           id: entry.getProperty("id"),
           title: "Edit Entry",
           creationType: 1,

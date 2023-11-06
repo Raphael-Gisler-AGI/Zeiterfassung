@@ -19,7 +19,7 @@ sap.ui.define(
           description: "{messages>description}",
           subtitle: "{messages>subtitle}",
         });
-        this.messages().refresh();
+        this.getMessagesModel().refresh();
         messagePopover = new MessagePopover({
           items: {
             path: "messages>/",
@@ -33,7 +33,7 @@ sap.ui.define(
         const startDate = new Date(
           new Date().setHours(new Date().getHours() - 1)
         );
-        this.onOpenModify({
+        this.dialogModifyOpen({
           title: "Create Entry",
           creationType: 0,
           description: "",
@@ -49,7 +49,7 @@ sap.ui.define(
         const toolPage = this.byId("toolPage");
         toolPage.setSideExpanded(!toolPage.getSideExpanded());
       },
-      onPressFooterButton(oEvent) {
+      onPressMessageToggleButton(oEvent) {
         messagePopover.toggle(oEvent.getSource());
       },
     });

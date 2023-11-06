@@ -10,9 +10,9 @@
 					path: 'entries>/',
 					sorter: [
 					{
-						path: 'Day',
+						path: 'StartTime',
 						descending: true,
-						group: true
+						group: '.formatter.tableGrouping'
 					},
 					{
 						path: 'StartTime',

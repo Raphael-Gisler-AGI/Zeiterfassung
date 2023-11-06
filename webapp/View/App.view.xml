@@ -58,7 +58,7 @@
 			<OverflowToolbar>
 				<Button
 					id="messagePopoverButton"
-					press=".onPressFooterButton"
+					press=".onPressMessageToggleButton"
 					icon="{
 						path: 'messages>/',
 						formatter: '.formatter.getMessageIcon'

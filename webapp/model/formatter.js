@@ -1,6 +1,25 @@
 sap.ui.define([], function () {
   "use strict";
   return {
+    tableGrouping(entry) {
+      if (entry.getProperty("timer")) {
+        return "Active Timer";
+      }
+      const startTime = entry.getProperty("StartTime");
+      const formattedDate = new Date(startTime).toLocaleDateString();
+      const categoryId = entry.getProperty("Category");
+      const category = this.getOwnerComponent()
+        .getModel("categories")
+        .getData();
+      const type = category.find((category) => category.id == categoryId)?.Type;
+      if (type === 2) {
+        const formattedEndDate = new Date(
+          entry.getProperty("EndTime")
+        ).toLocaleDateString();
+        return `${formattedDate} - ${formattedEndDate}`;
+      }
+      return formattedDate;
+    },
     getDisplayTime(date) {
       return new Date(date * 1000).toISOString().substring(11, 19);
     },

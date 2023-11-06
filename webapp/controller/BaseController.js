@@ -21,6 +21,8 @@ sap.ui.define(
       "sap.ui.agi.zeiterfassung.controller.BaseController",
       {
         formatter: formatter,
+        baseUrl: "http://localhost:3000/",
+
         // Navigation
         onNavBack() {
           const router = UIComponent.getRouterFor(this);
@@ -39,54 +41,56 @@ sap.ui.define(
             entry.StartTime = new Date(entry.StartTime);
             entry.EndTime = new Date(entry.EndTime);
           });
-          this.entries().setData(entries);
+          this.getEntriesModel().setData(entries);
           if (this.getTimer().getProperty("/active")) {
             this.addTimerToEntries();
           }
-          this.categories().setData(categories);
+          this.getCategoriesModel().setData(categories);
         },
         addTimerToEntries() {
           const category = this.getTimer().getProperty("/category") || -1;
           const startTime = Date.parse(localStorage.getItem("startTime"));
           const endTime = Date.now();
-          this.entries()
+          this.getEntriesModel()
             .getData()
             .push({
-              Day: "Active Timer",
+              timer: true,
               StartTime: startTime,
               EndTime: endTime,
               Duration: this.getDuration(startTime, endTime),
               Description: this.getTimer().getProperty("/description"),
               Category: category,
             });
-          this.entries().refresh();
+          this.getEntriesModel().refresh();
           this.runTimer();
         },
         // Get Global Models
-        entries() {
-          return this.getOwnerComponent().getModel("entries");
+        getModel(modelName) {
+          return this.getOwnerComponent().getModel(modelName);
         },
-        categories() {
-          return this.getOwnerComponent().getModel("categories");
+        getEntriesModel() {
+          return this.getModel("entries");
         },
-        favorites() {
-          return this.getOwnerComponent().getModel("favorites");
+        getCategoriesModel() {
+          return this.getModel("categories");
+        },
+        getFavoritesModel() {
+          return this.getModel("favorites");
         },
         getTimer() {
           return this.getOwnerComponent().getModel("timer");
         },
-        messages() {
-          return this.getOwnerComponent().getModel("messages");
+        getMessagesModel() {
+          return this.getModel("messages");
         },
         modify() {
           return this.getView().getModel("modify");
         },
 
-        // Create Edit Delete
-        baseUrl: "http://localhost:3000/",
-        async createEntry(data) {
-          const res = await fetch(`${this.baseUrl}createEntry`, {
-            method: "POST",
+        // CRUD Operations
+        async _postEntry(url, method, data) {
+          const res = await fetch(`${this.baseUrl}${url}`, {
+            method: method,
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },
@@ -95,16 +99,11 @@ sap.ui.define(
           this.refresh(await res.json());
           return res.status;
         },
+        async createEntry(data) {
+          return await this._postEntry("createEntry", "POST", data);
+        },
         async editEntry(data, id) {
-          const res = await fetch(`${this.baseUrl}editEntry/${id}`, {
-            method: "PATCH",
-            body: JSON.stringify(data),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-            },
-          });
-          this.refresh(await res.json());
-          return res.status;
+          return await this._postEntry(`editEntry/${id}`, "PATCH", data);
         },
         async deleteEntry(id) {
           const res = await fetch(`${this.baseUrl}deleteEntry/${id}`, {
@@ -121,7 +120,7 @@ sap.ui.define(
             },
             body: JSON.stringify(data),
           });
-          this.favorites().setData(await res.json());
+          this.getFavoritesModel().setData(await res.json());
           return res.status;
         },
         async editFavorite(data, id) {
@@ -132,14 +131,14 @@ sap.ui.define(
               "Content-type": "application/json; charset=UTF-8",
             },
           });
-          this.favorites().setData(await res.json());
+          this.getFavoritesModel().setData(await res.json());
           return res.status;
         },
         async deleteFavorite(id) {
           const res = await fetch(`${this.baseUrl}deleteFavorite/${id}`, {
             method: "DELETE",
           });
-          this.favorites().setData(await res.json());
+          this.getFavoritesModel().setData(await res.json());
           return res.status;
         },
 
@@ -147,7 +146,6 @@ sap.ui.define(
         async beforeCreate() {
           const modifyData = this.getView().getModel("modify").getData();
           const data = {
-            Day: modifyData.startDay,
             StartTime: modifyData.startTime,
             EndTime: modifyData.endTime,
             Duration: this.getDuration(
@@ -166,13 +164,11 @@ sap.ui.define(
               res = await this.editEntry(data, modifyData.id);
               break;
             case 2:
-              delete data["Day"];
               delete data["Duration"];
               data.Name = modifyData.name;
               res = await this.createFavorite(data);
               break;
             case 3:
-              delete data["Day"];
               delete data["Duration"];
               data.Name = modifyData.name;
               res = await this.editFavorite(data, modifyData.id);
@@ -208,12 +204,12 @@ sap.ui.define(
                 new Date(localStorage.getItem("startTime")),
                 endTime
               );
-              this.entries().refresh();
+              this.getEntriesModel().refresh();
             }
           }, 1000);
         },
         getRunningEntry() {
-          const entries = this.entries().getData();
+          const entries = this.getEntriesModel().getData();
           return entries[entries.length - 1];
         },
         getDuration(startTime, endTime) {
@@ -222,7 +218,7 @@ sap.ui.define(
             durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
           return result === NaN ? undefined : result;
         },
-        onOpenModify(modifyModel) {
+        dialogModifyOpen(modifyModel) {
           this.getView().setModel(new JSONModel(modifyModel), "modify");
           if (!this.pDialog) {
             this.pDialog = this.loadFragment({
@@ -234,7 +230,7 @@ sap.ui.define(
           });
         },
         getCategoryType(category) {
-          return this.categories()
+          return this.getCategoriesModel()
             .getData()
             .find((c) => c.id == category)?.Type;
         },
@@ -308,10 +304,6 @@ sap.ui.define(
             modify.type != 2 ? modify.startDay : modify.endDay,
             modify.type != 2 ? modify.endTime : "00:00"
           );
-          // Format Day
-          if (modify.type == 2) {
-            modify.startDay = `${modify.startDay} - ${modify.endDay}`;
-          }
           await this.beforeCreate();
           this.onCloseModify();
         },

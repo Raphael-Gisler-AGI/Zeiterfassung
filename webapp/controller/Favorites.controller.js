@@ -8,7 +8,7 @@ sap.ui.define(["./BaseController", "sap/m/MessageToast"], function (
     "sap.ui.agi.zeiterfassung.controller.Favorites",
     {
       onPressCreateFavorite() {
-        this.onOpenModify({
+        this.dialogModifyOpen({
           title: "Create Favorite",
           creationType: 2,
           name: "",
@@ -26,7 +26,7 @@ sap.ui.define(["./BaseController", "sap/m/MessageToast"], function (
         if (!favorite) {
           return this.showError();
         }
-        this.onOpenModify({
+        this.dialogModifyOpen({
           title: "Create Entry",
           creationType: 0,
           description: favorite.Description || undefined,
@@ -43,7 +43,7 @@ sap.ui.define(["./BaseController", "sap/m/MessageToast"], function (
         if (!favorite?.id) {
           return this.showError();
         }
-        this.onOpenModify({
+        this.dialogModifyOpen({
           title: "Edit Favorite",
           creationType: 3,
           id: favorite.id,

@@ -15,7 +15,7 @@ sap.ui.define(
         if (!localStorage.getItem("startTime")) {
           return;
         }
-        this.messages().getData().push({
+        this.getMessagesModel().getData().push({
           type: "Information",
           title: "Timer",
           subtitle: "Still running",
@@ -58,14 +58,14 @@ sap.ui.define(
       onPressReset() {
         clearInterval(this.timer);
         if (this.getTimer().getProperty("/active")) {
-          this.entries().getData().pop();
-          this.entries().refresh();
-          const index = this.messages()
+          this.getEntriesModel().getData().pop();
+          this.getEntriesModel().refresh();
+          const index = this.getMessagesModel()
             .getData()
             .map((message) => message.title)
             .indexOf("Timer");
-          this.messages().getData().splice(index, 1);
-          this.messages().refresh(true);
+          this.getMessagesModel().getData().splice(index, 1);
+          this.getMessagesModel().refresh(true);
         }
         this.byId("clockCategory").setSelectedKey("");
         localStorage.clear();
@@ -103,14 +103,14 @@ sap.ui.define(
         const category = oEvent.getSource().getSelectedKey() || -1;
         localStorage.setItem("category", category);
         this.getRunningEntry().Category = category;
-        this.entries().refresh();
+        this.getEntriesModel().refresh();
         this.getTimer().setProperty("/category", category);
       },
       onChangeDescription(oEvent) {
         const description = oEvent.getSource().getValue();
         localStorage.setItem("description", description);
         this.getRunningEntry().Description = description;
-        this.entries().refresh();
+        this.getEntriesModel().refresh();
       },
     });
   }

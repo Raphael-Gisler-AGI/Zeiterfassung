@@ -45,7 +45,7 @@ sap.ui.define(
         },
         getHoursInMonth: function () {
           let hours = 0;
-          const entries = this.entries().getData();
+          const entries = this.getEntriesModel().getData();
           entries.forEach((entry) => {
             hours += entry.Duration
           });
