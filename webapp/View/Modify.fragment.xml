@@ -27,9 +27,6 @@
 						value="{modify>/name}"
 					 	required="true" />	
 				</VBox>
-				<Label
-					visible="false"
-					id="modifyId" />
 				<Label text="Description" labelFor="appDescription" />
 				<TextArea
 					value="{modify>/description}"

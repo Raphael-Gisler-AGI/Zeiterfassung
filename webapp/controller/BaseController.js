@@ -110,11 +110,7 @@ sap.ui.define(
           return res.status;
         },
         async updateEntry(data, id) {
-          const res = await this._postData(
-            `/updateEntry/${id}`,
-            "PATCH",
-            data
-          );
+          const res = await this._postData(`/updateEntry/${id}`, "PATCH", data);
           this.updateModels(await res.json());
           return res.status;
         },
@@ -131,7 +127,11 @@ sap.ui.define(
           return res.status;
         },
         async updateFavorite(data, id) {
-          const res = await this._postData(`/updateFavorite/${id}`, "PATCH", data);
+          const res = await this._postData(
+            `/updateFavorite/${id}`,
+            "PATCH",
+            data
+          );
           this.getFavoritesModel().setData(await res.json());
           return res.status;
         },
@@ -192,10 +192,6 @@ sap.ui.define(
           } else {
             MessageToast.show(rejectMessage);
           }
-        },
-        getRunningEntry() {
-          const entries = this.getEntriesModel().getData();
-          return entries[entries.length - 1];
         },
         getDuration(startTime, endTime) {
           const durationDate = new Date(endTime - startTime);

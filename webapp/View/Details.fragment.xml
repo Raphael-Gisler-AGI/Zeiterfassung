@@ -9,12 +9,12 @@
         <beginButton>
             <Button
                 text="Edit"
-                press=".handleEditDetails" />
+                press=".onHandleEditDetails" />
         </beginButton>
         <endButton>
             <Button
                 text="Delete"
-                press=".handleDeleteDetails" />
+                press=".onHandleDeleteDetails" />
         </endButton>
         <content>
             <f:SimpleForm>

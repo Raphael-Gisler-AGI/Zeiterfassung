@@ -72,6 +72,10 @@ sap.ui.define(
           this.getEntriesModel().refresh();
         }, 1000);
       },
+      getRunningEntry() {
+        const entries = this.getEntriesModel().getData();
+        return entries[entries.length - 1];
+      },
       onPressReset() {
         clearInterval(this.timer);
         this.timer = undefined;

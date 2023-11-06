@@ -21,7 +21,7 @@
                 width="100%"
                 justifyContent="Center">
                 <Button
-                    press="onPressClock"
+                    press=".onPressClock"
                     width="50px"
                     icon="{= ${timer>/active} ? 'sap-icon://save' : 'sap-icon://media-play'}" />
             </HBox>
@@ -35,7 +35,7 @@
             <TextArea
                 width="100%"
                 value="{timer>/description}"
-                change="onChangeDescription"
+                change=".onChangeDescription"
                 placeholder="Description" />
             <ComboBox
                 id="clockCategory"
