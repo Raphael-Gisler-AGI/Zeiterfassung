@@ -20,6 +20,20 @@ sap.ui.define([], function () {
       }
       return formattedDate;
     },
+    getModifyTitle(creationType) {
+      switch (creationType) {
+        case 0:
+          return "Create Entry";
+        case 1:
+          return "Edit Entry";
+        case 2:
+          return "Create Favorite";
+        case 3:
+          return "Edit Favorite";
+        default:
+          return "Modify";
+      }
+    },
     getDisplayTime(date) {
       return new Date(date * 1000).toISOString().substring(11, 19);
     },

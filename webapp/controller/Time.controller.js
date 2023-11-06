@@ -22,7 +22,6 @@ sap.ui.define(
         const category = entry.getProperty("Category");
         this.dialogModifyOpen({
           id: entry.getProperty("id"),
-          title: "Edit Entry",
           creationType: this.CREATION_TYPE.UPDATE_ENTRY,
           description: entry.getProperty("Description"),
           category: category,

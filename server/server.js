@@ -33,7 +33,7 @@ app.post("/createEntry", (req, res) => {
   res.json(response());
 });
 
-app.patch("/editEntry/:id", (req, res) => {
+app.patch("/updateEntry/:id", (req, res) => {
   const { id } = req.params;
   const entry = req.body;
   entry.id = id;
@@ -87,7 +87,7 @@ app.post("/createFavorite", (req, res) => {
   saveEntry();
   res.json(file.Favorites);
 });
-app.patch("/editFavorite/:id", (req, res) => {
+app.patch("/updateFavorite/:id", (req, res) => {
   const { id } = req.params;
   const favorite = req.body;
   favorite.id = id;

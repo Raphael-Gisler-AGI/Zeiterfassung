@@ -105,7 +105,7 @@ sap.ui.define(
         const day = new Date().toISOString();
         this.getView().setModel(
           new JSONModel({
-            creationType: 0,
+            creationType: this.CREATION_TYPE.CREATE_ENTRY,
             startDay: day.split("T")[0].replaceAll("-", "."),
             startTime: Date.parse(localStorage.getItem("startTime")),
             endTime: Date.now(),
@@ -114,7 +114,7 @@ sap.ui.define(
           }),
           "modify"
         );
-        await this.beforeCreate();
+        await this.handleData();
         this.onPressReset();
       },
       onSetCategory(oEvent) {

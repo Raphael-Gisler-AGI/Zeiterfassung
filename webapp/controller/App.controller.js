@@ -34,7 +34,6 @@ sap.ui.define(
           new Date().setHours(new Date().getHours() - 1)
         );
         this.dialogModifyOpen({
-          title: "Create Entry",
           creationType: this.CREATION_TYPE.CREATE_ENTRY,
           description: "",
           category: undefined,

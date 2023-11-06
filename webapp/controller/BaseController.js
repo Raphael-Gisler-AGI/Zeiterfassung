@@ -40,8 +40,9 @@ sap.ui.define(
             router.navTo("time", {});
           }
         },
+
         // Refresh Global Models
-        async refresh(newData) {
+        async updateModels(newData) {
           const { entries, categories } = newData;
           entries.forEach((entry) => {
             entry.StartTime = new Date(entry.StartTime);
@@ -93,7 +94,7 @@ sap.ui.define(
         },
 
         // CRUD Operations
-        async _postEntry(url, method, data) {
+        async _postData(url, method, data) {
           const res = await fetch(`${this.baseUrl}${url}`, {
             method: method,
             headers: {
@@ -101,41 +102,36 @@ sap.ui.define(
             },
             body: JSON.stringify(data),
           });
-          this.refresh(await res.json());
-          return res.status;
+          return res;
         },
         async createEntry(data) {
-          return await this._postEntry("/createEntry", "POST", data);
+          const res = await this._postData("/createEntry", "POST", data);
+          this.updateModels(await res.json());
+          return res.status;
         },
         async updateEntry(data, id) {
-          return await this._postEntry(`/updateEntry/${id}`, "PATCH", data);
+          const res = await this._postData(
+            `/updateEntry/${id}`,
+            "PATCH",
+            data
+          );
+          this.updateModels(await res.json());
+          return res.status;
         },
         async deleteEntry(id) {
           const res = await fetch(`${this.baseUrl}/deleteEntry/${id}`, {
             method: "DELETE",
           });
-          this.refresh(await res.json());
+          this.updateModels(await res.json());
           return res.status;
         },
         async createFavorite(data) {
-          const res = await fetch(`${this.baseUrl}/createFavorite`, {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-            },
-            body: JSON.stringify(data),
-          });
+          const res = await this._postData("/createFavorite", "POST", data);
           this.getFavoritesModel().setData(await res.json());
           return res.status;
         },
         async updateFavorite(data, id) {
-          const res = await fetch(`${this.baseUrl}/updateFavorite/${id}`, {
-            method: "PATCH",
-            body: JSON.stringify(data),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-            },
-          });
+          const res = await this._postData(`/updateFavorite/${id}`, "PATCH", data);
           this.getFavoritesModel().setData(await res.json());
           return res.status;
         },
@@ -148,7 +144,7 @@ sap.ui.define(
         },
 
         // Before CRUD
-        async beforeCreate() {
+        async handleData() {
           const modifyData = this.getView().getModel("modify").getData();
           const data = {
             StartTime: modifyData.startTime,
@@ -236,7 +232,7 @@ sap.ui.define(
           if (!date && !time) {
             return undefined;
           }
-          return new Date(
+          return Date.parse(
             `${this.dateToString(date) || this.dateToString(new Date())} ${
               time || "00:00"
             }`
@@ -287,11 +283,7 @@ sap.ui.define(
             modify.type != 2 ? modify.startDay : modify.endDay,
             modify.type != 2 ? modify.endTime : "00:00"
           );
-          // Format Day
-          if (modify.type == 2) {
-            modify.startDay = `${modify.startDay} - ${modify.endDay}`;
-          }
-          await this.beforeCreate();
+          await this.handleData();
           this.onCloseModify();
         },
         onCloseModify() {

@@ -3,7 +3,10 @@
 	xmlns:l="sap.ui.layout"
 	xmlns:f="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
-	<Dialog id="modifyDialog" title="{modify>/title}">
+	<Dialog id="modifyDialog" title="{
+		path: 'modify>/creationType',
+		formatter: '.formatter.getModifyTitle'
+	}">
 		<beginButton>
 			<Button text="OK" type="Emphasized" press=".onOkModify" />
 		</beginButton>

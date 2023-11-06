@@ -17,7 +17,6 @@ sap.ui.define(
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
           this.dialogModifyOpen({
-            title: "Create Entry",
             creationType: this.CREATION_TYPE.CREATE_ENTRY,
             description: "",
             category: undefined,
@@ -42,7 +41,6 @@ sap.ui.define(
           const category = entry.getProperty("Category");
           this.dialogModifyOpen({
             id: entry.getProperty("id"),
-            title: "Edit Entry",
             creationType: this.CREATION_TYPE.UPDATE_ENTRY,
             description: entry.getProperty("Description"),
             category: category,
@@ -92,7 +90,6 @@ sap.ui.define(
           const endTime = details.getProperty("/EndTime");
           const category = details.getProperty("/Category");
           this.dialogModifyOpen({
-            title: "Edit Entry",
             creationType: this.CREATION_TYPE.UPDATE_ENTRY,
             id: details.getProperty("/id"),
             description: details.getProperty("/Description"),
