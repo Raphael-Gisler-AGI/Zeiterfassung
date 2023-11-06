@@ -12,7 +12,7 @@ sap.ui.define(
       "sap.ui.agi.zeiterfassung.controller.Statistics",
       {
         formatter: formatter,
-        onInit: function () {
+        onInit() {
           this.getView().setModel(
             new JSONModel({
               sortingState: true,
@@ -22,10 +22,10 @@ sap.ui.define(
           this.getView().setModel(new JSONModel({ hours: 0 }), "statistics");
           this.getHoursInMonth();
         },
-        onAfterRendering: function () {
+        onAfterRendering() {
           this.sortList();
         },
-        sortList: function () {
+        sortList() {
           this.byId("statisticList")
             .getBinding("items")
             .sort(
@@ -37,13 +37,13 @@ sap.ui.define(
               })
             );
         },
-        onPressSort: function () {
+        onPressSort() {
           const sorting = this.getView().getModel("sorting");
           const sortingState = sorting.getProperty("/sortingState");
           sorting.setProperty("/sortingState", !sortingState);
           this.sortList();
         },
-        getHoursInMonth: function () {
+        getHoursInMonth() {
           let hours = 0;
           const entries = this.getEntriesModel().getData();
           entries.forEach((entry) => {

@@ -10,7 +10,7 @@ sap.ui.define(["./BaseController", "sap/m/MessageToast"], function (
       onPressCreateFavorite() {
         this.dialogModifyOpen({
           title: "Create Favorite",
-          creationType: 2,
+          creationType: this.CREATION_TYPE.CREATE_FAVORITE,
           name: "",
           description: undefined,
           category: undefined,
@@ -28,7 +28,7 @@ sap.ui.define(["./BaseController", "sap/m/MessageToast"], function (
         }
         this.dialogModifyOpen({
           title: "Create Entry",
-          creationType: 0,
+          creationType: this.CREATION_TYPE.CREATE_ENTRY,
           description: favorite.Description || undefined,
           category: favorite.Category || undefined,
           type: this.getCategoryType(favorite.Category) || undefined,
@@ -45,7 +45,7 @@ sap.ui.define(["./BaseController", "sap/m/MessageToast"], function (
         }
         this.dialogModifyOpen({
           title: "Edit Favorite",
-          creationType: 3,
+          creationType: this.CREATION_TYPE.UPDATE_FAVORITE,
           id: favorite.id,
           name: favorite.Name,
           description: favorite.Description || undefined,

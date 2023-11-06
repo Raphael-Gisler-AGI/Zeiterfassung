@@ -18,7 +18,7 @@ sap.ui.define(
           const endTime = oEvent.getParameter("endDate");
           this.dialogModifyOpen({
             title: "Create Entry",
-            creationType: 0,
+            creationType: this.CREATION_TYPE.CREATE_ENTRY,
             description: "",
             category: undefined,
             type: 0,
@@ -32,13 +32,18 @@ sap.ui.define(
           const entry = oEvent
             .getParameter("appointment")
             .getBindingContext("entries");
+          if (entry.getProperty("timer")) {
+            return MessageToast.show(
+              "Please end the current timer before editing"
+            );
+          }
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
           const category = entry.getProperty("Category");
           this.dialogModifyOpen({
             id: entry.getProperty("id"),
             title: "Edit Entry",
-            creationType: 1,
+            creationType: this.CREATION_TYPE.UPDATE_ENTRY,
             description: entry.getProperty("Description"),
             category: category,
             type: this.getCategoryType(category),
@@ -58,7 +63,7 @@ sap.ui.define(
             .getObject();
           if (entry.timer) {
             return MessageToast.show(
-              "Please end the current timer before selecting"
+              "Please end the current timer before editing"
             );
           }
           this.getView().setModel(new JSONModel(entry), "details");
@@ -87,8 +92,8 @@ sap.ui.define(
           const endTime = details.getProperty("/EndTime");
           const category = details.getProperty("/Category");
           this.dialogModifyOpen({
-            title: "Create Favorite",
-            creationType: 1,
+            title: "Edit Entry",
+            creationType: this.CREATION_TYPE.UPDATE_ENTRY,
             id: details.getProperty("/id"),
             description: details.getProperty("/Description"),
             category: category,

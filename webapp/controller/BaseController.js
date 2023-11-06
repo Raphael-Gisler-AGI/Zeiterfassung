@@ -22,6 +22,12 @@ sap.ui.define(
       {
         formatter: formatter,
         baseUrl: "http://localhost:3000",
+        CREATION_TYPE: {
+          CREATE_ENTRY: 0,
+          UPDATE_ENTRY: 1,
+          CREATE_FAVORITE: 2,
+          UPDATE_FAVORITE: 3,
+        },
 
         // Navigation
         onNavBack() {
@@ -145,7 +151,6 @@ sap.ui.define(
         async beforeCreate() {
           const modifyData = this.getView().getModel("modify").getData();
           const data = {
-            Day: modifyData.startDay,
             StartTime: modifyData.startTime,
             EndTime: modifyData.endTime,
             Duration: this.getDuration(
@@ -157,20 +162,18 @@ sap.ui.define(
           };
           let res = 0;
           switch (modifyData.creationType) {
-            case 0:
+            case this.CREATION_TYPE.CREATE_ENTRY:
               res = await this.createEntry(data);
               break;
-            case 1:
+            case this.CREATION_TYPE.UPDATE_ENTRY:
               res = await this.editEntry(data, modifyData.id);
               break;
-            case 2:
-              delete data["Day"];
+            case this.CREATION_TYPE.CREATE_FAVORITE:
               delete data["Duration"];
               data.Name = modifyData.name;
               res = await this.createFavorite(data);
               break;
-            case 3:
-              delete data["Day"];
+            case this.CREATION_TYPE.UPDATE_FAVORITE:
               delete data["Duration"];
               data.Name = modifyData.name;
               res = await this.editFavorite(data, modifyData.id);

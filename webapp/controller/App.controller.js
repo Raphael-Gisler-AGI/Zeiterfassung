@@ -35,7 +35,7 @@ sap.ui.define(
         );
         this.dialogModifyOpen({
           title: "Create Entry",
-          creationType: 0,
+          creationType: this.CREATION_TYPE.CREATE_ENTRY,
           description: "",
           category: undefined,
           type: 0,

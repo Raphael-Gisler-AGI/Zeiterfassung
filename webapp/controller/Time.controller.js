@@ -15,16 +15,15 @@ sap.ui.define(
         const oItem = oEvent.getSource();
         const entry = oItem.getBindingContext("entries");
         if (this.getTimer().getProperty("/id") == entry.getProperty("id")) {
-          MessageToast.show("Please stop the timer before editing");
-          return;
+          return MessageToast.show("Please stop the timer before editing");
         }
         const startTime = entry.getProperty("StartTime");
         const endTime = entry.getProperty("EndTime");
-        const category = entry.getProperty("Category")
+        const category = entry.getProperty("Category");
         this.dialogModifyOpen({
           id: entry.getProperty("id"),
           title: "Edit Entry",
-          creationType: 1,
+          creationType: this.CREATION_TYPE.UPDATE_ENTRY,
           description: entry.getProperty("Description"),
           category: category,
           type: this.getCategoryType(category),
@@ -38,8 +37,7 @@ sap.ui.define(
         const oItem = oEvent.getSource();
         const id = oItem.getBindingContext("entries").getProperty("id");
         if (this.getTimer().getProperty("/id") == id) {
-          MessageToast.show("Please stop the timer before deleting");
-          return;
+          return MessageToast.show("Please stop the timer before deleting");
         }
         await this.beforeDeleteEntry(id);
       },
