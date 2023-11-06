@@ -4,8 +4,9 @@ sap.ui.define(
     "../model/formatter",
     "sap/ui/core/Fragment",
     "sap/ui/model/json/JSONModel",
+    "sap/m/MessageToast",
   ],
-  function (BaseController, formatter, Fragment, JSONModel) {
+  function (BaseController, formatter, Fragment, JSONModel, MessageToast) {
     "use strict";
 
     return BaseController.extend(
@@ -15,15 +16,14 @@ sap.ui.define(
         handleCreate(oEvent) {
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
-          const date = new Date();
           this.dialogModifyOpen({
             title: "Create Entry",
             creationType: 0,
             description: "",
             category: undefined,
             type: 0,
-            startDay: new Date(date),
-            endDay: new Date(date),
+            startDay: startTime,
+            endDay: endTime,
             startTime: this.formatTime(startTime),
             endTime: this.formatTime(endTime),
           });
@@ -56,6 +56,11 @@ sap.ui.define(
             .getParameter("appointment")
             .getBindingContext("entries")
             .getObject();
+          if (entry.timer) {
+            return MessageToast.show(
+              "Please end the current timer before selecting"
+            );
+          }
           this.getView().setModel(new JSONModel(entry), "details");
           if (!this.pDetails) {
             this.pDetails = Fragment.load({
@@ -80,7 +85,7 @@ sap.ui.define(
           const details = this.getView().getModel("details");
           const startTime = details.getProperty("/StartTime");
           const endTime = details.getProperty("/EndTime");
-          const category = details.getProperty("/Category")
+          const category = details.getProperty("/Category");
           this.dialogModifyOpen({
             title: "Create Favorite",
             creationType: 1,
