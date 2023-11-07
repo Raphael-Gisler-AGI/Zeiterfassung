@@ -24,12 +24,13 @@
 				<VBox visible="{= ${modify>/name} !== undefined ? true : false}">
 					<Label text="Name" labelFor="favoriteName" />
 					<Input
+						valueState="{modifyErrors>/name/state}"
+						valueStateText="{modifyErrors>/name/message}"
 						value="{modify>/name}"
 						required="true" />
 				</VBox>
 				<Label text="Description" labelFor="appDescription" />
 				<TextArea
-					valueLiveUpdate="true"
 					valueState="{modifyErrors>/description/state}"
 					valueStateText="{modifyErrors>/description/message}"
 					value="{modify>/description}"

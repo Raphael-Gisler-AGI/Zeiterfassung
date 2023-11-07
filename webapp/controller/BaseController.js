@@ -84,12 +84,15 @@ sap.ui.define(
           return this.getModel("favorites");
         },
         getTimer() {
-          return this.getOwnerComponent().getModel("timer");
+          return this.getModel("timer");
         },
         getMessagesModel() {
           return this.getModel("messages");
         },
-        modify() {
+        getI18nText(text) {
+          return this.getModel("i18n").getResourceBundle().getText(text);
+        },
+        getModifyModel() {
           return this.getView().getModel("modify");
         },
 
@@ -217,7 +220,7 @@ sap.ui.define(
         },
         setModifyType(oEvent) {
           const id = oEvent.getSource().getSelectedKey();
-          this.modify().setProperty("/type", this.getCategoryType(id));
+          this.getModifyModel.setProperty("/type", this.getCategoryType(id));
         },
         dateToString(date) {
           return `${date.getFullYear()} ${
@@ -237,45 +240,56 @@ sap.ui.define(
         modifyErrorHandling(modify) {
           const errors = {};
           if (
+            modify.creationType === this.CREATION_TYPE.CREATE_FAVORITE ||
+            modify.creationType === this.CREATION_TYPE.UPDATE_FAVORITE
+          ) {
+            if (!modify.name || modify.name.trim() === "") {
+              errors.name = {
+                state: "Error",
+                message: this.getI18nText("ModifyErrorName"),
+              };
+            }
+          }
+          if (
             modify.creationType === this.CREATION_TYPE.CREATE_ENTRY ||
             modify.creationType === this.CREATION_TYPE.UPDATE_ENTRY
           ) {
             if (!modify.description || modify.description.trim() === "") {
               errors.description = {
                 state: "Error",
-                message: "Please fill in a description",
+                message: this.getI18nText("ModifyErrorDescription"),
               };
             }
             if (!modify.category) {
               errors.category = {
                 state: "Error",
-                message: "Please select a category",
+                message: this.getI18nText("ModifyErrorCategory"),
               };
             }
             if (!modify.startDay) {
               errors.startDay = {
                 state: "Error",
-                message: "Please select a start day",
+                message: this.getI18nText("ModifyErrorStartDay"),
               };
             }
             if (modify.type != 2) {
               if (!modify.startTime) {
                 errors.startTime = {
                   state: "Error",
-                  message: "Please select a start time",
+                  message: this.getI18nText("ModifyErrorStartTime"),
                 };
               }
               if (!modify.endTime) {
                 errors.endTime = {
                   state: "Error",
-                  message: "Please select a end time",
+                  message: this.getI18nText("ModifyErrorEndTime"),
                 };
               }
             } else {
               if (!modify.endDay) {
                 errors.endDay = {
                   state: "Error",
-                  message: "Please select an end day",
+                  message: this.getI18nText("ModifyErrorEndDay"),
                 };
               }
             }
