@@ -17,7 +17,6 @@
 			class="sapUiContentPadding"
 			width="100%">
 			<f:SimpleForm
-				id="appointmentCreateForm"
 				editable="true"
 				layout="ResponsiveGridLayout"
 				singleContainerFullSize="false">

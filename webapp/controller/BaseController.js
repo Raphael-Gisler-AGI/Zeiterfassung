@@ -236,7 +236,7 @@ sap.ui.define(
         },
         modifyErrorHandling(modify) {
           if (modify.creationType < 2) {
-            if (!modify.description) {
+            if (!modify.description || modify.description.trim() === "") {
               return "Please fill in a description";
             }
             if (!modify.category) {

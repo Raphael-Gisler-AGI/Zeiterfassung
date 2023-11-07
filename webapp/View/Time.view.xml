@@ -93,9 +93,11 @@
 							}" />
 						<Button
 							icon="sap-icon://edit"
+							type="Transparent"
 							press=".onPressEdit" />
 						<Button
 							icon="sap-icon://delete"
+							type="Transparent"
 							press=".onPressDelete" />
 					</cells>
 				</ColumnListItem>

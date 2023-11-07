@@ -8,11 +8,6 @@
 		<headerToolbar>
 			<Toolbar>
 				<Title text="Favorites" />
-				<ToolbarSpacer />
-				<Button
-					tooltip="Create a Favorite"
-					icon="sap-icon://create"
-					press=".onPressCreateFavorite" />
 			</Toolbar>
 		</headerToolbar>
 		<ScrollContainer
@@ -20,23 +15,41 @@
 			vertical="true">
 			<List
 				id="favoriteList"
-				mode="SingleSelectMaster"
-				includeItemInSelection="true"
 				items="{favorites>/}">
-				<StandardListItem
-					title="{favorites>Name}" />
+				<items>
+				<InputListItem label="{favorites>Name}">
+					<Button
+						press="onPressOptions"
+						type="Transparent"
+						icon="sap-icon://overflow">
+						<dependents>
+							<ActionSheet>
+								<Button
+									text="Use"
+									icon="sap-icon://add"
+									press=".onPressAddFavorite" />
+								<Button
+									text="Edit"
+									icon="sap-icon://edit"
+									press=".onPressEditFavorite" />
+								<Button
+									text="Delete"
+									icon="sap-icon://delete"
+									press=".onPressDeleteFavorite" />
+							</ActionSheet>
+						</dependents>
+					</Button>
+				</InputListItem>
+				</items>
 			</List>
 		</ScrollContainer>
-		<HBox justifyContent="SpaceAround" class="sapUiSmallMarginTop">
+		<HBox
+			width="100%"
+			justifyContent="Center">
 			<Button
-				press=".onPressAddFavorite"
+				class="sapUiSmallMarginTop"
+				press=".onPressCreateFavorite"
 				icon="sap-icon://add" />
-			<Button
-				press=".onPressEditFavorite"
-				icon="sap-icon://edit" />
-			<Button
-				press=".onPressDeleteFavorite"
-				icon="sap-icon://delete" />
 		</HBox>
 	</Panel>
 </mvc:View>
