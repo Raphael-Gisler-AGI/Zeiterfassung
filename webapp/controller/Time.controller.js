@@ -5,13 +5,31 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
+    "sap/ui/model/json/JSONModel",
   ],
-  function (BaseController, formatter, Filter, FilterOperator, MessageToast) {
+  function (
+    BaseController,
+    formatter,
+    Filter,
+    FilterOperator,
+    MessageToast,
+    JSONModel
+  ) {
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Time", {
       formatter: formatter,
-      onPressEdit: function (oEvent) {
+      onInit() {
+        this.getView().setModel(
+          new JSONModel({
+            description: undefined,
+            category: undefined,
+          }),
+          "filter"
+        );
+      },
+
+      onPressEdit(oEvent) {
         const oItem = oEvent.getSource();
         const entry = oItem.getBindingContext("entries");
         if (this.getTimer().getProperty("/id") == entry.getProperty("id")) {
@@ -32,37 +50,34 @@ sap.ui.define(
           endTime: this.formatTime(endTime),
         });
       },
-      onPressDelete: async function (oEvent) {
+
+      onPressDelete(oEvent) {
         const oItem = oEvent.getSource();
         const id = oItem.getBindingContext("entries").getProperty("id");
         if (this.getTimer().getProperty("/id") == id) {
           return MessageToast.show("Please stop the timer before deleting");
         }
-        await this.beforeDeleteEntry(id);
+        this.beforeDeleteEntry(id);
       },
-      filter: [new Filter(), new Filter()],
-      onFilterSearch: function (oEvent) {
-        const query = oEvent.getParameter("newValue");
-        this.filter[0] = new Filter(
-          "Description",
-          FilterOperator.Contains,
-          query ? query : ""
-        );
-        this.setFilter(FilterOperator.Contains);
-      },
-      onFilterCategory: function (oEvent) {
-        const id = oEvent.getSource().getSelectedKey();
-        if (id) {
-          this.filter[1] = new Filter("Category", FilterOperator.EQ, id);
-        } else {
-          this.filter[1] = new Filter();
+
+      onFilter() {
+        const filters = [];
+        const { description, category } = this.getView()
+          .getModel("filter")
+          .getData();
+
+        if (description) {
+          filters.push(
+            new Filter("Description", FilterOperator.Contains, description)
+          );
         }
-        this.setFilter(FilterOperator.EQ);
-      },
-      setFilter: function (operation) {
+        if (category) {
+          filters.push(new Filter("Category", FilterOperator.EQ, category));
+        }
+
         this.byId("entryTable")
           .getBinding("items")
-          .filter(this.filter, operation);
+          .filter(filters, FilterOperator.Contains);
       },
     });
   }

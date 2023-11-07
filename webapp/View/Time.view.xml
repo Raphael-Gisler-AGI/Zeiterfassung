@@ -26,12 +26,14 @@
 						<ToolbarSpacer />
 						<SearchField
 							width="30%"
-							liveChange="onFilterSearch"
+							liveChange=".onFilter"
+							value="{filter>/description}"
 							placeholder="Search for a Description">
 						</SearchField>
 						<ComboBox
 							placeholder="Search for a Category"
-							selectionChange="onFilterCategory"
+							selectionChange=".onFilter"
+							selectedKey="{filter>/category}"
 							items="{categories>/}">
 							<core:ListItem
 								text="{categories>Name}"

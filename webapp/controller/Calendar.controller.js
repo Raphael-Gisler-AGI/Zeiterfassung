@@ -27,7 +27,7 @@ sap.ui.define(
             endTime: this.formatTime(endTime),
           });
         },
-        
+
         onHandleChange(oEvent) {
           const entry = oEvent
             .getParameter("appointment")
@@ -52,6 +52,7 @@ sap.ui.define(
             endTime: this.formatTime(endTime),
           });
         },
+
         onHandleSelect(oEvent) {
           if (!oEvent.getParameter("appointment")) {
             return;
@@ -81,10 +82,12 @@ sap.ui.define(
             oPopover.openBy(oEvent.getParameter("appointment"));
           });
         },
+
         onHandleDeleteDetails() {
           const id = this.getView().getModel("details").getProperty("/id");
           this.beforeDeleteEntry(id);
         },
+
         onHandleEditDetails: async function () {
           const details = this.getView().getModel("details");
           const startTime = details.getProperty("/StartTime");
@@ -102,6 +105,7 @@ sap.ui.define(
             endTime: this.formatTime(endTime),
           });
         },
+
         onPressLegend: function (oEvent) {
           if (!this.pLegend) {
             this.pLegend = Fragment.load({
