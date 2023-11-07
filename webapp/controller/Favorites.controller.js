@@ -10,7 +10,7 @@ sap.ui.define(
           this.getView().setModel(new JSONModel(), "selectedFavorite");
         },
         onPressCreateFavorite() {
-          this.dialogModifyOpen({
+          this.openModifyDialog({
             creationType: this.CREATION_TYPE.CREATE_FAVORITE,
             name: "",
             description: undefined,
@@ -23,9 +23,8 @@ sap.ui.define(
           });
         },
         onPressAddFavorite() {
-          console.log("test")
           const favorite = this.getSelectedFavorite();
-          this.dialogModifyOpen({
+          this.openModifyDialog({
             creationType: this.CREATION_TYPE.CREATE_ENTRY,
             description: favorite.Description || undefined,
             category: favorite.Category || undefined,
@@ -38,7 +37,7 @@ sap.ui.define(
         },
         onPressEditFavorite() {
           const favorite = this.getSelectedFavorite();
-          this.dialogModifyOpen({
+          this.openModifyDialog({
             creationType: this.CREATION_TYPE.UPDATE_FAVORITE,
             id: favorite.id,
             name: favorite.Name,

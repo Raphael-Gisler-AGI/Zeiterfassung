@@ -3,15 +3,16 @@
 	xmlns:l="sap.ui.layout"
 	xmlns:f="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
-	<Dialog id="modifyDialog" title="{
+	<Dialog id="modifyDialog"
+		title="{
 		path: 'modify>/creationType',
 		formatter: '.formatter.getModifyTitle'
 	}">
 		<beginButton>
-			<Button text="OK" type="Emphasized" press=".onOkModify" />
+			<Button text="OK" type="Emphasized" press=".onSubmitModifyDialog" />
 		</beginButton>
 		<endButton>
-			<Button text="Cancel" press=".onCloseModify" />
+			<Button text="Cancel" press=".onCloseModifyDialog" />
 		</endButton>
 		<l:VerticalLayout
 			class="sapUiContentPadding"
@@ -21,19 +22,24 @@
 				layout="ResponsiveGridLayout"
 				singleContainerFullSize="false">
 				<VBox visible="{= ${modify>/name} !== undefined ? true : false}">
-					<Label text="Name" labelFor="favoriteName"/>
+					<Label text="Name" labelFor="favoriteName" />
 					<Input
 						value="{modify>/name}"
-					 	required="true" />	
+						required="true" />
 				</VBox>
 				<Label text="Description" labelFor="appDescription" />
 				<TextArea
+					valueLiveUpdate="true"
+					valueState="{modifyErrors>/description/state}"
+					valueStateText="{modifyErrors>/description/message}"
 					value="{modify>/description}"
 					required="true" />
 				<Label text="Category" labelFor="category" />
 				<ComboBox
 					selectedKey="{modify>/category}"
 					selectionChange="setModifyType"
+					valueState="{modifyErrors>/category/state}"
+					valueStateText="{modifyErrors>/category/message}"
 					items="{categories>/}"
 					required="true">
 					<core:Item
@@ -44,6 +50,8 @@
 					text="{= ${modify>/type} > 1 ? 'From' : 'Day'}"
 					labelFor="startDate" />
 				<DatePicker
+					valueState="{modifyErrors>/startDay/state}"
+					valueStateText="{modifyErrors>/startDay/message}"
 					value="{
 						path:'modify>/startDay',
 						type: 'sap.ui.model.type.Date'
@@ -53,6 +61,8 @@
 				<VBox visible="{= ${modify>/type} > 1 ? true : false}">
 					<Label text="Until" />
 					<DatePicker
+						valueState="{modifyErrors>/endDay/state}"
+						valueStateText="{modifyErrors>/endDay/message}"
 						value="{
 							path:'modify>/endDay',
 							type: 'sap.ui.model.type.Date'
@@ -67,6 +77,8 @@
 					<VBox>
 						<Label text="Start Time" labelFor="startTime" />
 						<TimePicker
+							valueState="{modifyErrors>/startTime/state}"
+							valueStateText="{modifyErrors>/startTime/message}"
 							value="{modify>/startTime}"
 							minutesStep="{= ${modify>/type} > 0 ? 1 : 15}"
 							support2400="true"
@@ -76,6 +88,8 @@
 					<VBox>
 						<Label text="End Time" labelFor="endTime" />
 						<TimePicker
+							valueState="{modifyErrors>/endTime/state}"
+							valueStateText="{modifyErrors>/endTime/message}"
 							value="{modify>/endTime}"
 							minutesStep="{= ${modify>/type} > 0 ? 1 : 15}"
 							support2400="true"

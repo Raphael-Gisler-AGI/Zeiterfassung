@@ -49,6 +49,7 @@
 			<Button
 				class="sapUiSmallMarginTop"
 				press=".onPressCreateFavorite"
+				text="Create New"
 				icon="sap-icon://add" />
 		</HBox>
 	</Panel>

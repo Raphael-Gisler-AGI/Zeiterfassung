@@ -199,7 +199,7 @@ sap.ui.define(
             durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
           return result === NaN ? undefined : result;
         },
-        dialogModifyOpen(modifyModel) {
+        openModifyDialog(modifyModel) {
           this.getView().setModel(new JSONModel(modifyModel), "modify");
           if (!this.pDialog) {
             this.pDialog = this.loadFragment({
@@ -235,40 +235,65 @@ sap.ui.define(
           );
         },
         modifyErrorHandling(modify) {
-          if (modify.creationType < 2) {
+          const errors = {};
+          if (
+            modify.creationType === this.CREATION_TYPE.CREATE_ENTRY ||
+            modify.creationType === this.CREATION_TYPE.UPDATE_ENTRY
+          ) {
             if (!modify.description || modify.description.trim() === "") {
-              return "Please fill in a description";
+              errors.description = {
+                state: "Error",
+                message: "Please fill in a description",
+              };
             }
             if (!modify.category) {
-              return "Please select a category";
+              errors.category = {
+                state: "Error",
+                message: "Please select a category",
+              };
             }
             if (!modify.startDay) {
-              return "Please select a start day";
+              errors.startDay = {
+                state: "Error",
+                message: "Please select a start day",
+              };
             }
             if (modify.type != 2) {
               if (!modify.startTime) {
-                return "Please select a start time";
+                errors.startTime = {
+                  state: "Error",
+                  message: "Please select a start time",
+                };
               }
               if (!modify.endTime) {
-                return "Please select an end time";
+                errors.endTime = {
+                  state: "Error",
+                  message: "Please select a end time",
+                };
               }
             } else {
               if (!modify.endDay) {
-                return "Please select an end day";
+                errors.endDay = {
+                  state: "Error",
+                  message: "Please select an end day",
+                };
               }
             }
           }
           if (modify.startTime > modify.endTime) {
-            return "The End Time has to be larger than the Start Time";
+            MessageToast.show(
+              "The End Time has to be larger than the Start Time"
+            );
           }
-          return "";
+          return errors;
         },
-        async onOkModify() {
+        async onSubmitModifyDialog() {
+          this.getView().setModel(new JSONModel({}), "modifyErrors");
           const modify = this.getView().getModel("modify").getData();
           // Error handling
-          const error = this.modifyErrorHandling(modify);
-          if (error != "") {
-            return MessageToast.show(error);
+          const errors = this.modifyErrorHandling(modify);
+          if (Object.keys(errors).length > 0) {
+            return this.getView().getModel("modifyErrors").setData(errors);
           }
           // Formatting Time
           modify.startTime = this.timeToDate(
@@ -280,9 +305,9 @@ sap.ui.define(
             modify.type != 2 ? modify.endTime : "00:00"
           );
           await this.handleData();
-          this.onCloseModify();
+          this.onCloseModifyDialog();
         },
-        onCloseModify() {
+        onCloseModifyDialog() {
           this.byId("modifyDialog").close();
         },
         formatTime(time) {

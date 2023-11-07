@@ -33,7 +33,7 @@ sap.ui.define(
         const startDate = new Date(
           new Date().setHours(new Date().getHours() - 1)
         );
-        this.dialogModifyOpen({
+        this.openModifyDialog({
           creationType: this.CREATION_TYPE.CREATE_ENTRY,
           description: "",
           category: undefined,

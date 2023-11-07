@@ -16,7 +16,7 @@ sap.ui.define(
         onHandleCreate(oEvent) {
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
-          this.dialogModifyOpen({
+          this.openModifyDialog({
             creationType: this.CREATION_TYPE.CREATE_ENTRY,
             description: "",
             category: undefined,
@@ -40,7 +40,7 @@ sap.ui.define(
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
           const category = entry.getProperty("Category");
-          this.dialogModifyOpen({
+          this.openModifyDialog({
             id: entry.getProperty("id"),
             creationType: this.CREATION_TYPE.UPDATE_ENTRY,
             description: entry.getProperty("Description"),
@@ -93,7 +93,7 @@ sap.ui.define(
           const startTime = details.getProperty("/StartTime");
           const endTime = details.getProperty("/EndTime");
           const category = details.getProperty("/Category");
-          this.dialogModifyOpen({
+          this.openModifyDialog({
             creationType: this.CREATION_TYPE.UPDATE_ENTRY,
             id: details.getProperty("/id"),
             description: details.getProperty("/Description"),
