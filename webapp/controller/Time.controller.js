@@ -32,7 +32,7 @@ sap.ui.define(
       onPressEdit(oEvent) {
         const oItem = oEvent.getSource();
         const entry = oItem.getBindingContext("entries");
-        if (this.getTimer().getProperty("/id") == entry.getProperty("id")) {
+        if (this.getTimerModel().getProperty("/id") == entry.getProperty("id")) {
           return MessageToast.show("Please stop the timer before editing");
         }
         const startTime = entry.getProperty("StartTime");
@@ -54,7 +54,7 @@ sap.ui.define(
       onPressDelete(oEvent) {
         const oItem = oEvent.getSource();
         const id = oItem.getBindingContext("entries").getProperty("id");
-        if (this.getTimer().getProperty("/id") == id) {
+        if (this.getTimerModel().getProperty("/id") == id) {
           return MessageToast.show("Please stop the timer before deleting");
         }
         this.confirmDeleteEntry(id);

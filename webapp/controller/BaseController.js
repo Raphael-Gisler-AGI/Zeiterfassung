@@ -51,7 +51,7 @@ sap.ui.define(
             entry.EndTime = new Date(entry.EndTime);
           });
           this.getEntriesModel().setData(entries);
-          if (this.getTimer().getProperty("/active")) {
+          if (this.getTimerModel().getProperty("/active")) {
             this.addTimerToEntries();
           }
           this.getCategoriesModel().setData(categories);
@@ -66,8 +66,8 @@ sap.ui.define(
               StartTime: startTime,
               EndTime: endTime,
               Duration: this.getDuration(startTime, endTime),
-              Description: this.getTimer().getProperty("/description"),
-              Category: this.getTimer().getProperty("/category") || -1,
+              Description: this.getTimerModel().getProperty("/description"),
+              Category: this.getTimerModel().getProperty("/category") || -1,
             });
           this.getEntriesModel().refresh();
         },
@@ -84,7 +84,7 @@ sap.ui.define(
         getFavoritesModel() {
           return this.getModel("favorites");
         },
-        getTimer() {
+        getTimerModel() {
           return this.getModel("timer");
         },
         getMessagesModel() {

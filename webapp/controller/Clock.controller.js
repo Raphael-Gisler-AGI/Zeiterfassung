@@ -25,13 +25,13 @@ sap.ui.define(
           Math.floor(new Date() - new Date(localStorage.getItem("startTime"))) /
             1000
         );
-        this.getTimer().setProperty("/time", newDuration);
+        this.getTimerModel().setProperty("/time", newDuration);
         const description = localStorage.getItem("description") || "";
         const category = localStorage.getItem("category") || "";
-        this.getTimer().setProperty("/description", description);
-        this.getTimer().setProperty("/category", category);
+        this.getTimerModel().setProperty("/description", description);
+        this.getTimerModel().setProperty("/category", category);
         this.byId("clockCategory").setSelectedKey(category);
-        this.getTimer().setProperty("/active", true);
+        this.getTimerModel().setProperty("/active", true);
         this.addTimerToEntries();
         this.runTimer();
       },
@@ -47,18 +47,18 @@ sap.ui.define(
         );
       },
       onPressClock() {
-        const active = this.getTimer().getProperty("/active");
+        const active = this.getTimerModel().getProperty("/active");
         if (active) {
           this.saveTimer();
         } else {
-          this.getTimer().setProperty("/active", true);
+          this.getTimerModel().setProperty("/active", true);
           localStorage.setItem("startTime", new Date());
           this.addTimerToEntries();
           this.runTimer();
         }
       },
       runTimer() {
-        const timer = this.getTimer();
+        const timer = this.getTimerModel();
         const current = this.getRunningEntry();
         const startTime = new Date(localStorage.getItem("startTime"));
         this.timer = setInterval(() => {
@@ -79,7 +79,7 @@ sap.ui.define(
       onPressReset() {
         clearInterval(this.timer);
         this.timer = undefined;
-        if (this.getTimer().getProperty("/active")) {
+        if (this.getTimerModel().getProperty("/active")) {
           this.getEntriesModel().getData().pop();
           this.getEntriesModel().refresh();
           const index = this.getMessagesModel()
@@ -91,20 +91,22 @@ sap.ui.define(
         }
         this.byId("clockCategory").setSelectedKey("");
         localStorage.clear();
-        this.getTimer().setProperty("/active", false);
+        this.getTimerModel().setProperty("/active", false);
         this.setDefaultTimer();
       },
       async saveTimer() {
-        const timer = this.getTimer();
+        const timer = this.getTimerModel();
         const description = timer.getProperty("/description");
         const category = timer.getProperty("/category");
+        let errorMessage = "";
         if (!description) {
-          MessageToast.show("Please add a description");
-          return;
+          errorMessage = "Please add a description";
         }
         if (!category || category < 0) {
-          MessageToast.show("Please select a category");
-          return;
+          errorMessage += `${errorMessage ? "\n" : ""}Please select a category`;
+        }
+        if (errorMessage != "") {
+          return MessageToast.show(errorMessage);
         }
         const day = new Date().toISOString();
         this.getView().setModel(
@@ -124,7 +126,7 @@ sap.ui.define(
       onChangeDescription(oEvent) {
         const description = oEvent.getSource().getValue();
         localStorage.setItem("description", description);
-        if (this.getTimer().getProperty("/active")) {
+        if (this.getTimerModel().getProperty("/active")) {
           this.getRunningEntry().Description = description;
           this.getEntriesModel().refresh();
         }
@@ -132,8 +134,8 @@ sap.ui.define(
       onSetCategory(oEvent) {
         const category = oEvent.getSource().getSelectedKey() || -1;
         localStorage.setItem("category", category);
-        this.getTimer().setProperty("/category", category);
-        if (this.getTimer().getProperty("/active")) {
+        this.getTimerModel().setProperty("/category", category);
+        if (this.getTimerModel().getProperty("/active")) {
           this.getRunningEntry().Category = category;
           this.getEntriesModel().refresh();
         }
