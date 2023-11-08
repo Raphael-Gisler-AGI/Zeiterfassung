@@ -237,12 +237,15 @@ sap.ui.define(
           this.getModifyModel().setProperty("/type", this.getCategoryType(id));
         },
         dateToString(date) {
+          if(!date) {
+            return undefined;
+          }
           return `${date.getFullYear()} ${
             date.getMonth() + 1
           } ${date.getDate()}`;
         },
         timeToDate(date, time) {
-          if (!date && !time) {
+          if (!time) {
             return undefined;
           }
           return Date.parse(
