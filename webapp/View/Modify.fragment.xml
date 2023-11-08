@@ -22,19 +22,21 @@
 				layout="ResponsiveGridLayout"
 				singleContainerFullSize="false">
 				<VBox visible="{= ${modify>/name} !== undefined ? true : false}">
-					<Label text="Name" labelFor="favoriteName" />
+					<Label text="Name" labelFor="modifyFavoriteName" />
 					<Input
+						id="modifyFavoriteName"
 						valueState="{modifyErrors>/name/state}"
 						valueStateText="{modifyErrors>/name/message}"
 						value="{modify>/name}"
-						required="true" />
+						required="{= ${modify>/creationType} > 1}" />
 				</VBox>
-				<Label text="Description" labelFor="appDescription" />
+				<Label text="Description" labelFor="modifyDescription" />
 				<TextArea
+					id="modifyDescription"
 					valueState="{modifyErrors>/description/state}"
 					valueStateText="{modifyErrors>/description/message}"
 					value="{modify>/description}"
-					required="true" />
+					required="{= 1 > ${modify>/creationType}}" />
 				<Label text="Category" labelFor="category" />
 				<ComboBox
 					selectedKey="{modify>/category}"
@@ -42,26 +44,28 @@
 					valueState="{modifyErrors>/category/state}"
 					valueStateText="{modifyErrors>/category/message}"
 					items="{categories>/}"
-					required="true" >
+					required="{= 1 > ${modify>/creationType}}">
 					<core:Item
 						key="{categories>id}"
 						text="{categories>Name}" />
 				</ComboBox>
 				<Label
 					text="{= ${modify>/type} > 1 ? 'From' : 'Day'}"
-					labelFor="startDate" />
+					labelFor="modifyStartDate" />
 				<DatePicker
+					id="modifyStartDate"
 					valueState="{modifyErrors>/startDay/state}"
 					valueStateText="{modifyErrors>/startDay/message}"
 					value="{
 						path:'modify>/startDay',
 						type: 'sap.ui.model.type.Date'
 					}"
-					required="true" />
+					required="{= 1 > ${modify>/creationType}}" />
 				<Label />
 				<VBox visible="{= ${modify>/type} > 1 ? true : false}">
-					<Label text="Until" />
+					<Label text="Until" labelFor="modifyEndDay" />
 					<DatePicker
+						id="modifyEndDay"
 						valueState="{modifyErrors>/endDay/state}"
 						valueStateText="{modifyErrors>/endDay/message}"
 						value="{
@@ -69,15 +73,16 @@
 							type: 'sap.ui.model.type.Date'
 						}"
 						valueFormat="YYYY.MM.dd"
-						required="true" />
+						required="{= 1 > ${modify>/creationType}}" />
 				</VBox>
 				<Label />
 				<HBox
 					visible="{= ${modify>/type} > 1 ? false : true}"
 					justifyContent="SpaceBetween">
 					<VBox>
-						<Label text="Start Time" labelFor="startTime" />
+						<Label text="Start Time" labelFor="modifyStartTime" />
 						<TimePicker
+							id="modifyStartTime"
 							valueState="{modifyErrors>/startTime/state}"
 							valueStateText="{modifyErrors>/startTime/message}"
 							value="{modify>/startTime}"
@@ -85,11 +90,12 @@
 							support2400="true"
 							displayFormat="HH:mm"
 							valueFormat="HH:mm"
-							required="true" />
+							required="{= 1 > ${modify>/creationType}}" />
 					</VBox>
 					<VBox>
-						<Label text="End Time" labelFor="endTime" />
+						<Label text="End Time" labelFor="modifyEndTime" />
 						<TimePicker
+							id="modifyEndTime"
 							valueState="{modifyErrors>/endTime/state}"
 							valueStateText="{modifyErrors>/endTime/message}"
 							value="{modify>/endTime}"
@@ -97,7 +103,7 @@
 							support2400="true"
 							valueFormat="HH:mm"
 							displayFormat="HH:mm"
-							required="true" />
+							required="{= 1 > ${modify>/creationType}}" />
 					</VBox>
 				</HBox>
 			</f:SimpleForm>

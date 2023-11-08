@@ -57,7 +57,7 @@ sap.ui.define(
         if (this.getTimer().getProperty("/id") == id) {
           return MessageToast.show("Please stop the timer before deleting");
         }
-        this.beforeDeleteEntry(id);
+        this.confirmDeleteEntry(id);
       },
 
       onFilter() {

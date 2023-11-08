@@ -85,7 +85,7 @@ sap.ui.define(
 
         onHandleDeleteDetails() {
           const id = this.getView().getModel("details").getProperty("/id");
-          this.beforeDeleteEntry(id);
+          this.confirmDeleteEntry(id);
         },
 
         onHandleEditDetails: async function () {

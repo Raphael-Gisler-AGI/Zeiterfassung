@@ -6,6 +6,7 @@ sap.ui.define(
     "sap/m/MessageToast",
     "sap/ui/core/routing/History",
     "sap/ui/core/UIComponent",
+    "sap/m/MessageBox",
   ],
   function (
     Controller,
@@ -13,7 +14,8 @@ sap.ui.define(
     JSONModel,
     MessageToast,
     History,
-    UIComponent
+    UIComponent,
+    MessageBox
   ) {
     "use strict";
 
@@ -179,13 +181,22 @@ sap.ui.define(
           }
           console.log(res);
         },
-        async beforeDeleteEntry(id) {
-          const res = await this.deleteEntry(id);
-          console.log(res);
-          this.displayResponse(
-            res,
-            "Entry has been deleted",
-            "Failed to delete an entry\nPlease try again"
+        async confirmDeleteEntry(id) {
+          MessageBox.confirm(
+            "Are you sure you want to permanently delete this entry",
+            {
+              title: "Confirm Deletion",
+              onClose: async (oEvent) => {
+                if (oEvent === "OK") {
+                  const res = await this.deleteEntry(id);
+                  this.displayResponse(
+                    res,
+                    "Entry has been deleted",
+                    "Failed to delete an entry\nPlease try again"
+                  );
+                }
+              },
+            }
           );
         },
         displayResponse(res, successMessage, rejectMessage) {
@@ -219,7 +230,7 @@ sap.ui.define(
         },
         setModifyType(oEvent) {
           const id = oEvent.getSource().getSelectedKey();
-          this.getModifyModel.setProperty("/type", this.getCategoryType(id));
+          this.getModifyModel().setProperty("/type", this.getCategoryType(id));
         },
         dateToString(date) {
           return `${date.getFullYear()} ${
@@ -296,12 +307,12 @@ sap.ui.define(
           if (modify.startTime > modify.endTime) {
             errors.startTime = {
               state: "Error",
-              message: this.getI18nText("ModifyErrorStartEndTime")
-            }
+              message: this.getI18nText("ModifyErrorStartEndTime"),
+            };
             errors.endTime = {
               state: "Error",
-              message: this.getI18nText("ModifyErrorStartEndTime")
-            }
+              message: this.getI18nText("ModifyErrorStartEndTime"),
+            };
           }
           return errors;
         },
@@ -326,7 +337,7 @@ sap.ui.define(
           this.onCloseModifyDialog();
         },
         onCloseModifyDialog() {
-          this.getView().getModel("modifyErrors").setData({});
+          this.getView().getModel("modifyErrors")?.setData({});
           this.byId("modifyDialog").close();
         },
         formatTime(time) {
