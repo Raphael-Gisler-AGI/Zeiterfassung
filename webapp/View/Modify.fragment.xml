@@ -42,7 +42,7 @@
 					valueState="{modifyErrors>/category/state}"
 					valueStateText="{modifyErrors>/category/message}"
 					items="{categories>/}"
-					required="true">
+					required="true" >
 					<core:Item
 						key="{categories>id}"
 						text="{categories>Name}" />
@@ -84,7 +84,8 @@
 							minutesStep="{= ${modify>/type} > 0 ? 1 : 15}"
 							support2400="true"
 							displayFormat="HH:mm"
-							valueFormat="HH:mm" />
+							valueFormat="HH:mm"
+							required="true" />
 					</VBox>
 					<VBox>
 						<Label text="End Time" labelFor="endTime" />
@@ -95,7 +96,8 @@
 							minutesStep="{= ${modify>/type} > 0 ? 1 : 15}"
 							support2400="true"
 							valueFormat="HH:mm"
-							displayFormat="HH:mm" />
+							displayFormat="HH:mm"
+							required="true" />
 					</VBox>
 				</HBox>
 			</f:SimpleForm>

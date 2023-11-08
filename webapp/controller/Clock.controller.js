@@ -121,18 +121,22 @@ sap.ui.define(
         await this.handleData();
         this.onPressReset();
       },
-      onSetCategory(oEvent) {
-        const category = oEvent.getSource().getSelectedKey() || -1;
-        localStorage.setItem("category", category);
-        this.getRunningEntry().Category = category;
-        this.getEntriesModel().refresh();
-        this.getTimer().setProperty("/category", category);
-      },
       onChangeDescription(oEvent) {
         const description = oEvent.getSource().getValue();
         localStorage.setItem("description", description);
-        this.getRunningEntry().Description = description;
-        this.getEntriesModel().refresh();
+        if (this.getTimer().getProperty("/active")) {
+          this.getRunningEntry().Description = description;
+          this.getEntriesModel().refresh();
+        }
+      },
+      onSetCategory(oEvent) {
+        const category = oEvent.getSource().getSelectedKey() || -1;
+        localStorage.setItem("category", category);
+        this.getTimer().setProperty("/category", category);
+        if (this.getTimer().getProperty("/active")) {
+          this.getRunningEntry().Category = category;
+          this.getEntriesModel().refresh();
+        }
       },
     });
   }

@@ -55,7 +55,6 @@ sap.ui.define(
           this.getCategoriesModel().setData(categories);
         },
         addTimerToEntries() {
-          const category = this.getTimer().getProperty("/category") || -1;
           const startTime = Date.parse(localStorage.getItem("startTime"));
           const endTime = Date.now();
           this.getEntriesModel()
@@ -66,7 +65,7 @@ sap.ui.define(
               EndTime: endTime,
               Duration: this.getDuration(startTime, endTime),
               Description: this.getTimer().getProperty("/description"),
-              Category: category,
+              Category: this.getTimer().getProperty("/category") || -1,
             });
           this.getEntriesModel().refresh();
         },
@@ -295,9 +294,14 @@ sap.ui.define(
             }
           }
           if (modify.startTime > modify.endTime) {
-            MessageToast.show(
-              "The End Time has to be larger than the Start Time"
-            );
+            errors.startTime = {
+              state: "Error",
+              message: this.getI18nText("ModifyErrorStartEndTime")
+            }
+            errors.endTime = {
+              state: "Error",
+              message: this.getI18nText("ModifyErrorStartEndTime")
+            }
           }
           return errors;
         },
@@ -322,6 +326,7 @@ sap.ui.define(
           this.onCloseModifyDialog();
         },
         onCloseModifyDialog() {
+          this.getView().getModel("modifyErrors").setData({});
           this.byId("modifyDialog").close();
         },
         formatTime(time) {
