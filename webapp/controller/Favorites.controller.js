@@ -52,7 +52,7 @@ sap.ui.define(
         },
         async onPressDeleteFavorite() {
           const favorite = this.getSelectedFavorite();
-          await this.deleteFavorite(favorite.id);
+          await this.confirmDeleteEntry(favorite.id, false);
         },
         getSelectedFavorite() {
           return this.getView().getModel("selectedFavorite").getData();

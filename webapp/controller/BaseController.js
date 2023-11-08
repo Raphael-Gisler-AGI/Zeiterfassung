@@ -184,15 +184,22 @@ sap.ui.define(
           }
           MessageToast.show(statusText);
         },
-        async confirmDeleteEntry(id) {
+        async handleConfirmDelete(id, isEntry) {
+          if (isEntry) {
+            return await this.deleteEntry(id);
+          }
+          return await this.deleteFavorite(id);
+        },
+        async confirmDeleteEntry(id, isEntry) {
           MessageBox.confirm(
             "Are you sure you want to permanently delete this entry",
             {
               title: "Confirm Deletion",
               onClose: async (oEvent) => {
                 if (oEvent === "OK") {
-                  const statusText = await this.deleteEntry(id);
-                  MessageToast.show(statusText);
+                  MessageToast.show(
+                    await this.handleConfirmDelete(id, isEntry)
+                  );
                 }
               },
             }
