@@ -160,6 +160,9 @@ sap.ui.define(
             Description: modifyData.description,
             Category: modifyData.category,
           };
+          if(modifyData.type === 2) {
+            data.HalfDay = modifyData.halfDay;
+          }
           let statusText;
           switch (modifyData.creationType) {
             case this.CREATION_TYPE.CREATE_ENTRY:
@@ -190,9 +193,11 @@ sap.ui.define(
           }
           return await this.deleteFavorite(id);
         },
-        async confirmDeleteEntry(id, isEntry) {
+        confirmDeleteEntry(id, isEntry) {
           MessageBox.confirm(
-            "Are you sure you want to permanently delete this entry",
+            `Are you sure you want to permanently delete this ${
+              isEntry ? "entry" : "favorite"
+            }`,
             {
               title: "Confirm Deletion",
               onClose: async (oEvent) => {

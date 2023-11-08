@@ -42,6 +42,7 @@ sap.ui.define(
           endDay: date,
           startTime: this.formatTime(startDate),
           endTime: this.formatTime(date),
+          halfDay: false,
         });
       },
       onShellbarMenuPress() {

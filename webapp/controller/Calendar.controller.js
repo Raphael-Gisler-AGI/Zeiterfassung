@@ -25,6 +25,7 @@ sap.ui.define(
             endDay: endTime,
             startTime: this.formatTime(startTime),
             endTime: this.formatTime(endTime),
+            halfDay: false,
           });
         },
 
@@ -50,6 +51,7 @@ sap.ui.define(
             endDay: new Date(endTime),
             startTime: this.formatTime(startTime),
             endTime: this.formatTime(endTime),
+            halfDay: entry.getProperty("HalfDay") || false,
           });
         },
 
@@ -103,6 +105,7 @@ sap.ui.define(
             endDay: new Date(endTime),
             startTime: this.formatTime(startTime),
             endTime: this.formatTime(endTime),
+            halfDay: details.getProperty("/halfDay") || false,
           });
         },
 

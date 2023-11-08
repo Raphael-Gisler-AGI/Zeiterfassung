@@ -75,10 +75,7 @@
 							title="{entries>Description}" />
 						<Text
 							text="{
-									path: 'entries>StartTime',
-									formatter: '.formatter.getDate'
-								} - {
-									path: 'entries>EndTime',
+									path: 'entries>',
 									formatter: '.formatter.getDate'
 								}" />
 						<Text

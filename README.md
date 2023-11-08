@@ -1,6 +1,1 @@
 # Zeiterfassung
-
-
-Create
-
-Favorite

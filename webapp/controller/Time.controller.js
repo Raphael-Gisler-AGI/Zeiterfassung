@@ -30,9 +30,10 @@ sap.ui.define(
       },
 
       onPressEdit(oEvent) {
-        const oItem = oEvent.getSource();
-        const entry = oItem.getBindingContext("entries");
-        if (this.getTimerModel().getProperty("/id") == entry.getProperty("id")) {
+        const entry = oEvent.getSource().getBindingContext("entries");
+        if (
+          this.getTimerModel().getProperty("/id") == entry.getProperty("id")
+        ) {
           return MessageToast.show("Please stop the timer before editing");
         }
         const startTime = entry.getProperty("StartTime");
@@ -48,6 +49,7 @@ sap.ui.define(
           endDay: new Date(endTime),
           startTime: this.formatTime(startTime),
           endTime: this.formatTime(endTime),
+          halfDay: entry.getProperty("HalfDay") || false,
         });
       },
 

@@ -40,8 +40,14 @@ sap.ui.define([], function () {
     getDateAsObject(date) {
       return new Date(date);
     },
-    getDate(date) {
-      return new Date(date).toLocaleTimeString().split(":", 2).join(":");
+    getDate(entry) {
+      if ("HalfDay" in entry) {
+        return entry.HalfDay ? "Half Day" : "Full Day";
+      }
+      const convertDate = (date) => {
+        return new Date(date).toLocaleTimeString().split(":", 2).join(":");
+      };
+      return `${convertDate(entry.StartTime)} - ${convertDate(entry.EndTime)}`;
     },
     getCategoryText(id) {
       const categories = this.getOwnerComponent()

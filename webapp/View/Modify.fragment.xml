@@ -36,21 +36,22 @@
 					valueState="{modifyErrors>/description/state}"
 					valueStateText="{modifyErrors>/description/message}"
 					value="{modify>/description}"
-					required="{= 1 > ${modify>/creationType}}" />
-				<Label text="Category" labelFor="category" />
+					required="{= 2 > ${modify>/creationType}}" />
+				<Label text="Category" labelFor="modifyCategory" />
 				<ComboBox
+					id="modifyCategory"
 					selectedKey="{modify>/category}"
 					selectionChange="setModifyType"
 					valueState="{modifyErrors>/category/state}"
 					valueStateText="{modifyErrors>/category/message}"
 					items="{categories>/}"
-					required="{= 1 > ${modify>/creationType}}">
+					required="{= 2 > ${modify>/creationType}}">
 					<core:Item
 						key="{categories>id}"
 						text="{categories>Name}" />
 				</ComboBox>
 				<Label
-					text="{= ${modify>/type} > 1 ? 'From' : 'Day'}"
+					text="{= ${modify>/type} > 2 ? 'From' : 'Day'}"
 					labelFor="modifyStartDate" />
 				<DatePicker
 					id="modifyStartDate"
@@ -60,9 +61,9 @@
 						path:'modify>/startDay',
 						type: 'sap.ui.model.type.Date'
 					}"
-					required="{= 1 > ${modify>/creationType}}" />
+					required="{= 2 > ${modify>/creationType}}" />
 				<Label />
-				<VBox visible="{= ${modify>/type} > 1 ? true : false}">
+				<VBox visible="{= ${modify>/type} > 1}">
 					<Label text="Until" labelFor="modifyEndDay" />
 					<DatePicker
 						id="modifyEndDay"
@@ -72,8 +73,12 @@
 							path:'modify>/endDay',
 							type: 'sap.ui.model.type.Date'
 						}"
-						valueFormat="YYYY.MM.dd"
-						required="{= 1 > ${modify>/creationType}}" />
+						required="{= 2 > ${modify>/creationType}}" />
+					<HBox alignItems="Center">
+						<Label text="Half Day" />
+						<CheckBox
+							selected="{modify>/halfDay}" />
+					</HBox>
 				</VBox>
 				<Label />
 				<HBox
@@ -90,7 +95,7 @@
 							support2400="true"
 							displayFormat="HH:mm"
 							valueFormat="HH:mm"
-							required="{= 1 > ${modify>/creationType}}" />
+							required="{= 2 > ${modify>/creationType}}" />
 					</VBox>
 					<VBox>
 						<Label text="End Time" labelFor="modifyEndTime" />
@@ -103,7 +108,7 @@
 							support2400="true"
 							valueFormat="HH:mm"
 							displayFormat="HH:mm"
-							required="{= 1 > ${modify>/creationType}}" />
+							required="{= 2 > ${modify>/creationType}}" />
 					</VBox>
 				</HBox>
 			</f:SimpleForm>
