@@ -8,6 +8,7 @@
 	height="calc(100vh - 4px)">
 	<Page
 		showFooter="{= ${messages>/}.length > 0}"
+		floatingFooter="true"
 		showHeader="false">
 		<tnt:ToolPage
 			id="toolPage">
@@ -40,7 +41,8 @@
 			</tnt:sideContent>
 			<tnt:mainContents>
 				<cssgrid:CSSGrid
-					gridTemplateColumns="80% 19%" gridGap="1%">
+					gridTemplateColumns="80% 19%"
+					gridGap="1%">
 					<App id="app" />
 					<VBox>
 						<Button

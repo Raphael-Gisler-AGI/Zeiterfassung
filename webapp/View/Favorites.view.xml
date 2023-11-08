@@ -17,29 +17,29 @@
 				id="favoriteList"
 				items="{favorites>/}">
 				<items>
-				<InputListItem label="{favorites>Name}">
-					<Button
-						press="onPressOptions"
-						type="Transparent"
-						icon="sap-icon://overflow">
-						<dependents>
-							<ActionSheet>
-								<Button
-									text="Use"
-									icon="sap-icon://add"
-									press=".onPressAddFavorite" />
-								<Button
-									text="Edit"
-									icon="sap-icon://edit"
-									press=".onPressEditFavorite" />
-								<Button
-									text="Delete"
-									icon="sap-icon://delete"
-									press=".onPressDeleteFavorite" />
-							</ActionSheet>
-						</dependents>
-					</Button>
-				</InputListItem>
+					<InputListItem label="{favorites>Name}">
+						<Button
+							press="onPressOptions"
+							type="Transparent"
+							icon="sap-icon://overflow">
+							<dependents>
+								<ActionSheet>
+									<Button
+										text="Use"
+										icon="sap-icon://add"
+										press=".onPressAddFavorite" />
+									<Button
+										text="Edit"
+										icon="sap-icon://edit"
+										press=".onPressEditFavorite" />
+									<Button
+										text="Delete"
+										icon="sap-icon://delete"
+										press=".onPressDeleteFavorite" />
+								</ActionSheet>
+							</dependents>
+						</Button>
+					</InputListItem>
 				</items>
 			</List>
 		</ScrollContainer>

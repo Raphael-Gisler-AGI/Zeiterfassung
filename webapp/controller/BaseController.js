@@ -111,24 +111,24 @@ sap.ui.define(
         async createEntry(data) {
           const res = await this._postData("/createEntry", "POST", data);
           this.updateModels(await res.json());
-          return res.status;
+          return res.statusText;
         },
         async updateEntry(data, id) {
           const res = await this._postData(`/updateEntry/${id}`, "PATCH", data);
           this.updateModels(await res.json());
-          return res.status;
+          return res.statusText;
         },
         async deleteEntry(id) {
           const res = await fetch(`${this.baseUrl}/deleteEntry/${id}`, {
             method: "DELETE",
           });
           this.updateModels(await res.json());
-          return res.status;
+          return res.statusText;
         },
         async createFavorite(data) {
           const res = await this._postData("/createFavorite", "POST", data);
           this.getFavoritesModel().setData(await res.json());
-          return res.status;
+          return res.statusText;
         },
         async updateFavorite(data, id) {
           const res = await this._postData(
@@ -137,14 +137,14 @@ sap.ui.define(
             data
           );
           this.getFavoritesModel().setData(await res.json());
-          return res.status;
+          return res.statusText;
         },
         async deleteFavorite(id) {
           const res = await fetch(`${this.baseUrl}/deleteFavorite/${id}`, {
             method: "DELETE",
           });
           this.getFavoritesModel().setData(await res.json());
-          return res.status;
+          return res.statusText;
         },
 
         // Before CRUD
@@ -160,26 +160,29 @@ sap.ui.define(
             Description: modifyData.description,
             Category: modifyData.category,
           };
-          let res = 0;
+          let statusText;
           switch (modifyData.creationType) {
             case this.CREATION_TYPE.CREATE_ENTRY:
-              res = await this.createEntry(data);
+              statusText = await this.createEntry(data);
               break;
             case this.CREATION_TYPE.UPDATE_ENTRY:
-              res = await this.updateEntry(data, modifyData.id);
+              statusText = await this.updateEntry(data, modifyData.id);
               break;
             case this.CREATION_TYPE.CREATE_FAVORITE:
               delete data.Duration;
               data.Name = modifyData.name;
-              res = await this.createFavorite(data);
+              statusText = await this.createFavorite(data);
               break;
             case this.CREATION_TYPE.UPDATE_FAVORITE:
               delete data.Duration;
               data.Name = modifyData.name;
-              res = await this.updateFavorite(data, modifyData.id);
+              statusText = await this.updateFavorite(data, modifyData.id);
+              break;
+            default:
+              statusText = "An error has occured";
               break;
           }
-          console.log(res);
+          MessageToast.show(statusText);
         },
         async confirmDeleteEntry(id) {
           MessageBox.confirm(
@@ -188,23 +191,12 @@ sap.ui.define(
               title: "Confirm Deletion",
               onClose: async (oEvent) => {
                 if (oEvent === "OK") {
-                  const res = await this.deleteEntry(id);
-                  this.displayResponse(
-                    res,
-                    "Entry has been deleted",
-                    "Failed to delete an entry\nPlease try again"
-                  );
+                  const statusText = await this.deleteEntry(id);
+                  MessageToast.show(statusText);
                 }
               },
             }
           );
-        },
-        displayResponse(res, successMessage, rejectMessage) {
-          if (res === 200) {
-            MessageToast.show(successMessage);
-          } else {
-            MessageToast.show(rejectMessage);
-          }
         },
         getDuration(startTime, endTime) {
           const durationDate = new Date(endTime - startTime);

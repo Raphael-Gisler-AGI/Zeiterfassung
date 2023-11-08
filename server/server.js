@@ -27,9 +27,11 @@ app.post("/createEntry", (req, res) => {
   file.Entries.push(entry);
   categories[entry.Category].Time += entry.Duration;
   if (saveEntry() == 400 || saveCategories() == 400) {
+    res.statusMessage = "Failed to create a new entry";
     res.sendStatus(400);
     return;
   }
+  res.statusMessage = "Created a new Entry";
   res.json(response());
 });
 
@@ -49,9 +51,11 @@ app.patch("/updateEntry/:id", (req, res) => {
   const index = file.Entries.map((entry) => entry.id).indexOf(id);
   file.Entries[index] = entry;
   if (saveEntry() == 400 || saveCategories() == 400) {
+    res.statusMessage = "Failed to update your Entry";
     res.sendStatus(400);
     return;
   }
+  res.statusMessage = "Updated your Entry";
   res.json(response());
 });
 
@@ -62,9 +66,11 @@ app.delete("/deleteEntry/:id", (req, res) => {
     entry.Duration;
   findDelete(id);
   if (saveEntry() == 400 || saveCategories() == 400) {
+    res.statusMessage = "Failed to delete your entry";
     res.sendStatus(400);
     return;
   }
+  res.statusMessage = "Deleted your entry";
   res.json(response());
 });
 
@@ -85,6 +91,7 @@ app.post("/createFavorite", (req, res) => {
   favorite["id"] = crypto.randomBytes(16).toString("hex");
   file.Favorites.push(favorite);
   saveEntry();
+  res.statusMessage = "Created a new Favorite";
   res.json(file.Favorites);
 });
 app.patch("/updateFavorite/:id", (req, res) => {
@@ -94,6 +101,7 @@ app.patch("/updateFavorite/:id", (req, res) => {
   const index = file.Favorites.map((favorite) => favorite.id).indexOf(id);
   file.Favorites[index] = favorite;
   saveEntry();
+  res.statusMessage = "Update your Favorite";
   res.json(file.Favorites);
 });
 app.delete("/deleteFavorite/:id", (req, res) => {
@@ -105,6 +113,7 @@ app.delete("/deleteFavorite/:id", (req, res) => {
     return;
   }
   saveEntry();
+  res.statusMessage = "Deleted your Favorite";
   res.json(file.Favorites);
 });
 
