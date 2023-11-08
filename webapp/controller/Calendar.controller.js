@@ -90,7 +90,7 @@ sap.ui.define(
           this.confirmDeleteEntry(id, true);
         },
 
-        onHandleEditDetails: async function () {
+        onHandleEditDetails() {
           const details = this.getView().getModel("details");
           const startTime = details.getProperty("/StartTime");
           const endTime = details.getProperty("/EndTime");
@@ -105,11 +105,11 @@ sap.ui.define(
             endDay: new Date(endTime),
             startTime: this.formatTime(startTime),
             endTime: this.formatTime(endTime),
-            halfDay: details.getProperty("/halfDay") || false,
+            halfDay: details.getProperty("/HalfDay") || false,
           });
         },
 
-        onPressLegend: function (oEvent) {
+        onPressLegend(oEvent) {
           if (!this.pLegend) {
             this.pLegend = Fragment.load({
               id: this.getView().getId(),

@@ -49,6 +49,9 @@ sap.ui.define([], function () {
       };
       return `${convertDate(entry.StartTime)} - ${convertDate(entry.EndTime)}`;
     },
+    getDateAsFormat(date) {
+      return new Date(date).toLocaleTimeString().split(":", 2).join(":");
+    },
     getCategoryText(id) {
       const categories = this.getOwnerComponent()
         .getModel("categories")

@@ -101,7 +101,7 @@ app.patch("/updateFavorite/:id", (req, res) => {
   const index = file.Favorites.map((favorite) => favorite.id).indexOf(id);
   file.Favorites[index] = favorite;
   saveEntry();
-  res.statusMessage = "Update your Favorite";
+  res.statusMessage = "Updated your Favorite";
   res.json(file.Favorites);
 });
 app.delete("/deleteFavorite/:id", (req, res) => {

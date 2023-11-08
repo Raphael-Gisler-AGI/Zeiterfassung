@@ -160,7 +160,7 @@ sap.ui.define(
             Description: modifyData.description,
             Category: modifyData.category,
           };
-          if(modifyData.type === 2) {
+          if (modifyData.type === 2) {
             data.HalfDay = modifyData.halfDay;
           }
           let statusText;
@@ -329,14 +329,16 @@ sap.ui.define(
             return this.getView().getModel("modifyErrors").setData(errors);
           }
           // Formatting Time
-          modify.startTime = this.timeToDate(
-            modify.startDay,
-            modify.type != 2 ? modify.startTime : "00:00"
-          );
-          modify.endTime = this.timeToDate(
-            modify.type != 2 ? modify.startDay : modify.endDay,
-            modify.type != 2 ? modify.endTime : "00:00"
-          );
+          modify.startTime =
+            this.timeToDate(
+              modify.startDay,
+              modify.type != 2 ? modify.startTime : "00:00"
+            ) || undefined;
+          modify.endTime =
+            this.timeToDate(
+              modify.type != 2 ? modify.startDay : modify.endDay,
+              modify.type != 2 ? modify.endTime : "00:00"
+            ) || undefined;
           await this.handleData();
           this.onCloseModifyDialog();
         },

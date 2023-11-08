@@ -23,17 +23,10 @@
                     formatter: '.formatter.getCategoryText'
                 }" />
                 <Label
-                    labelFor="detailsStartTime"
-                    text="From" />
+                    labelFor="detailsDuration"
+                    text="Duration" />
                 <Text text="{
-                    path: 'details>/StartTime',
-					formatter: '.formatter.getDate'
-                }" />
-                <Label
-                    labelFor="detailsEndTime"
-                    text="To" />
-                <Text text="{
-                    path: 'details>/EndTime',
+                    path: 'details>/',
 					formatter: '.formatter.getDate'
                 }" />
             </f:SimpleForm>
