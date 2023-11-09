@@ -30,6 +30,11 @@ sap.ui.define(
           CREATE_FAVORITE: 2,
           UPDATE_FAVORITE: 3,
         },
+        CATEGORY_TYPE: {
+          PROJECT: 0,
+          NON_PROJECT: 1,
+          FULL_DAY: 2
+        },
 
         // Navigation
         onNavBack() {
@@ -99,14 +104,13 @@ sap.ui.define(
 
         // CRUD Operations
         async _postData(url, method, data) {
-          const res = await fetch(`${this.baseUrl}${url}`, {
+          return await fetch(`${this.baseUrl}${url}`, {
             method: method,
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },
             body: JSON.stringify(data),
           });
-          return res;
         },
         async createEntry(data) {
           const res = await this._postData("/createEntry", "POST", data);
@@ -160,7 +164,7 @@ sap.ui.define(
             Description: modifyData.description,
             Category: modifyData.category,
           };
-          if (modifyData.type === 2) {
+          if (modifyData.type === this.CATEGORY_TYPE.FULL_DAY) {
             data.HalfDay = modifyData.halfDay;
           }
           let statusText;
@@ -236,8 +240,10 @@ sap.ui.define(
           const id = oEvent.getSource().getSelectedKey();
           this.getModifyModel().setProperty("/type", this.getCategoryType(id));
         },
+
+        // Formatting Dates
         dateToString(date) {
-          if(!date) {
+          if (!date) {
             return undefined;
           }
           return `${date.getFullYear()} ${
@@ -289,7 +295,7 @@ sap.ui.define(
                 message: this.getI18nText("ModifyErrorStartDay"),
               };
             }
-            if (modify.type != 2) {
+            if (modify.type != this.CATEGORY_TYPE.FULL_DAY) {
               if (!modify.startTime) {
                 errors.startTime = {
                   state: "Error",
@@ -335,12 +341,12 @@ sap.ui.define(
           modify.startTime =
             this.timeToDate(
               modify.startDay,
-              modify.type != 2 ? modify.startTime : "00:00"
+              modify.type != this.CATEGORY_TYPE.FULL_DAY ? modify.startTime : "00:00"
             ) || undefined;
           modify.endTime =
             this.timeToDate(
-              modify.type != 2 ? modify.startDay : modify.endDay,
-              modify.type != 2 ? modify.endTime : "00:00"
+              modify.type != this.CATEGORY_TYPE.FULL_DAY ? modify.startDay : modify.endDay,
+              modify.type != this.CATEGORY_TYPE.FULL_DAY ? modify.endTime : "00:00"
             ) || undefined;
           await this.handleData();
           this.onCloseModifyDialog();
