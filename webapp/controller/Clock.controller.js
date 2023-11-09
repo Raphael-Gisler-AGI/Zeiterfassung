@@ -1,15 +1,13 @@
 sap.ui.define(
   [
     "./BaseController",
-    "../model/formatter",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
   ],
-  function (BaseController, formatter, JSONModel, MessageToast) {
+  function (BaseController, JSONModel, MessageToast) {
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Clock", {
-      formatter: formatter,
       onInit() {
         this.setDefaultTimer();
         if (!localStorage.getItem("startTime")) {

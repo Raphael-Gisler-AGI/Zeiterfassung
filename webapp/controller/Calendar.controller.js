@@ -1,18 +1,16 @@
 sap.ui.define(
   [
     "./BaseController",
-    "../model/formatter",
     "sap/ui/core/Fragment",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
   ],
-  function (BaseController, formatter, Fragment, JSONModel, MessageToast) {
+  function (BaseController, Fragment, JSONModel, MessageToast) {
     "use strict";
 
     return BaseController.extend(
       "sap.ui.agi.zeiterfassung.controller.Calendar",
       {
-        formatter: formatter,
         onHandleCreate(oEvent) {
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");

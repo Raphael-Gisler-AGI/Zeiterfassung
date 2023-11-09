@@ -1,7 +1,6 @@
 sap.ui.define(
   [
     "./BaseController",
-    "../model/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
@@ -9,7 +8,6 @@ sap.ui.define(
   ],
   function (
     BaseController,
-    formatter,
     Filter,
     FilterOperator,
     MessageToast,
@@ -18,7 +16,6 @@ sap.ui.define(
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Time", {
-      formatter: formatter,
       onInit() {
         this.getView().setModel(
           new JSONModel({

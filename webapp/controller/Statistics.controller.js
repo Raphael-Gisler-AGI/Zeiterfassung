@@ -1,17 +1,15 @@
 sap.ui.define(
   [
     "./BaseController",
-    "../model/formatter",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Sorter",
   ],
-  function (BaseController, formatter, JSONModel, Sorter) {
+  function (BaseController, JSONModel, Sorter) {
     "use strict";
 
     return BaseController.extend(
       "sap.ui.agi.zeiterfassung.controller.Statistics",
       {
-        formatter: formatter,
         onInit() {
           this.getView().setModel(
             new JSONModel({

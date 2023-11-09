@@ -33,10 +33,13 @@ sap.ui.define(
         CATEGORY_TYPE: {
           PROJECT: 0,
           NON_PROJECT: 1,
-          FULL_DAY: 2
+          FULL_DAY: 2,
         },
 
         // Navigation
+        /**
+         * Navigate back to the previous page
+         */
         onNavBack() {
           const router = UIComponent.getRouterFor(this);
           const oHistory = History.getInstance();
@@ -49,18 +52,23 @@ sap.ui.define(
         },
 
         // Refresh Global Models
+        /**
+         * Give the Entries and Categories Model new Data from the server
+         * The entire previous data will be overwritten
+         * @param {object} newData An object holding both entries and categories
+         */
         async updateModels(newData) {
           const { entries, categories } = newData;
-          entries.forEach((entry) => {
-            entry.StartTime = new Date(entry.StartTime);
-            entry.EndTime = new Date(entry.EndTime);
-          });
           this.getEntriesModel().setData(entries);
+          this.getCategoriesModel().setData(categories);
           if (this.getTimerModel().getProperty("/active")) {
             this.addTimerToEntries();
           }
-          this.getCategoriesModel().setData(categories);
         },
+        /**
+         * Push a new Entry into the Array of Entries
+         * The new Entry is a Timer
+         */
         addTimerToEntries() {
           const startTime = Date.parse(localStorage.getItem("startTime"));
           const endTime = Date.now();
@@ -76,33 +84,75 @@ sap.ui.define(
             });
           this.getEntriesModel().refresh();
         },
+
         // Get Global Models
+        /**
+         * Get any Model from the Component
+         * @param {string} modelName The name of a Component Model
+         * @returns {object}
+         */
         getModel(modelName) {
           return this.getOwnerComponent().getModel(modelName);
         },
+        /**
+         * Get the Entries Model
+         * @returns {object}
+         */
         getEntriesModel() {
           return this.getModel("entries");
         },
+        /**
+         * Get the Categories Model
+         * @returns {object}
+         */
         getCategoriesModel() {
           return this.getModel("categories");
         },
+        /**
+         * Get the Favorites Model
+         * @returns {object}
+         */
         getFavoritesModel() {
           return this.getModel("favorites");
         },
+        /**
+         * Get the Timer Model
+         * @returns {object}
+         */
         getTimerModel() {
           return this.getModel("timer");
         },
+        /**
+         * Get the Messages Model
+         * @returns {object}
+         */
         getMessagesModel() {
           return this.getModel("messages");
         },
+        /**
+         * Get text from i18n
+         * @param {string} text
+         * @returns {object}
+         */
         getI18nText(text) {
           return this.getModel("i18n").getResourceBundle().getText(text);
         },
+        /**
+         * Get the Modify Model
+         * @returns {object}
+         */
         getModifyModel() {
           return this.getView().getModel("modify");
         },
 
         // CRUD Operations
+        /**
+         * Sends the provided data to the server
+         * @param {string} url
+         * @param {string} method POST / PATCH / DELETE
+         * @param {object} data
+         * @returns {object} The response of a fetch
+         */
         async _postData(url, method, data) {
           return await fetch(`${this.baseUrl}${url}`, {
             method: method,
@@ -112,16 +162,32 @@ sap.ui.define(
             body: JSON.stringify(data),
           });
         },
+        /**
+         * Create an entry
+         * @param {object} data
+         * @returns {string} The message from the server (success or error)
+         */
         async createEntry(data) {
           const res = await this._postData("/createEntry", "POST", data);
           this.updateModels(await res.json());
           return res.statusText;
         },
+        /**
+         * Update an entry
+         * @param {object} data
+         * @param {string} id
+         * @returns {string} The message from the server (success or error)
+         */
         async updateEntry(data, id) {
           const res = await this._postData(`/updateEntry/${id}`, "PATCH", data);
           this.updateModels(await res.json());
           return res.statusText;
         },
+        /**
+         * Deletes the entry
+         * @param {string} id The Id of the entry
+         * @returns {string} The message from the server (success or error)
+         */
         async deleteEntry(id) {
           const res = await fetch(`${this.baseUrl}/deleteEntry/${id}`, {
             method: "DELETE",
@@ -129,11 +195,22 @@ sap.ui.define(
           this.updateModels(await res.json());
           return res.statusText;
         },
+        /**
+         * Creates a favorite
+         * @param {object} data The new favorite
+         * @returns {string} The message from the server (success or error)
+         */
         async createFavorite(data) {
           const res = await this._postData("/createFavorite", "POST", data);
           this.getFavoritesModel().setData(await res.json());
           return res.statusText;
         },
+        /**
+         * Updates a favorite
+         * @param {object} data The updated favorite
+         * @param {string} id The Id of the favorite
+         * @returns {string} The message from the server (success or error)
+         */
         async updateFavorite(data, id) {
           const res = await this._postData(
             `/updateFavorite/${id}`,
@@ -143,6 +220,11 @@ sap.ui.define(
           this.getFavoritesModel().setData(await res.json());
           return res.statusText;
         },
+        /**
+         * Delete a favorite
+         * @param {string} id The Id of the favorite
+         * @returns {string} The message from the server (success or error)
+         */
         async deleteFavorite(id) {
           const res = await fetch(`${this.baseUrl}/deleteFavorite/${id}`, {
             method: "DELETE",
@@ -152,6 +234,10 @@ sap.ui.define(
         },
 
         // Before CRUD
+        /**
+         * Handles the data before given to the server
+         * The data is handled dependant on the creation type
+         */
         async handleData() {
           const modifyData = this.getView().getModel("modify").getData();
           const data = {
@@ -191,12 +277,23 @@ sap.ui.define(
           }
           MessageToast.show(statusText);
         },
+        /**
+         * Deletes the entry or favorite
+         * @param {string} id The Id of an entry or favorite
+         * @param {boolean} isEntry If the given Id is from an entry
+         * @returns
+         */
         async handleConfirmDelete(id, isEntry) {
           if (isEntry) {
             return await this.deleteEntry(id);
           }
           return await this.deleteFavorite(id);
         },
+        /**
+         * Creates a popup that asks the user if the element should be deleted
+         * @param {string} id The Id of an entry or favorite
+         * @param {boolean} isEntry If the given Id is from an entry
+         */
         confirmDeleteEntry(id, isEntry) {
           MessageBox.confirm(
             `Are you sure you want to permanently delete this ${
@@ -214,12 +311,22 @@ sap.ui.define(
             }
           );
         },
+        /**
+         * Calculate the difference between the start time and end time
+         * @param {number} startTime The Start Time
+         * @param {number} endTime The End Time
+         * @returns {number|undefined} The difference between the two in minutes
+         */
         getDuration(startTime, endTime) {
           const durationDate = new Date(endTime - startTime);
           const result =
             durationDate.getMinutes() + (durationDate.getHours() - 1) * 60;
           return result === NaN ? undefined : result;
         },
+        /**
+         * Opens a dialog
+         * @param {object} modifyModel The model that will be used for the form
+         */
         openModifyDialog(modifyModel) {
           this.getView().setModel(new JSONModel(modifyModel), "modify");
           if (!this.pDialog) {
@@ -231,17 +338,32 @@ sap.ui.define(
             oDialog.open();
           });
         },
+        /**
+         * Gets the type of a category
+         * (Project, Non Project, Full Day)
+         * @param {number} category
+         * @returns {number}
+         */
         getCategoryType(category) {
           return this.getCategoriesModel()
             .getData()
             .find((c) => c.id == category)?.Type;
         },
+        /**
+         * Writes to the modify model what the new type is
+         * @param {object} oEvent
+         */
         setModifyType(oEvent) {
           const id = oEvent.getSource().getSelectedKey();
           this.getModifyModel().setProperty("/type", this.getCategoryType(id));
         },
 
         // Formatting Dates
+        /**
+         * Converts a date object into a string
+         * @param {Date} date
+         * @returns {string|undefined}
+         */
         dateToString(date) {
           if (!date) {
             return undefined;
@@ -250,6 +372,12 @@ sap.ui.define(
             date.getMonth() + 1
           } ${date.getDate()}`;
         },
+        /**
+         * Combines a date and time
+         * @param {Date} date 
+         * @param {string} time 
+         * @returns {number|undefined}
+         */
         timeToDate(date, time) {
           if (!time) {
             return undefined;
@@ -260,6 +388,11 @@ sap.ui.define(
             }`
           );
         },
+        /**
+         * Error Handling
+         * @param {object} modify
+         * @returns {object} An object containing all the errors
+         */
         modifyErrorHandling(modify) {
           const errors = {};
           if (
@@ -329,32 +462,51 @@ sap.ui.define(
           }
           return errors;
         },
+        /**
+         * Handle the submitted data from the Modify Dialog and Convert the date objects
+         * @returns {void}
+         */
         async onSubmitModifyDialog() {
           this.getView().setModel(new JSONModel({}), "modifyErrors");
           const modify = this.getView().getModel("modify").getData();
           // Error handling
           const errors = this.modifyErrorHandling(modify);
           if (Object.keys(errors).length > 0) {
-            return this.getView().getModel("modifyErrors").setData(errors);
+            this.getView().getModel("modifyErrors").setData(errors);
+            return;
           }
           // Formatting Time
           modify.startTime =
             this.timeToDate(
               modify.startDay,
-              modify.type != this.CATEGORY_TYPE.FULL_DAY ? modify.startTime : "00:00"
+              modify.type != this.CATEGORY_TYPE.FULL_DAY
+                ? modify.startTime
+                : "00:00"
             ) || undefined;
           modify.endTime =
             this.timeToDate(
-              modify.type != this.CATEGORY_TYPE.FULL_DAY ? modify.startDay : modify.endDay,
-              modify.type != this.CATEGORY_TYPE.FULL_DAY ? modify.endTime : "00:00"
+              modify.type != this.CATEGORY_TYPE.FULL_DAY
+                ? modify.startDay
+                : modify.endDay,
+              modify.type != this.CATEGORY_TYPE.FULL_DAY
+                ? modify.endTime
+                : "00:00"
             ) || undefined;
           await this.handleData();
           this.onCloseModifyDialog();
         },
+        /**
+         * Closes the Modify Dialog and resets the errors model
+         */
         onCloseModifyDialog() {
           this.getView().getModel("modifyErrors")?.setData({});
           this.byId("modifyDialog").close();
         },
+        /**
+         * Add a trailing 0 if necessary
+         * @param {Date|number} time
+         * @returns {string|undefined} If time is set returns a string otherwise undefined
+         */
         formatTime(time) {
           if (!time) {
             return undefined;
@@ -362,10 +514,10 @@ sap.ui.define(
           if (typeof time == "number") {
             time = new Date(time);
           }
-          return `${
-            time.getHours() < 10 ? "0" + time.getHours() : time.getHours()
-          }:${
-            time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
+          const hours = time.getHours();
+          const minutes = time.getMinutes();
+          return `${hours < 10 ? "0" + hours : hours}:${
+            minutes < 10 ? "0" + minutes : minutes
           }`;
         },
       }

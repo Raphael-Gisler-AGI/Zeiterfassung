@@ -1,17 +1,18 @@
 sap.ui.define(
   [
     "./BaseController",
-    "../model/formatter",
     "sap/m/MessagePopover",
     "sap/m/MessageItem",
     "sap/m/Link",
     "sap/ui/model/json/JSONModel",
   ],
-  function (BaseController, formatter, MessagePopover, MessageItem) {
+  function (BaseController, MessagePopover, MessageItem) {
     "use strict";
     let messagePopover;
     return BaseController.extend("sap.ui.demo.nav.controller.App", {
-      formatter: formatter,
+      /**
+       * Set the message button in the footer
+       */
       onInit() {
         const messageTemplate = new MessageItem({
           type: "{messages>type}",
@@ -19,7 +20,6 @@ sap.ui.define(
           description: "{messages>description}",
           subtitle: "{messages>subtitle}",
         });
-        this.getMessagesModel().refresh();
         messagePopover = new MessagePopover({
           items: {
             path: "messages>/",
@@ -28,6 +28,9 @@ sap.ui.define(
         });
         this.byId("messagePopoverButton").addDependent(messagePopover);
       },
+      /**
+       * Create data for modify Form
+       */
       onPressCreate() {
         const date = new Date();
         const startDate = new Date(
@@ -45,10 +48,16 @@ sap.ui.define(
           halfDay: false,
         });
       },
+      /**
+       * Toggle the Side Navigation Menu
+       */
       onShellbarMenuPress() {
         const toolPage = this.byId("toolPage");
         toolPage.setSideExpanded(!toolPage.getSideExpanded());
       },
+      /**
+       * Toggle the Message Menu
+       */
       onPressMessageToggleButton(oEvent) {
         messagePopover.toggle(oEvent.getSource());
       },
