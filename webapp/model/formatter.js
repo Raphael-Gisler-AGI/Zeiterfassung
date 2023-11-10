@@ -1,6 +1,11 @@
 sap.ui.define([], function () {
   "use strict";
   return {
+    /**
+     * Formatter for the grouping of entries
+     * @param {object} entry
+     * @returns {string} Returns the date formatted
+     */
     tableGrouping(entry) {
       if (entry.getProperty("timer")) {
         return "Active Timer";
@@ -12,14 +17,19 @@ sap.ui.define([], function () {
         .getModel("categories")
         .getData();
       const type = category.find((category) => category.id == categoryId)?.Type;
-      if (type === 2) {
-        const formattedEndDate = new Date(
-          entry.getProperty("EndTime")
-        ).toLocaleDateString();
-        return `${formattedDate} - ${formattedEndDate}`;
+      if (type !== 2) {
+        return formattedDate;
       }
-      return formattedDate;
+      const formattedEndDate = new Date(
+        entry.getProperty("EndTime")
+      ).toLocaleDateString();
+      return `${formattedDate} - ${formattedEndDate}`;
     },
+    /**
+     * Formatter for the modify title
+     * @param {number} creationType 
+     * @returns {string}
+     */
     getModifyTitle(creationType) {
       switch (creationType) {
         case 0:
@@ -34,12 +44,27 @@ sap.ui.define([], function () {
           return "Modify";
       }
     },
-    getDisplayTime(date) {
-      return new Date(date * 1000).toISOString().substring(11, 19);
+    /**
+     * The minutes get converted into a date object and then get displayed
+     * @param {number} timerSeconds The timer amount in seconds
+     * @returns {string}
+     */
+    getDisplayTime(timerSeconds) {
+      return new Date(timerSeconds * 1000).toISOString().substring(11, 19);
     },
+    /**
+     * Converts a date as a number into a date object
+     * @param {number} date 
+     * @returns {Date}
+     */
     getDateAsObject(date) {
       return new Date(date);
     },
+    /**
+     * Display start and end time next to each other
+     * @param {object} entry 
+     * @returns {string}
+     */
     getDate(entry) {
       if ("HalfDay" in entry) {
         return entry.HalfDay ? "Half Day" : "Full Day";
@@ -49,9 +74,11 @@ sap.ui.define([], function () {
       };
       return `${convertDate(entry.StartTime)} - ${convertDate(entry.EndTime)}`;
     },
-    getDateAsFormat(date) {
-      return new Date(date).toLocaleTimeString().split(":", 2).join(":");
-    },
+    /**
+     * Formatter for getting the Category name
+     * @param {string} id 
+     * @returns {string} Returns name of a Category
+     */
     getCategoryText(id) {
       const categories = this.getOwnerComponent()
         .getModel("categories")
@@ -62,11 +89,21 @@ sap.ui.define([], function () {
       }
       return category.Name;
     },
-    getTime(value) {
+    /**
+     * Converts minutes into hours
+     * @param {number} minutes 
+     * @returns {string} Returns hours with trailing 'h'
+     */
+    getTime(minutes) {
       const round = 1000;
-      const hours = Math.round((value / 60) * round) / round;
+      const hours = Math.round((minutes / 60) * round) / round;
       return `${hours}h`;
     },
+    /**
+     * Gives the name of the type
+     * @param {number} type 
+     * @returns {string|number} Should return a string but if no type is found will return same number back
+     */
     getCategoryType(type) {
       switch (type) {
         case 0:
@@ -79,7 +116,13 @@ sap.ui.define([], function () {
           return type;
       }
     },
+    /**
+     * Uses type of a category to get a calendar type
+     * @param {number} category 
+     * @returns {string} Returns the calendar type
+     */
     getCalendarType(category) {
+      console.log(category)
       const type = this.getOwnerComponent()
         .getModel("categories")
         .getData()
@@ -95,6 +138,11 @@ sap.ui.define([], function () {
           return "Type01";
       }
     },
+    /**
+     * Uses error message type to get a sap icon link
+     * @param {object} messages 
+     * @returns {string} Returns a sap icon link
+     */
     getMessageIcon(messages) {
       if (messages.length === 0) {
         return "None";
@@ -115,6 +163,11 @@ sap.ui.define([], function () {
       }
       return `sap-icon://${icon}`;
     },
+    /**
+     * Get the type from a message object
+     * @param {object} messages 
+     * @returns {string} Returns the message type
+     */
     getMessageType(messages) {
       if (messages.length == 0) {
         return "Neutral";
