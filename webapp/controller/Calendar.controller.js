@@ -11,6 +11,10 @@ sap.ui.define(
     return BaseController.extend(
       "sap.ui.agi.zeiterfassung.controller.Calendar",
       {
+        /**
+         * Create data for modify Form
+         * @param {object} oEvent Event when draging in calendar page
+         */
         onHandleCreate(oEvent) {
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
@@ -26,15 +30,18 @@ sap.ui.define(
             halfDay: false,
           });
         },
-
+        /**
+         * Get entry and handle data for modify form
+         * @param {object} oEvent
+         * @returns {void} Returns void if appointment is the timer
+         */
         onHandleChange(oEvent) {
           const entry = oEvent
             .getParameter("appointment")
             .getBindingContext("entries");
           if (entry.getProperty("timer")) {
-            return MessageToast.show(
-              "Please end the current timer before editing"
-            );
+            MessageToast.show("Please end the current timer before editing");
+            return;
           }
           const startTime = oEvent.getParameter("startDate");
           const endTime = oEvent.getParameter("endDate");
@@ -52,7 +59,11 @@ sap.ui.define(
             halfDay: entry.getProperty("HalfDay") || false,
           });
         },
-
+        /**
+         * Open details Fragment
+         * @param {object} oEvent
+         * @returns {void} Returns void if no appointment was selected or appointment is the timer
+         */
         onHandleSelect(oEvent) {
           if (!oEvent.getParameter("appointment")) {
             return;
@@ -62,9 +73,8 @@ sap.ui.define(
             .getBindingContext("entries")
             .getObject();
           if (entry.timer) {
-            return MessageToast.show(
-              "Please end the current timer before editing"
-            );
+            MessageToast.show("Please end the current timer before editing");
+            return;
           }
           this.getView().setModel(new JSONModel(entry), "details");
           if (!this.pDetails) {
@@ -82,12 +92,16 @@ sap.ui.define(
             oPopover.openBy(oEvent.getParameter("appointment"));
           });
         },
-
+        /**
+         * Parses the Id of an entry to the confirmation function
+         */
         onHandleDeleteDetails() {
           const id = this.getView().getModel("details").getProperty("/id");
           this.confirmDeleteEntry(id, true);
         },
-
+        /**
+         * Handle data for modify form
+         */
         onHandleEditDetails() {
           const details = this.getView().getModel("details");
           const startTime = details.getProperty("/StartTime");
@@ -106,7 +120,10 @@ sap.ui.define(
             halfDay: details.getProperty("/HalfDay") || false,
           });
         },
-
+        /**
+         * Opens the Legend Fragment
+         * @param {object} oEvent Event from button press in calendar page
+         */
         onPressLegend(oEvent) {
           if (!this.pLegend) {
             this.pLegend = Fragment.load({
