@@ -122,7 +122,6 @@ sap.ui.define([], function () {
      * @returns {string} Returns the calendar type
      */
     getCalendarType(category) {
-      console.log(category)
       const type = this.getOwnerComponent()
         .getModel("categories")
         .getData()

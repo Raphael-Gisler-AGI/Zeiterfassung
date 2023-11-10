@@ -105,13 +105,14 @@ sap.ui.define(
         this.timer = undefined;
         this.byId("clockCategory").setSelectedKey("");
         localStorage.clear();
+        const active = this.getTimerModel().getProperty("/active");
         this.setDefaultTimer();
-        if (!this.getTimerModel().getProperty("/active")) {
+        if (!active) {
           return;
         }
         this.getTimerModel().setProperty("/active", false);
         this.getEntriesModel().getData().pop();
-        this.getEntriesModel().refresh();
+        this.getEntriesModel().refresh(true);
         // Delete information message if exists
         const messages = this.getMessagesModel();
         const index = messages

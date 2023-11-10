@@ -504,7 +504,7 @@ sap.ui.define(
         },
         /**
          * Add a trailing 0 if necessary
-         * @param {Date|number} time
+         * @param {object|number} time
          * @returns {string|undefined} If time is set returns a string otherwise undefined
          */
         formatTime(time) {
