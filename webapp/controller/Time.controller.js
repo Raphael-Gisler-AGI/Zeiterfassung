@@ -6,16 +6,13 @@ sap.ui.define(
     "sap/m/MessageToast",
     "sap/ui/model/json/JSONModel",
   ],
-  function (
-    BaseController,
-    Filter,
-    FilterOperator,
-    MessageToast,
-    JSONModel
-  ) {
+  function (BaseController, Filter, FilterOperator, MessageToast, JSONModel) {
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Time", {
+      /**
+       * Set new filter model
+       */
       onInit() {
         this.getView().setModel(
           new JSONModel({
@@ -25,13 +22,16 @@ sap.ui.define(
           "filter"
         );
       },
-
+      /**
+       * Handles the data and opens the modify dialog
+       * @param {object} oEvent
+       * @returns {void} Early return if the entry is the timer
+       */
       onPressEdit(oEvent) {
         const entry = oEvent.getSource().getBindingContext("entries");
-        if (
-          this.getTimerModel().getProperty("/id") == entry.getProperty("id")
-        ) {
-          return MessageToast.show("Please stop the timer before editing");
+        if (entry.getProperty("timer")) {
+          MessageToast.show("Please stop the timer before editing");
+          return;
         }
         const startTime = entry.getProperty("StartTime");
         const endTime = entry.getProperty("EndTime");
@@ -49,16 +49,22 @@ sap.ui.define(
           halfDay: entry.getProperty("HalfDay") || false,
         });
       },
-
+      /**
+       * Parses the Id of an entry to the confirmation function
+       * @param {object} oEvent
+       * @returns {void} Early return if the entry is the timer
+       */
       onPressDelete(oEvent) {
-        const oItem = oEvent.getSource();
-        const id = oItem.getBindingContext("entries").getProperty("id");
-        if (this.getTimerModel().getProperty("/id") == id) {
-          return MessageToast.show("Please stop the timer before deleting");
+        const entry = oEvent.getSource().getBindingContext("entries");
+        if (entry.getProperty("timer")) {
+          MessageToast.show("Please stop the timer before deleting");
+          return;
         }
-        this.confirmDeleteEntry(id, true);
+        this.confirmDeleteEntry(entry.getProperty("id"), true);
       },
-
+      /**
+       * Apply the filters to the table of entries
+       */
       onFilter() {
         const filters = [];
         const { description, category } = this.getView()
