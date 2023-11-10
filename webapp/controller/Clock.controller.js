@@ -1,13 +1,13 @@
 sap.ui.define(
-  [
-    "./BaseController",
-    "sap/ui/model/json/JSONModel",
-    "sap/m/MessageToast",
-  ],
+  ["./BaseController", "sap/ui/model/json/JSONModel", "sap/m/MessageToast"],
   function (BaseController, JSONModel, MessageToast) {
     "use strict";
 
     return BaseController.extend("sap.ui.agi.zeiterfassung.controller.Clock", {
+      /**
+       * Sets the default timer and continues the old one if active
+       * @returns {void} Early returns if timer isn't active
+       */
       onInit() {
         this.setDefaultTimer();
         if (!localStorage.getItem("startTime")) {
@@ -33,6 +33,9 @@ sap.ui.define(
         this.addTimerToEntries();
         this.runTimer();
       },
+      /**
+       * Creates a timer model in the component and sets its default values
+       */
       setDefaultTimer() {
         this.getOwnerComponent().setModel(
           new JSONModel({
@@ -44,6 +47,9 @@ sap.ui.define(
           "timer"
         );
       },
+      /**
+       * Either saves the timer or starts it
+       */
       onPressClock() {
         const active = this.getTimerModel().getProperty("/active");
         if (active) {
@@ -55,9 +61,17 @@ sap.ui.define(
           this.runTimer();
         }
       },
+      /**
+       * Creates an interval that updates a timer
+       * @returns {void} If the running timer wasn't found void will be returned
+       */
       runTimer() {
         const timer = this.getTimerModel();
         const current = this.getRunningEntry();
+        if (!current) {
+          MessageToast.show("Timer couldn't be started");
+          return;
+        }
         const startTime = new Date(localStorage.getItem("startTime"));
         this.timer = setInterval(() => {
           timer.setProperty("/time", (new Date() - startTime) / 1000);
@@ -70,28 +84,50 @@ sap.ui.define(
           this.getEntriesModel().refresh();
         }, 1000);
       },
+      /**
+       * Gets the last entry in the entries model
+       * @returns {object|undefined} If found returns the last entry which is the timer otherwise returns undefined
+       */
       getRunningEntry() {
         const entries = this.getEntriesModel().getData();
-        return entries[entries.length - 1];
+        const lastEntry = entries[entries.length - 1];
+        if (!lastEntry.timer) {
+          return undefined;
+        }
+        return lastEntry;
       },
+      /**
+       * Resets the timer, If timer is running will remove it, If there is a message will remove it
+       * @returns {void} Early return if timer isn't active
+       */
       onPressReset() {
         clearInterval(this.timer);
         this.timer = undefined;
-        if (this.getTimerModel().getProperty("/active")) {
-          this.getEntriesModel().getData().pop();
-          this.getEntriesModel().refresh();
-          const index = this.getMessagesModel()
-            .getData()
-            .map((message) => message.title)
-            .indexOf("Timer");
-          this.getMessagesModel().getData().splice(index, 1);
-          this.getMessagesModel().refresh(true);
-        }
         this.byId("clockCategory").setSelectedKey("");
         localStorage.clear();
-        this.getTimerModel().setProperty("/active", false);
         this.setDefaultTimer();
+        if (!this.getTimerModel().getProperty("/active")) {
+          return;
+        }
+        this.getTimerModel().setProperty("/active", false);
+        this.getEntriesModel().getData().pop();
+        this.getEntriesModel().refresh();
+        // Delete information message if exists
+        const messages = this.getMessagesModel();
+        const index = messages
+          .getData()
+          .map((message) => message.title)
+          .indexOf("Timer");
+        if (index < 0) {
+          return;
+        }
+        messages.getData().splice(index, 1);
+        messages.refresh(true);
       },
+      /**
+       * Error handling and creates JSONModel for modify dialog
+       * @returns {void} If errors were found
+       */
       async saveTimer() {
         const timer = this.getTimerModel();
         const description = timer.getProperty("/description");
@@ -104,7 +140,8 @@ sap.ui.define(
           errorMessage += `${errorMessage ? "\n" : ""}Please select a category`;
         }
         if (errorMessage != "") {
-          return MessageToast.show(errorMessage);
+          MessageToast.show(errorMessage);
+          return;
         }
         const day = new Date().toISOString();
         this.getView().setModel(
@@ -121,6 +158,10 @@ sap.ui.define(
         await this.handleData();
         this.onPressReset();
       },
+      /**
+       * Changes the description in the localstorage and in the timer entry
+       * @param {object} oEvent Event from description field being changed
+       */
       onChangeDescription(oEvent) {
         const description = oEvent.getSource().getValue();
         localStorage.setItem("description", description);
@@ -129,6 +170,10 @@ sap.ui.define(
           this.getEntriesModel().refresh();
         }
       },
+      /**
+       * Changes the category in the localstorage and in the timer entry
+       * @param {object} oEvent Event from category combobox being changed
+       */
       onSetCategory(oEvent) {
         const category = oEvent.getSource().getSelectedKey() || -1;
         localStorage.setItem("category", category);
