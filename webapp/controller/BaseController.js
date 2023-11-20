@@ -329,6 +329,12 @@ sap.ui.define(
          */
         openModifyDialog(modifyModel) {
           this.getView().setModel(new JSONModel(modifyModel), "modify");
+          this.getView().setModel(
+            new JSONModel({
+              isRecording: false,
+            }),
+            "recording"
+          );
           if (!this.pDialog) {
             this.pDialog = this.loadFragment({
               name: "sap.ui.agi.zeiterfassung.view.Modify",
@@ -374,8 +380,8 @@ sap.ui.define(
         },
         /**
          * Combines a date and time
-         * @param {Date} date 
-         * @param {string} time 
+         * @param {Date} date
+         * @param {string} time
          * @returns {number|undefined}
          */
         timeToDate(date, time) {
@@ -519,6 +525,51 @@ sap.ui.define(
           return `${hours < 10 ? "0" + hours : hours}:${
             minutes < 10 ? "0" + minutes : minutes
           }`;
+        },
+        onPressRecord() {
+          const categories = this.getCategoriesModel().getData();
+          window.SpeechRecognition =
+            window.SpeechRecognition || window.webkitSpeechRecognition;
+          const recognition = new SpeechRecognition();
+          recognition.interimResults = true;
+          recognition.addEventListener("result", (e) => {
+            const transcript = Array.from(e.results)
+              .map((result) => result[0])
+              .map((result) => result.transcript)
+              .join("");
+            if (e.results[0].isFinal) {
+              const foundCategory = categories.find((category) =>
+                transcript
+                  .split(" ")
+                  .some(
+                    (word) => word.toLowerCase() === category.Name.toLowerCase()
+                  )
+              );
+              if (foundCategory) {
+                this.getModifyModel().setProperty(
+                  "/category",
+                  foundCategory.id
+                );
+                this.getModifyModel().setProperty("/type", foundCategory.Type);
+              }
+              this.getModifyModel().setProperty(
+                "/description",
+                `${this.getModifyModel().getProperty(
+                  "/description"
+                )} ${transcript}`
+              );
+            }
+          });
+
+          const recording = this.getView().getModel("recording");
+          if (recording.getProperty("/isRecording")) {
+            recording.setProperty("/isRecording", false);
+            recognition.stop();
+          } else {
+            recording.setProperty("/isRecording", true);
+            recognition.addEventListener("end", recognition.start);
+            recognition.start();
+          }
         },
       }
     );

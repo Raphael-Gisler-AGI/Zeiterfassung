@@ -3,17 +3,24 @@
 	xmlns:l="sap.ui.layout"
 	xmlns:f="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
-	<Dialog id="modifyDialog"
+	<Dialog
+		id="modifyDialog"
 		title="{
 			path: 'modify>/creationType',
 			formatter: '.formatter.getModifyTitle'
 		}">
-		<beginButton>
-			<Button text="OK" type="Emphasized" press=".onSubmitModifyDialog" />
-		</beginButton>
-		<endButton>
-			<Button text="Cancel" press=".onCloseModifyDialog" />
-		</endButton>
+		<buttons>
+			<Button
+				icon="{= ${recording>/isRecording} ? 'sap-icon://record' : 'sap-icon://microphone'}"
+				press=".onPressRecord" />
+			<Button
+				text="OK"
+				type="Emphasized"
+				press=".onSubmitModifyDialog" />
+			<Button
+				text="Cancel"
+				press=".onCloseModifyDialog" />
+		</buttons>
 		<l:VerticalLayout
 			class="sapUiContentPadding"
 			width="100%">
@@ -36,7 +43,9 @@
 					valueState="{modifyErrors>/description/state}"
 					valueStateText="{modifyErrors>/description/message}"
 					value="{modify>/description}"
-					required="{= 2 > ${modify>/creationType}}" />
+					required="{= 2 > ${modify>/creationType}}"
+					growing="true"
+					growingMaxLines="15" />
 				<Label text="Category" labelFor="modifyCategory" />
 				<ComboBox
 					id="modifyCategory"
