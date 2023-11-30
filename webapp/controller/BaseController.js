@@ -38,16 +38,22 @@ sap.ui.define(
 
         // Navigation
         /**
+         * Gets the router from the Component
+         * @returns {object} The Router
+         */
+        getRouter() {
+          return this.getOwnerComponent().getRouter();
+        },
+        /**
          * Navigate back to the previous page
          */
         onNavBack() {
-          const router = UIComponent.getRouterFor(this);
-          const oHistory = History.getInstance();
-          const sPreviousHash = oHistory.getPreviousHash();
-          if (sPreviousHash !== undefined) {
-            window.history.go(-1);
+          const history = History.getInstance();
+          const previousHash = history.getPreviousHash();
+          if (previousHash === undefined) {
+            this.getRouter().navTo("time");
           } else {
-            router.navTo("time", {});
+            window.history.go(-1);
           }
         },
 
@@ -283,7 +289,7 @@ sap.ui.define(
          * @param {boolean} isEntry If the given Id is from an entry
          * @returns
          */
-        async handleConfirmDelete(id, isEntry) {
+        async _handleConfirmDelete(id, isEntry) {
           if (isEntry) {
             return await this.deleteEntry(id);
           }
@@ -304,7 +310,7 @@ sap.ui.define(
               onClose: async (oEvent) => {
                 if (oEvent === "OK") {
                   MessageToast.show(
-                    await this.handleConfirmDelete(id, isEntry)
+                    await this._handleConfirmDelete(id, isEntry)
                   );
                 }
               },
@@ -364,7 +370,7 @@ sap.ui.define(
          * @param {Date} date
          * @returns {string|undefined}
          */
-        dateToString(date) {
+        _dateToString(date) {
           if (!date) {
             return undefined;
           }
@@ -378,12 +384,12 @@ sap.ui.define(
          * @param {string} time 
          * @returns {number|undefined}
          */
-        timeToDate(date, time) {
+        _timeToDate(date, time) {
           if (!time) {
             return undefined;
           }
           return Date.parse(
-            `${this.dateToString(date) || this.dateToString(new Date())} ${
+            `${this._dateToString(date) || this._dateToString(new Date())} ${
               time || "00:00"
             }`
           );
@@ -393,7 +399,7 @@ sap.ui.define(
          * @param {object} modify
          * @returns {object} An object containing all the errors
          */
-        modifyErrorHandling(modify) {
+        _modifyErrorHandling(modify) {
           const errors = {};
           if (
             modify.creationType === this.CREATION_TYPE.CREATE_FAVORITE ||
@@ -470,21 +476,21 @@ sap.ui.define(
           this.getView().setModel(new JSONModel({}), "modifyErrors");
           const modify = this.getView().getModel("modify").getData();
           // Error handling
-          const errors = this.modifyErrorHandling(modify);
+          const errors = this._modifyErrorHandling(modify);
           if (Object.keys(errors).length > 0) {
             this.getView().getModel("modifyErrors").setData(errors);
             return;
           }
           // Formatting Time
           modify.startTime =
-            this.timeToDate(
+            this._timeToDate(
               modify.startDay,
               modify.type != this.CATEGORY_TYPE.FULL_DAY
                 ? modify.startTime
                 : "00:00"
             ) || undefined;
           modify.endTime =
-            this.timeToDate(
+            this._timeToDate(
               modify.type != this.CATEGORY_TYPE.FULL_DAY
                 ? modify.startDay
                 : modify.endDay,

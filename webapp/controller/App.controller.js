@@ -11,9 +11,15 @@ sap.ui.define(
     let messagePopover;
     return BaseController.extend("sap.ui.demo.nav.controller.App", {
       /**
+       * Event listener to select side navigation when refreshed
        * Set the message button in the footer
        */
       onInit() {
+        this.getRouter().attachRouteMatched((oEvent) => {
+          this.byId("sideNavigation").setSelectedKey(
+            oEvent.getParameter("name")
+          );
+        });
         const messageTemplate = new MessageItem({
           type: "{messages>type}",
           title: "{messages>title}",
@@ -27,6 +33,13 @@ sap.ui.define(
           },
         });
         this.byId("messagePopoverButton").addDependent(messagePopover);
+      },
+      /**
+       * Navigate to proper page
+       * @param {object} oEvent 
+       */
+      onSelectSideNav(oEvent) {
+        this.getRouter().navTo(oEvent.getParameter("item").getKey());
       },
       /**
        * Create data for modify Form

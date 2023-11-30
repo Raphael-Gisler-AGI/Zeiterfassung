@@ -20,19 +20,21 @@
 				</f:ShellBar>
 			</tnt:header>
 			<tnt:sideContent>
-				<tnt:SideNavigation>
-					<tnt:NavigationList>
+				<tnt:SideNavigation id="sideNavigation">
+					<tnt:NavigationList
+						id="navigationList"
+						itemSelect="onSelectSideNav">
 						<tnt:items>
 							<tnt:NavigationListItem
-								href="index.html#/"
+								key="time"
 								icon="sap-icon://table-chart"
 								text="Table" />
 							<tnt:NavigationListItem
-								href="index.html#/calendar"
+								key="calendar"
 								icon="sap-icon://calendar"
 								text="Calendar" />
 							<tnt:NavigationListItem
-								href="index.html#/statistics"
+								key="statistics"
 								icon="sap-icon://bar-chart"
 								text="Statistics" />
 						</tnt:items>
