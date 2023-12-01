@@ -5,7 +5,6 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/ui/core/routing/History",
-    "sap/ui/core/UIComponent",
     "sap/m/MessageBox",
   ],
   function (
@@ -14,7 +13,6 @@ sap.ui.define(
     JSONModel,
     MessageToast,
     History,
-    UIComponent,
     MessageBox
   ) {
     "use strict";
@@ -380,8 +378,8 @@ sap.ui.define(
         },
         /**
          * Combines a date and time
-         * @param {Date} date 
-         * @param {string} time 
+         * @param {Date} date
+         * @param {string} time
          * @returns {number|undefined}
          */
         _timeToDate(date, time) {
@@ -470,7 +468,7 @@ sap.ui.define(
         },
         /**
          * Handle the submitted data from the Modify Dialog and Convert the date objects
-         * @returns {void}
+         * @returns {void} Early return if there are errors
          */
         async onSubmitModifyDialog() {
           this.getView().setModel(new JSONModel({}), "modifyErrors");
@@ -482,22 +480,14 @@ sap.ui.define(
             return;
           }
           // Formatting Time
+          let { startTime, endTime, startDay } = modify;
+          if (modify.type === this.CATEGORY_TYPE.FULL_DAY) {
+            startTime = endTime = "00:00";
+            startDay = modify.endDay;
+          }
           modify.startTime =
-            this._timeToDate(
-              modify.startDay,
-              modify.type != this.CATEGORY_TYPE.FULL_DAY
-                ? modify.startTime
-                : "00:00"
-            ) || undefined;
-          modify.endTime =
-            this._timeToDate(
-              modify.type != this.CATEGORY_TYPE.FULL_DAY
-                ? modify.startDay
-                : modify.endDay,
-              modify.type != this.CATEGORY_TYPE.FULL_DAY
-                ? modify.endTime
-                : "00:00"
-            ) || undefined;
+            this._timeToDate(modify.startDay, startTime) || undefined;
+          modify.endTime = this._timeToDate(startDay, endTime) || undefined;
           await this.handleData();
           this.onCloseModifyDialog();
         },
