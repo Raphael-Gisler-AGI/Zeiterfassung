@@ -76,8 +76,7 @@
 						required="{= 2 > ${modify>/creationType}}" />
 					<HBox alignItems="Center">
 						<Label text="Half Day" />
-						<CheckBox
-							selected="{modify>/halfDay}" />
+						<CheckBox selected="{modify>/halfDay}" />
 					</HBox>
 				</VBox>
 				<Label />

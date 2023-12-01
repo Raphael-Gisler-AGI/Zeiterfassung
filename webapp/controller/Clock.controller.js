@@ -9,7 +9,7 @@ sap.ui.define(
        * @returns {void} Early returns if timer isn't active
        */
       onInit() {
-        this.setDefaultTimer();
+        this._setDefaultTimer();
         if (!localStorage.getItem("startTime")) {
           return;
         }
@@ -31,12 +31,12 @@ sap.ui.define(
         this.byId("clockCategory").setSelectedKey(category);
         this.getTimerModel().setProperty("/active", true);
         this.addTimerToEntries();
-        this.runTimer();
+        this._runTimer();
       },
       /**
        * Creates a timer model in the component and sets its default values
        */
-      setDefaultTimer() {
+      _setDefaultTimer() {
         this.getOwnerComponent().setModel(
           new JSONModel({
             description: "",
@@ -58,16 +58,17 @@ sap.ui.define(
           this.getTimerModel().setProperty("/active", true);
           localStorage.setItem("startTime", new Date());
           this.addTimerToEntries();
-          this.runTimer();
+          this._runTimer();
         }
       },
       /**
        * Creates an interval that updates a timer
        * @returns {void} If the running timer wasn't found void will be returned
        */
-      runTimer() {
+      _runTimer() {
         const timer = this.getTimerModel();
         const current = this.getRunningEntry();
+        const entries = this.getEntriesModel();
         if (!current) {
           MessageToast.show("Timer couldn't be started");
           return;
@@ -75,13 +76,6 @@ sap.ui.define(
         const startTime = new Date(localStorage.getItem("startTime"));
         this.timer = setInterval(() => {
           timer.setProperty("/time", (new Date() - startTime) / 1000);
-          const endTime = new Date();
-          current.EndTime = endTime;
-          current.Duration = this.getDuration(
-            new Date(localStorage.getItem("startTime")),
-            endTime
-          );
-          this.getEntriesModel().refresh();
         }, 1000);
       },
       /**
@@ -106,7 +100,7 @@ sap.ui.define(
         this.byId("clockCategory").setSelectedKey("");
         localStorage.clear();
         const active = this.getTimerModel().getProperty("/active");
-        this.setDefaultTimer();
+        this._setDefaultTimer();
         if (!active) {
           return;
         }
