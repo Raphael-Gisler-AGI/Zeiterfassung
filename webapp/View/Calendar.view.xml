@@ -30,6 +30,7 @@
 				<unified:CalendarAppointment
 					key="{entries>id}"
 					title="{entries>Description}"
+					tentative="{entries>timer}"
 					text="{
 						path: 'entries>Category',
 						formatter: '.formatter.getCategoryText'
