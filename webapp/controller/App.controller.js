@@ -9,7 +9,7 @@ sap.ui.define(
   function (BaseController, MessagePopover, MessageItem) {
     "use strict";
     let messagePopover;
-    return BaseController.extend("sap.ui.demo.nav.controller.App", {
+    return BaseController.extend("sap.ui.agi.zeiterfassung.controller.App", {
       /**
        * Event listener to select side navigation when refreshed
        * Set the message button in the footer
