@@ -92,10 +92,10 @@ sap.ui.define(
         // Get Global Models
         /**
          * Get any Model from the Component
-         * @param {string} modelName The name of a Component Model
+         * @param {string} [modelName] The name of a Component Model
          * @returns {object}
          */
-        getModel(modelName) {
+        getModel(modelName = undefined) {
           return this.getOwnerComponent().getModel(modelName);
         },
         /**
@@ -134,6 +134,13 @@ sap.ui.define(
           return this.getModel("messages");
         },
         /**
+         * Get the Modify Model
+         * @returns {object}
+         */
+        getModifyModel() {
+          return this.getModel("modify");
+        },
+        /**
          * Get text from i18n
          * @param {string} text
          * @returns {object}
@@ -141,13 +148,7 @@ sap.ui.define(
         getI18nText(text) {
           return this.getModel("i18n").getResourceBundle().getText(text);
         },
-        /**
-         * Get the Modify Model
-         * @returns {object}
-         */
-        getModifyModel() {
-          return this.getView().getModel("modify");
-        },
+
 
         // CRUD Operations
         /**
@@ -319,7 +320,7 @@ sap.ui.define(
          * Calculate the difference between the start time and end time
          * @param {number} startTime The Start Time
          * @param {number} endTime The End Time
-         * @returns {number|undefined} The difference between the two in minutes
+         * @returns {(number|undefined)} The difference between the two in minutes
          */
         getDuration(startTime, endTime) {
           const durationDate = new Date(endTime - startTime);
@@ -336,7 +337,7 @@ sap.ui.define(
           if (!this.pDialog) {
             this.pDialog = this.loadFragment({
               name: "sap.ui.agi.zeiterfassung.view.Modify",
-            });
+            }).then(oDialog => this.getView().addDependent(oDialog));
           }
           this.pDialog.then(function (oDialog) {
             oDialog.open();
@@ -351,7 +352,7 @@ sap.ui.define(
         getCategoryType(category) {
           return this.getCategoriesModel()
             .getData()
-            .find((c) => c.id == category)?.Type;
+            .find((c) => c.id == category)?.Type || false;
         },
         /**
          * Writes to the modify model what the new type is
@@ -500,7 +501,7 @@ sap.ui.define(
         },
         /**
          * Add a trailing 0 if necessary
-         * @param {object|number} time
+         * @param {object|number} time 
          * @returns {string|undefined} If time is set returns a string otherwise undefined
          */
         formatTime(time) {

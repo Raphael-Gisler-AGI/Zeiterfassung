@@ -9,10 +9,14 @@ sap.ui.define(
        * @returns {void} Early returns if timer isn't active
        */
       onInit() {
-        this._setDefaultTimer();
+        this._createTimerModel();
+
+        // Auslgern in eigene Funktion für bessere Kontroller der onInit Funktion
+        // this._getTimerFromLocalStorage();
         if (!localStorage.getItem("startTime")) {
           return;
         }
+
         this.getMessagesModel().getData().push({
           type: "Information",
           title: "Timer",
@@ -23,13 +27,17 @@ sap.ui.define(
           Math.floor(new Date() - new Date(localStorage.getItem("startTime"))) /
             1000
         );
-        this.getTimerModel().setProperty("/time", newDuration);
+
         const description = localStorage.getItem("description") || "";
         const category = localStorage.getItem("category") || "";
+
+        this.getTimerModel().setProperty("/time", newDuration);
         this.getTimerModel().setProperty("/description", description);
         this.getTimerModel().setProperty("/category", category);
-        this.byId("clockCategory").setSelectedKey(category);
         this.getTimerModel().setProperty("/active", true);
+
+        this.byId("clockCategory").setSelectedKey(category);
+
         this.addTimerToEntries();
         this._runTimer();
       },
@@ -68,7 +76,7 @@ sap.ui.define(
       _runTimer() {
         const timer = this.getTimerModel();
         const current = this.getRunningEntry();
-        const entries = this.getEntriesModel();
+
         if (!current) {
           MessageToast.show("Timer couldn't be started");
           return;
@@ -95,6 +103,10 @@ sap.ui.define(
        * @returns {void} Early return if timer isn't active
        */
       onPressReset() {
+        this._resetTimer();
+      },
+
+      _resetTimer() {
         clearInterval(this.timer);
         this.timer = undefined;
         this.byId("clockCategory").setSelectedKey("");
@@ -119,6 +131,7 @@ sap.ui.define(
         messages.getData().splice(index, 1);
         messages.refresh(true);
       },
+
       /**
        * Error handling and creates JSONModel for modify dialog
        * @returns {void} If errors were found
@@ -127,6 +140,7 @@ sap.ui.define(
         const timer = this.getTimerModel();
         const description = timer.getProperty("/description");
         const category = timer.getProperty("/category");
+        // Errors über Array sammeln
         let errorMessage = "";
         if (!description) {
           errorMessage = "Please add a description";
@@ -151,7 +165,7 @@ sap.ui.define(
           "modify"
         );
         await this.handleData();
-        this.onPressReset();
+        this._resetTimer();
       },
       /**
        * Changes the description in the localstorage and in the timer entry
@@ -160,6 +174,7 @@ sap.ui.define(
       onChangeDescription(oEvent) {
         const description = oEvent.getSource().getValue();
         localStorage.setItem("description", description);
+
         if (this.getTimerModel().getProperty("/active")) {
           this.getRunningEntry().Description = description;
           this.getEntriesModel().refresh();
@@ -173,11 +188,15 @@ sap.ui.define(
         const category = oEvent.getSource().getSelectedKey() || -1;
         localStorage.setItem("category", category);
         this.getTimerModel().setProperty("/category", category);
-        if (this.getTimerModel().getProperty("/active")) {
+        if (this._isTimerActive()) {
           this.getRunningEntry().Category = category;
           this.getEntriesModel().refresh();
         }
       },
+
+      _isTimerActive() {
+        return this.getTimerModel().getProperty("/active");
+      }
     });
   }
 );

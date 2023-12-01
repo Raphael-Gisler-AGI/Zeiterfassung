@@ -34,20 +34,7 @@ sap.ui.define(
         onAfterRendering() {
           this.sortList(true);
         },
-        /**
-         * List of statistics get's ordered dependant on the state
-         * @param {boolean} sortingState If the List should be descending
-         */
-        sortList(sortingState) {
-          this.byId("statisticList")
-            .getBinding("items")
-            .sort(
-              new Sorter({
-                path: "Time",
-                descending: sortingState,
-              })
-            );
-        },
+
         /**
          * Toggle the sorting state and run the sorting function
          */
@@ -57,6 +44,21 @@ sap.ui.define(
           sorting.setProperty("/sortingState", sortingState);
           this.sortList(sortingState);
         },
+
+        /**
+         * List of statistics get's ordered dependant on the state
+         * @param {boolean} sortDescending If the List should be descending
+         */
+        sortList(sortDescending) {
+          this.byId("statisticList")
+            .getBinding("items")
+            .sort(
+              new Sorter({
+                path: "Time",
+                descending: sortDescending,
+              })
+            );
+        }
       }
     );
   }
